@@ -8,6 +8,8 @@
  * @ingroup tripal_modules
  */
 
+require_once "includes/custom_schema.inc";
+
 
 
 /**
