@@ -1,0 +1,117 @@
+<?php
+
+/**
+ * @defgroup mainlab_tripal Library
+ * @{
+ * Provides functions for display and management of data in custom tables
+ * @}
+ * @ingroup tripal_modules
+ */
+
+
+
+/**
+ * Provide information to drupal about the node types that we're creating
+ * in this module
+ *
+ * @ingroup mainlab_tripal
+ */
+function mainlab_tripal_node_info() {
+  $nodes = array();
+
+  return $nodes;
+}
+
+/**
+ * Set the permission types that the chado module uses.  Essentially we
+ * want permissionis that protect creation, editing and deleting of chado
+ * data objects
+ *
+ * @ingroup mainlab_tripal
+ */
+function mainlab_tripal_perm() {
+  return array(
+
+  );
+}
+/**
+ * Menu items are automatically added for the new node types created
+ * by this module to the 'Create Content' Navigation menu item.  This function
+ * adds more menu items needed for this module.
+ *
+ * @ingroup mainlab_tripal
+ */
+function mainlab_tripal_menu() {
+  $items = array();
+  
+
+  return $items;
+}
+
+/**
+ * Implements hook_views_api()
+ * Purpose: Essentially this hook tells drupal that there is views support for
+ *  for this module which then includes tripal_db.views.inc where all the
+ *  views integration code is
+ *
+ * @ingroup mainlab_tripal
+ */
+function mainlab_tripal_views_api() {
+  return array(
+    'api' => 2.0,
+  );
+}
+
+
+/**
+ * Administrative settings form
+ *
+ * @ingroup mainlab_tripal
+ */
+function mainlab_tripal_admin() {
+  $form = array();
+
+
+
+  return system_settings_form($form);
+}
+
+/**
+ *
+ * @ingroup mainlab_tripal
+ */
+function mainlab_tripal_admin_validate($form, &$form_state) {
+ 
+}
+
+/**
+ * Implementation of hook_nodeapi().
+ *
+ * @ingroup mainlab_tripal
+ */
+function mainlab_tripal_nodeapi(&$node, $op, $teaser, $page) {
+
+ 
+}
+
+/**
+ *  We need to let drupal know about our theme functions and their arguments.
+ *  We create theme functions to allow users of the module to customize the
+ *  look and feel of the output generated in this module
+ *
+ * @ingroup mainlab_tripal
+ */
+function mainlab_tripal_theme() {
+  $themes = array(
+  );
+  return $themes;
+}
+
+
+/**
+ *
+ * @ingroup mainlab_tripal
+ */
+function mainlab_tripal_cron() {
+
+}

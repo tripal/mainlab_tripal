@@ -1,0 +1,64 @@
+<?php
+/**
+ * @file
+ * Contains functions used to install the mainlab tripal module
+ */
+
+
+/*******************************************************************************
+ * Implementation of hook_install().
+ */
+function mainlab_tripal_install() {
+   // create the module's data directory
+   tripal_create_moddir('mainlab_tripal');
+   
+   // add any drupal tables
+   drupal_install_schema('mainlab_tripal');
+   
+   // add custom chado tables
+   mainlab_tripal_add_custom_tables();
+
+}
+
+/*******************************************************************************
+ * Implementation of hook_uninstall().
+ */
+function mainlab_tripal_uninstall() {
+      drupal_uninstall_schema('mainlab_tripal');
+}
+/*******************************************************************************
+*  The blast analysis module creates it's own custom table for storing
+*  blast results in a format more condusive for fine-grained searching.
+*  Therefore,  we must define the hook_schema function, as recoginzed by
+*  the Tripal core API,  for specifying the details for this table.
+*/
+function mainlab_tripal_add_custom_tables() {
+
+}
+/*******************************************************************************
+* Implementation of hook_schema(). This table stores the parsers for blast xml
+* xml results.
+*/
+function mainlab_tripal_schema() {
+   $schema = array();
+
+  return $schema;
+}
+
+/*******************************************************************************
+ * Implementation of hook_requirements(). Make sure 'Tripal Core' and 'Tripal
+ * Analysis' are enabled before installation
+ */
+function mainlab_tripal_requirements($phase) {
+   $requirements = array();
+   if ($phase == 'install') {
+      if (!function_exists('tripal_create_moddir') || !function_exists('tripal_analysis_register_child')) {
+         $requirements ['mainlab_tripal'] = array(
+            'title' => "mainlab_tripal",  
+            'value' => "error. Some required modules are just being installed. Please try again.",  
+            'severity' => REQUIREMENT_ERROR,
+         );
+      }
+   }
+   return $requirements;
+}
