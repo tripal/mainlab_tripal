@@ -26,19 +26,17 @@ if (count($object_rels) > 0 or count($subject_rels) > 0) {
            <table id="tripal_organism-relationships_as_object-table" class="tripal_organism-table tripal-table tripal-table-horz">
              <tr>
                <th>Organism</th>
-               <th>Type</th>
              </tr> <?php
              foreach ($objects as $object){ ?>
                <tr>
                  <td><?php 
                     if ($object->record->nid) {
-                      print "<a href=\"" . url("node/" . $object->record->nid) . "\" target=\"_blank\">" . $object->record->object_id->name . "</a>";
+                      print "<i><a href=\"" . url("node/" . $object->record->nid) . "\" target=\"_blank\">" . $object->record->object_organism_id->genus . " " . $object->record->object_organism_id->genus . "</i></a>";
                     }
                     else {
-                      print $object->record->object_id->name;
+                      print "<i>" . $object->record->object_organism_id->genus . " " . $object->record->object_organism_id->genus . "</i>";
                     } ?>
                  </td>
-                 <td><?php print ucwords(preg_replace('/_/', ' ', $object->record->object_id->type_id->name)) ?></td>                 
                </tr> <?php
              } ?>
              </table>
@@ -63,13 +61,12 @@ if (count($object_rels) > 0 or count($subject_rels) > 0) {
                <tr>
                  <td><?php 
                     if ($subject->record->nid) {
-                      print "<a href=\"" . url("node/" . $subject->record->nid) . "\" target=\"_blank\">" . $subject->record->subject_id->name . "</a>";
+                      print "<i><a href=\"" . url("node/" . $subject->record->nid) . "\" target=\"_blank\">" . $subject->record->subject_organism_id->genus . " " . $subject->record->subject_organism_id->species . "</i></a>";
                     }
                     else {
-                      print $subject->record->subject_id->name;
+                      print "<i>" . $subject->record->subject_organism_id->genus . " " . $subject->record->subject_organism_id->species . "</a>";
                     } ?>
                  </td>
-                 <td><?php print ucwords(preg_replace('/_/', ' ', $subject->record->subject_id->type_id->name)) ?></td>                 
                </tr> <?php
              } ?>
              </table>
