@@ -22,7 +22,7 @@ if (count($object_rels) > 0 or count($subject_rels) > 0) {
          $rel_type = preg_replace("/^is/", '', $rel_type);
          // iterate through each parent   
          foreach ($rels as $obj_type => $objects){?>
-           <p>This organism is <b><?php print $rel_type ?></b> the following <?php print $obj_type ?> organism(s):
+           <p>This organism is <b><?php print $rel_type ?></b> the following <?php print $obj_type ?>:
            <table id="tripal_organism-relationships_as_object-table" class="tripal_organism-table tripal-table tripal-table-horz">
              <tr>
                <th>Organism</th>
