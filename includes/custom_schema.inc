@@ -32,3 +32,11 @@ function mainlab_tripal_chado_schema_v1_2_featuremap(){
   );
   return $schema;
 }
+
+function mainlab_tripal_chado_schema_v1_2_organism(){
+  $schema['referring_tables'] = array(
+    'organismprop',
+    'organism_relationship'
+  );
+  return $schema;
+}
