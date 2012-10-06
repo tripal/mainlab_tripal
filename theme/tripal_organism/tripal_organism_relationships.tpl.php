@@ -31,10 +31,10 @@ if (count($object_rels) > 0 or count($subject_rels) > 0) {
                <tr>
                  <td><?php 
                     if ($object->record->nid) {
-                      print "<i><a href=\"" . url("node/" . $object->record->nid) . "\" target=\"_blank\">" . $object->record->object_organism_id->genus . " " . $object->record->object_organism_id->genus . "</i></a>";
+                      print "<i><a href=\"" . url("node/" . $object->record->nid) . "\" target=\"_blank\">" . $object->record->object_organism_id->genus . " " . $object->record->object_organism_id->species . "</i></a>";
                     }
                     else {
-                      print "<i>" . $object->record->object_organism_id->genus . " " . $object->record->object_organism_id->genus . "</i>";
+                      print "<i>" . $object->record->object_organism_id->genus . " " . $object->record->object_organism_id->species . "</i>";
                     } ?>
                  </td>
                </tr> <?php
