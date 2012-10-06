@@ -104,7 +104,14 @@ function mainlab_tripal_nodeapi(&$node, $op, $teaser, $page) {
  * @ingroup mainlab_tripal
  */
 function mainlab_tripal_theme() {
+	$path = drupal_get_path('module', 'mainlab_tripal') . '/theme';
+	
   $themes = array(
+    'tripal_organism_relationships' => array(
+      'arguments' => array('node' => NULL),
+      'template' => 'tripal_organism_relationships',
+      'path' => $path . '/tripal_organism',    
+    ),
   );
   return $themes;
 }
@@ -115,5 +122,99 @@ function mainlab_tripal_theme() {
  * @ingroup mainlab_tripal
  */
 function mainlab_tripal_cron() {
+
+}
+
+/**
+ *
+ *
+ * @ingroup tripal_organism
+ */
+function tripal_organism_preprocess_tripal_organism_relationships(&$variables) {
+  // we want to provide a new variable that contains the matched organisms.
+  $organism = $variables['node']->organism;
+   
+  // expand the organism object to include the organism relationships.
+  $options = array(
+    'order_by'=> array('rank' => 'ASC'),
+    'return_array' => 1,
+    'statement_name' => 'exp_organism_rels'
+  );
+  $organism = tripal_core_expand_chado_vars($organism,'table', 'organism_relationship', $options);
+
+  // get the subject relationships
+  $srelationships = $organism->organism_relationship->subject_id;
+  if (!$srelationships) {
+     $srelationships = array();
+  } 
+  elseif (!is_array($srelationships)) { 
+     $srelationships = array($srelationships); 
+  }
+  
+  // get the object relationships
+  $orelationships = $organism->organism_relationship->object_id;
+  if (!$orelationships) {
+     $orelationships = array();
+  } 
+  elseif (!is_array($orelationships)) { 
+     $orelationships = array($orelationships); 
+  }
+  
+  // combine both object and subject relationshisp into a single array
+  $relationships = array();
+  $relationships['object'] = array();
+  $relationships['subject'] = array();
+  
+   // iterate through the object relationships
+   foreach ($orelationships as $relationship) {
+     $rel = new stdClass();      
+     $rel->record = $relationship;    
+     
+     // get the relationship and child types
+     $rel_type = t(preg_replace('/_/'," ",$relationship->type_id->name));
+     $child_type = $relationship->subject_id->type_id->name;
+     
+     // get the node id of the subject
+     $sql = "SELECT nid FROM chado_organism WHERE organism_id = %d";
+     $n = db_fetch_object(db_query($sql,$relationship->subject_id->organism_id));
+     if($n){
+        $rel->record->nid = $n->nid;
+     }
+
+     if (!array_key_exists($rel_type, $relationships['object'])) {
+       $relationships['object'][$rel_type] = array();   
+     }
+     if (!array_key_exists($child_type, $relationships['object'][$rel_type])) {
+       $relationships['object'][$rel_type][$child_type] = array();   
+     }
+     $relationships['object'][$rel_type][$child_type][] = $rel;     
+  }
+
+  
+  // now add in the subject relationships
+  foreach ($srelationships as $relationship) {
+     $rel = new stdClass(); 
+     
+     $rel->record = $relationship;
+     $rel_type = t(preg_replace('/_/'," ",$relationship->type_id->name));
+     $parent_type = $relationship->object_id->type_id->name;
+     
+     // get the node id of the subject
+     $sql = "SELECT nid FROM chado_organism WHERE organism_id = %d";
+     $n = db_fetch_object(db_query($sql,$relationship->object_id->organism_id));
+     if($n){
+        $rel->record->nid = $n->nid;
+     }
+     
+     if (!array_key_exists($rel_type, $relationships['subject'])) {
+       $relationships['subject'][$rel_type] = array();   
+     }
+     if (!array_key_exists($child_type, $relationships['subject'][$rel_type])) {
+       $relationships['subject'][$rel_type][$parent_type] = array();   
+     }
+     $relationships['subject'][$rel_type][$parent_type][] = $rel;
+  }
+  
+  $organism->all_relationships = $relationships;
 
 }
