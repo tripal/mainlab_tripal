@@ -114,7 +114,7 @@ function mainlab_tripal_theme() {
     ),
     'tripal_organism_properties' => array(
       'arguments' => array('node' => NULL),
-      'template' => 'tripal_organism_proeprties',
+      'template' => 'tripal_organism_properties',
       'path' => $path . '/tripal_organism',    
     ),
   );
