@@ -142,7 +142,7 @@ function tripal_organism_preprocess_tripal_organism_relationships(&$variables) {
   $organism = tripal_core_expand_chado_vars($organism,'table', 'organism_relationship', $options);
 
   // get the subject relationships
-  $srelationships = $organism->organism_relationship->subject_id;
+  $srelationships = $organism->organism_relationship->subject_organism_id;
   if (!$srelationships) {
      $srelationships = array();
   } 
@@ -151,7 +151,7 @@ function tripal_organism_preprocess_tripal_organism_relationships(&$variables) {
   }
   
   // get the object relationships
-  $orelationships = $organism->organism_relationship->object_id;
+  $orelationships = $organism->organism_relationship->object_organism_id;
   if (!$orelationships) {
      $orelationships = array();
   } 
@@ -171,11 +171,11 @@ function tripal_organism_preprocess_tripal_organism_relationships(&$variables) {
      
      // get the relationship and child types
      $rel_type = t(preg_replace('/_/'," ",$relationship->type_id->name));
-     $child_type = $relationship->subject_id->type_id->name;
+     $child_type = $relationship->subject_organism_id->type_id->name;
      
      // get the node id of the subject
      $sql = "SELECT nid FROM chado_organism WHERE organism_id = %d";
-     $n = db_fetch_object(db_query($sql,$relationship->subject_id->organism_id));
+     $n = db_fetch_object(db_query($sql,$relationship->subject_organism_id->organism_id));
      if($n){
         $rel->record->nid = $n->nid;
      }
@@ -196,11 +196,11 @@ function tripal_organism_preprocess_tripal_organism_relationships(&$variables) {
      
      $rel->record = $relationship;
      $rel_type = t(preg_replace('/_/'," ",$relationship->type_id->name));
-     $parent_type = $relationship->object_id->type_id->name;
+     $parent_type = $relationship->object_organism_id->type_id->name;
      
      // get the node id of the subject
      $sql = "SELECT nid FROM chado_organism WHERE organism_id = %d";
-     $n = db_fetch_object(db_query($sql,$relationship->object_id->organism_id));
+     $n = db_fetch_object(db_query($sql,$relationship->object_organism_id->organism_id));
      if($n){
         $rel->record->nid = $n->nid;
      }
