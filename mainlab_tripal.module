@@ -112,6 +112,11 @@ function mainlab_tripal_theme() {
       'template' => 'tripal_organism_relationships',
       'path' => $path . '/tripal_organism',    
     ),
+    'tripal_organism_properties' => array(
+      'arguments' => array('node' => NULL),
+      'template' => 'tripal_organism_proeprties',
+      'path' => $path . '/tripal_organism',    
+    ),
   );
   return $themes;
 }
