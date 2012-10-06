@@ -136,7 +136,6 @@ function tripal_organism_preprocess_tripal_organism_relationships(&$variables) {
    
   // expand the organism object to include the organism relationships.
   $options = array(
-    'order_by'=> array('rank' => 'ASC'),
     'return_array' => 1,
     'statement_name' => 'exp_organism_rels'
   );
