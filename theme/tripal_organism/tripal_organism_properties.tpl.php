@@ -6,8 +6,8 @@ $properties = $node->organism->organismprop;
 
 if(count($properties) > 0){ ?>
 	<div id="tripal_organism-properties-box" class="tripal_organism-info-box tripal-info-box-nosidebar">
-	  <div class="tripal_organism-info-box-title tripal-info-box-title">Properties</div>
-	  <div class="tripal_organism-info-box-desc tripal-info-box-desc">Properties for the organism '<?php print $node->organism->genus . " " . $node->organism->species ?>' include:</div>
+	  <div class="tripal_organism-info-box-title tripal-info-box-title-nosidebar">Properties</div>
+	  <!-- <div class="tripal_organism-info-box-desc tripal-info-box-desc">Properties for the organism '<?php print $node->organism->genus . " " . $node->organism->species ?>' include:</div> -->
 	  <table class="tripal_organism-table tripal-table tripal-table-horz">
 	    <tr><th>Type</th><th>Value</th></tr> <?php	
 			$i = 0;
