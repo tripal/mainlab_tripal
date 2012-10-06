@@ -44,7 +44,8 @@ if (count($object_rels) > 0 or count($subject_rels) > 0) {
          }
       }
       
-      // second add in the object relationships.  
+      // second add in the object relationships. 
+      /* 
       foreach ($object_rels as $rel_type => $rels){
          // make the type more human readable
          $rel_type = preg_replace('/_/', ' ', $rel_type);
@@ -72,6 +73,6 @@ if (count($object_rels) > 0 or count($subject_rels) > 0) {
              </table>
              </p><br><?php
          }
-      } ?>
+      } */?>
   </div> <?php
 }
