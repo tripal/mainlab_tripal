@@ -28,7 +28,8 @@ function mainlab_tripal_chado_schema_v1_2_stock(){
 function mainlab_tripal_chado_schema_v1_2_featuremap(){
   $schema['referring_tables'] = array(
     'featuremap_stock',
-    'featuremapprop'
+    'featuremapprop',
+    'featuremap_organism'
   );
   return $schema;
 }
