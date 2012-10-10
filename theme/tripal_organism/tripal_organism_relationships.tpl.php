@@ -19,32 +19,29 @@ if (count($object_rels) > 0 or count($subject_rels) > 0) {
     <div class="tripal_organism-info-box-desc tripal-info-box-desc"></div> <?php
     
       // first add in the subject relationships.  
-      foreach ($subject_rels as $rel_type => $rels){
+      foreach ($subject_rels as $rel_type => $objects){
          // make the type a bit more human readable
          $rel_type = preg_replace("/_/", ' ', $rel_type);
-         $rel_type = preg_replace("/^is/", '', $rel_type);
-         // iterate through each parent   
-         foreach ($rels as $objects){?>
-           <p>This species is <b><?php print $rel_type ?></b> the following <?php print $obj_type ?>:
-           <table id="tripal_organism-relationships_as_object-table" class="tripal_organism-table tripal-table tripal-table-horz">
+         $rel_type = preg_replace("/^is/", '', $rel_type); ?>
+         <p>This species is <b><?php print $rel_type ?></b> the following <?php print $obj_type ?>:
+         <table id="tripal_organism-relationships_as_object-table" class="tripal_organism-table tripal-table tripal-table-horz">
+           <tr>
+             <th>Organism</th>
+           </tr> <?php
+           foreach ($objects as $object){ ?>
              <tr>
-               <th>Organism</th>
+               <td><?php 
+                  if ($object->nid) {
+                    print "<i><a href=\"" . url("node/" . $object->nid) . "\" target=\"_blank\">" . $object->genus . " " . $object->species . "</i></a>";
+                  }
+                  else {
+                    print "<i>" . $object->genus . " " . $object->species . "</i>";
+                  } ?>
+               </td>
              </tr> <?php
-             foreach ($objects as $object){ ?>
-               <tr>
-                 <td><?php 
-                    if ($object->nid) {
-                      print "<i><a href=\"" . url("node/" . $object->nid) . "\" target=\"_blank\">" . $object->genus . " " . $object->species . "</i></a>";
-                    }
-                    else {
-                      print "<i>" . $object->genus . " " . $object->species . "</i>";
-                    } ?>
-                 </td>
-               </tr> <?php
-             } ?>
-             </table>
-             </p><br><?php
-         }
+           } ?>
+         </table>
+         </p><br><?php
       }
       /*
       // second add in the object relationships. 
