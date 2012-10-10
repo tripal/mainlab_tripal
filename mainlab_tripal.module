@@ -174,27 +174,25 @@ function tripal_organism_preprocess_tripal_organism_relationships(&$variables) {
   
    // iterate through the object relationships
    while ($relationship = db_fetch_object($as_object)) {
-     $rel = new stdClass();      
-     $rel->record = $relationship;    
-     
+    
      // get the relationship and child types
      $rel_type = t(preg_replace('/_/'," ",$relationship->rel_type));     
 
      if (!array_key_exists($rel_type, $relationships['object'])) {
        $relationships['object'][$rel_type] = array();   
-     }    
+     }  
+     $relationships['object'][$rel_type] = $relationships;  
   }
   
    while ($relationship = db_fetch_object($as_subject)) {
-     $rel = new stdClass();      
-     $rel->record = $relationship;    
-     
+    
      // get the relationship and child types
      $rel_type = t(preg_replace('/_/'," ",$relationship->rel_type));     
 
      if (!array_key_exists($rel_type, $relationships['subject'])) {
        $relationships['subject'][$rel_type] = array();   
-     }    
+     }  
+     $relationships['subject'][$rel_type] = $relationships;  
   } 
   
   $organism->all_relationships = $relationships;
