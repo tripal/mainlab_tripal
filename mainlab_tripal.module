@@ -192,9 +192,9 @@ function tripal_organism_preprocess_tripal_organism_relationships(&$variables) {
      if (!array_key_exists($rel_type, $relationships['subject'])) {
        $relationships['subject'][$rel_type] = array();   
      }  
-     $relationships['subject'][$rel_type] = $relationships;  
+     $relationships['subject'][$rel_type] = $relationship;  
   } 
   
-  $organism->all_relationships = $relationship;
+  $organism->all_relationships = $relationships;
 
 }
