@@ -150,7 +150,7 @@ function tripal_organism_preprocess_tripal_organism_relationships(&$variables) {
   // query, therefore we will manually perform the query
   $sql = "
     SELECT O.genus, O.species, O.organism_id, CO.nid, CVT.name as rel_type
-    FROM organism_relationships ORel
+    FROM organism_relationship ORel
       INNER JOIN organganism O on ORel.subject_id = O.organism_id
       INNER JOIN cvterm CVT on ORel.type_id = CVT.cvterm_id
       LEFT JOIN chado_organism CO on O.organism_id = CO.organism_id
@@ -159,7 +159,7 @@ function tripal_organism_preprocess_tripal_organism_relationships(&$variables) {
   $as_subject = chado_query($sql,$organism->organism_id);
   $sql = "
     SELECT O.genus, O.species, O.organism_id, CO.nid, CVT.name as rel_type
-    FROM organism_relationships ORel
+    FROM organism_relationship ORel
       INNER JOIN organganism O on ORel.subject_id = O.organism_id
       INNER JOIN cvterm CVT on ORel.type_id = CVT.cvterm_id
       LEFT JOIN chado_organism CO on O.organism_id = CO.organism_id
