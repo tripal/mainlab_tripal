@@ -154,7 +154,7 @@ function tripal_organism_preprocess_tripal_organism_relationships(&$variables) {
       INNER JOIN organganism O on ORel.subject_id = O.organism_id
       INNER JOIN cvterm CVT on ORel.type_id = CVT.cvterm_id
       LEFT JOIN chado_organism CO on O.organism_id = CO.organism_id
-    WHERE OR.subject_id = %d      
+    WHERE ORel.subject_id = %d      
   ";
   $as_subject = chado_query($sql,$organism->organism_id);
   $sql = "
@@ -163,7 +163,7 @@ function tripal_organism_preprocess_tripal_organism_relationships(&$variables) {
       INNER JOIN organganism O on ORel.subject_id = O.organism_id
       INNER JOIN cvterm CVT on ORel.type_id = CVT.cvterm_id
       LEFT JOIN chado_organism CO on O.organism_id = CO.organism_id
-    WHERE OR.object_id = %d      
+    WHERE ORel.object_id = %d      
   ";
   $as_object = chado_query($sql,$organism->organism_id);   
   
