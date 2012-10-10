@@ -181,7 +181,7 @@ function tripal_organism_preprocess_tripal_organism_relationships(&$variables) {
      if (!array_key_exists($rel_type, $relationships['object'])) {
        $relationships['object'][$rel_type] = array();   
      }  
-     $relationships['object'][$rel_type] = $relationship;  
+     $relationships['object'][$rel_type][] = $relationship;  
   }
   
    while ($relationship = db_fetch_object($as_subject)) {
@@ -192,7 +192,7 @@ function tripal_organism_preprocess_tripal_organism_relationships(&$variables) {
      if (!array_key_exists($rel_type, $relationships['subject'])) {
        $relationships['subject'][$rel_type] = array();   
      }  
-     $relationships['subject'][$rel_type] = $relationship;  
+     $relationships['subject'][$rel_type][] = $relationship;  
   } 
   
   $organism->all_relationships = $relationships;
