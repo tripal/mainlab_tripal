@@ -9,6 +9,9 @@ $subject_rels = $all_relationships['subject'];
 // make the organism type a bit more human readable
 $organism_type =  preg_replace("/_/", ' ', $organism->type_id->name);
 
+dpm($object_rels);
+dpm($subject_rels);
+
 if (count($object_rels) > 0 or count($subject_rels) > 0) {
 ?>
   <div id="tripal_organism-relationships-box" class="tripal_organism-info-box tripal-info-box">
