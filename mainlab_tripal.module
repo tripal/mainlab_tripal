@@ -122,6 +122,56 @@ function mainlab_tripal_theme() {
       'template' => 'tripal_organism_maps',
       'path' => $path . '/tripal_organism',    
     ),
+  	'tripal_feature_publication' => array(
+  			'arguments' => array('node' => NULL),
+  			'template' => 'tripal_feature_publication',
+  			'path' => $path . '/tripal_feature',
+  	),
+  	'tripal_feature_contact' => array(
+  			'arguments' => array('node' => NULL),
+  			'template' => 'tripal_feature_contact',
+  			'path' => $path . '/tripal_feature',
+  	),
+  	'tripal_feature_genetic_marker' => array(
+  				'arguments' => array('node' => NULL),
+  				'template' => 'tripal_feature_genetic_marker',
+  				'path' => $path . '/tripal_feature',
+  	),
+  	'tripal_feature_genetic_marker_map_positions' => array(
+  		'arguments' => array('node' => NULL),
+  		'template' => 'tripal_feature_genetic_marker_map_positions',
+  		'path' => $path . '/tripal_feature',
+  	 ),
+  	'tripal_feature_genetic_marker_polymorphism' => array(
+  			'arguments' => array('node' => NULL),
+  			'template' => 'tripal_feature_genetic_marker_polymorphism',
+  			'path' => $path . '/tripal_feature',
+  	),
+  	 'tripal_feature_sequence_feature' => array(
+  				'arguments' => array('node' => NULL),
+  				'template' => 'tripal_feature_sequence_feature',
+  				'path' => $path . '/tripal_feature',
+  	 ),
+  	'tripal_featuremap_base_custom' => array(
+  			'arguments' => array('node' => NULL),
+  			'template' => 'tripal_featuremap_base_custom',
+  			'path' => $path . '/tripal_featuremap',
+  	),
+  	'tripal_featuremap_stock' => array(
+  			'arguments' => array('node' => NULL),
+  			'template' => 'tripal_featuremap_stock',
+  			'path' => $path . '/tripal_featuremap',
+  	),
+  	'tripal_featuremap_publication' => array(
+  			'arguments' => array('node' => NULL),
+  			'template' => 'tripal_featuremap_publication',
+  			'path' => $path . '/tripal_featuremap',
+  	),
+  	'tripal_featuremap_contact' => array(
+  			'arguments' => array('node' => NULL),
+  			'template' => 'tripal_featuremap_contact',
+  			'path' => $path . '/tripal_featuremap',
+  	),
   );
   return $themes;
 }
@@ -197,4 +247,61 @@ function tripal_organism_preprocess_tripal_organism_relationships(&$variables) {
   
   $organism->all_relationships = $relationships;
 
+}
+
+/**
+ *
+ *
+ * @ingroup tripal_feature
+ */
+function tripal_feature_preprocess_tripal_feature_genetic_marker_map_positions(&$variables) {
+	$feature = $variables['node']->feature;
+   // get map positions
+   $results = chado_query(
+   "SELECT nid, FM.name, locus_name, locus_start, linkage_group, genome 
+	  FROM search_by_map_locus SBML 
+     INNER JOIN featuremap FM ON SBML.featuremap_id = FM.featuremap_id
+     INNER JOIN chado_featuremap CF ON SBML.featuremap_id = CF.featuremap_id
+     WHERE locus_feature_id IN 
+	  (SELECT feature_id 
+		   FROM feature F 
+		   INNER JOIN feature_relationship FR ON F.feature_id = FR.subject_id 
+		   WHERE F.type_id =	(SELECT cvterm_id FROM cvterm WHERE name = 'marker_locus')
+		   AND FR.type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'instance_of') 
+         AND FR.object_id = %d)", $feature->feature_id);
+   $positions = array ();
+   $counter = 0;
+   while ($pos = db_fetch_object($results)) {
+   	$positions [$counter] = $pos;
+   	$counter ++;
+   }
+   $feature->map_positions = $positions;
+}
+
+/**
+ *
+ *
+ * @ingroup tripal_featuremap
+ */
+function tripal_featuremap_preprocess_tripal_featuremap_base_custom(&$variables) {
+	$featuremap = $variables['node']->featuremap;
+	$num_loci = db_result(chado_query(
+			"SELECT count (distinct F.uniquename) 
+			  FROM featurepos FP 
+			  INNER JOIN feature F ON F.feature_id = FP.feature_id 
+			  WHERE F.type_id = (SELECT cvterm_id 
+			                                      FROM cvterm 
+			                                      WHERE name = 'marker_locus') 
+			  AND featuremap_id = %d", $featuremap->featuremap_id));
+	$num_lg = db_result(chado_query(
+			"SELECT count (distinct F.uniquename) 
+			  FROM featurepos FP 
+			  INNER JOIN feature F ON F.feature_id = FP.map_feature_id 
+			  WHERE F.type_id = (SELECT cvterm_id 
+			                                      FROM cvterm 
+			                                      WHERE name = 'linkage_group') 
+			  AND featuremap_id = %d", $featuremap->featuremap_id));
+	
+	$featuremap->num_loci = $num_loci;
+	$featuremap->num_lg = $num_lg;
 }
