@@ -4,6 +4,7 @@ $featuremap  = $variables['node']->featuremap;
 // expand featuremap to include pubs 
 $featuremap = tripal_core_expand_chado_vars($featuremap, 'table', 'featuremap_pub');
 $pubs = $featuremap->featuremap_pub;
+$pubs = tripal_core_expand_chado_vars($pubs, 'field', 'pub.title');
 ?>
 
 <div id="tripal_featuremap-pub-box" class="tripal_featuremap-info-box tripal-info-box">

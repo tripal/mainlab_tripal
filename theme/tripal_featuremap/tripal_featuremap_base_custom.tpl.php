@@ -49,25 +49,15 @@ $contacts = $featuremap->featuremap_contact;
 ?>
 
 <div id="tripal_featuremap-base-box" class="tripal_featuremap-info-box tripal-info-box">
-  <div class="tripal_featuremap-info-box-title tripal-info-box-title">Map Information</div>
+  <div class="tripal_featuremap-info-box-title tripal-info-box-title">Map Details</div>
   <div class="tripal_featuremap-info-box-desc tripal-info-box-desc"></div>
 
-<?php 
-// Find the CMap link
-$sql = "SELECT map_set_acc FROM cmap_map_set WHERE map_set_name = '%s'";
-global $db_url;
-if (is_array($db_url) && array_key_exists('cmap', $db_url)) {
-   $previous = db_set_active('cmap');
-   $cmap_acc = db_result(db_query($sql, $featuremap->name));
-   db_set_active($previous);
-}
-?>
    <table id="tripal_featuremap-base-table" class="tripal_featuremap-table tripal-table tripal-table-vert">
       <tr class="tripal_featuremap-table-even-row tripal-table-even-row">
         <th width="160px">Name</th>
         <td>
         <?php print $featuremap->name; ?>
-        <?php if ($cmap_acc) {print " [<a href=\"http://www.cottongen.org/cgi-bin/cmap/viewer?ref_map_set_acc=$cmap_acc\" target=\"_blank\">View in CMap</a>]";}?>
+        <?php if ($featuremap->cmap_url) {print " [<a href=\"$featuremap->cmap_url\" target=\"_blank\">View in CMap</a>]";}?>
         </td>
       </tr>
 <?php 

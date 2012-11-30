@@ -63,10 +63,11 @@ $polymorphism = $feature->feature_genotype->feature_id;
 
 // expand feature to include pubs
 $feature = tripal_core_expand_chado_vars($feature, 'table', 'feature_pub');
+$feature = tripal_core_expand_chado_vars($feature, 'table', 'feature_pub');
 $pubs = $feature->feature_pub;
 
 // get contact
-$feature = tripal_core_expand_chado_vars($feature, 'table', 'feature_contact');
+$feature = tripal_core_expand_chado_vars($feature, 'field', 'pub.title');
 $contacts = $feature->feature_contact;
 
 // Define function to get table row class
@@ -150,8 +151,8 @@ function showPolymorphism () {
      	<!-- Restriction Enzyme -->
      	<?php $class = genetic_markerGetTableRowClass($counter); print "<tr class=\"" . $class ."\"><th>Restriction Enzyme</th><td>"; if (key_exists('restriction_enzyme', $kv_properties)) { print $kv_properties['restriction_enzyme']; } else {print "N/A";} print"</td></tr>"; $counter ++;?>
      	<!-- Polymorphism -->
-     	<?php $class = genetic_markerGetTableRowClass($counter); print "<tr class=\"" . $class ."\"><th>Polymorphism</th><td>"; if ($polymorphism) { print "<a href=\"#\"onClick=\"showPolymorphism()\">P_ " . $feature->name . "</a>"; } else { print "N/A"; } print "</td></tr>"; $counter ++;?>
-     	<!-- Map position (content dynamically inserted using javascript to prevent doing the query twice) -->
+     	<?php $class = genetic_markerGetTableRowClass($counter); print "<tr class=\"" . $class ."\"><th>Polymorphism</th><td>"; if ($polymorphism) { print "<a href=\"/polymorphism/$feature->feature_id\">P_ " . $feature->name . "</a>"; } else { print "N/A"; } print "</td></tr>"; $counter ++;?>
+     	<!-- Map position (content dynamically inserted using javascript) -->
      	<?php $class = genetic_markerGetTableRowClass($counter); print "<tr class=\"" . $class ."\"><th>Map position</th><td id=\"tripal-feature-genetic_marker-map_position\">N/A</td></tr>"; $counter ++;?>
       <!-- Publication -->
      	<?php 
