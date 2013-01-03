@@ -63,6 +63,15 @@ function mainlab_tripal_menu() {
   		'file' => 'includes/allele.page.inc',
   		'type' => MENU_CALLBACK
   );
+  // The sequence listing page
+  $items['feature_listing/%/%/%'] = array(
+  		'title' => 'Sequences',
+  		'page callback' => 'mainlab_feature_listing',
+  		'page arguments' => array(1,2,3),
+  		'access arguments' => array('access content'),
+  		'file' => 'includes/feature_listing.page.inc',
+  		'type' => MENU_CALLBACK
+  );
   return $items;
 }
 
