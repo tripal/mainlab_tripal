@@ -233,6 +233,11 @@ function mainlab_tripal_theme() {
   			'template' => 'tripal_stock_population_map',
   			'path' => $path . '/tripal_stock',
   	),
+  	'tripal_stock_image' => array(
+  			'arguments' => array('node' => NULL),
+  			'template' => 'tripal_stock_image',
+  			'path' => $path . '/tripal_stock',
+  	),
   );
   return $themes;
 }
@@ -585,4 +590,31 @@ function tripal_stock_preprocess_tripal_stock_population_map(&$variables) {
 		$counter ++;
 	}
 	$stock->population_map = $maps;
+}
+
+/**
+ * @ingroup tripal_stock
+ */
+function tripal_stock_preprocess_tripal_stock_image(&$variables) {
+	$stock = $variables['node']->stock;
+	// We want to show maps for this stock and maps of its children
+	$results = chado_query(
+			"SELECT eimage_type, image_uri, value as legend 
+			 FROM stock_image SI 
+			 INNER JOIN eimage I ON SI.eimage_id = I.eimage_id 
+			 INNER JOIN eimageprop IP ON I.eimage_id = IP.eimage_id 
+			 WHERE IP.type_id = (SELECT cvterm_id 
+			                                      FROM cvterm 
+			                                      WHERE name = 'description' 
+			                                      AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN')
+			                                    )
+			AND stock_id = %d", 
+			$stock->stock_id);
+	$images = NULL;
+	$counter = 0;
+	while ($img = db_fetch_object($results)) {
+		$images[$counter] = $img;
+		$counter ++;
+	}
+	$stock->images = $images;
 }
