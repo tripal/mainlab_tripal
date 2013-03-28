@@ -9,6 +9,7 @@
  */
 
 require_once "includes/custom_schema.inc";
+require_once "includes/qtl_details.inc";
 
 
 
@@ -350,7 +351,7 @@ function tripal_feature_preprocess_tripal_feature_genetic_marker_map_positions(&
    	WHERE FR2.type_id = 
    	  (SELECT cvterm_id FROM cvterm WHERE name = 'located_in')   		
      ) BIN ON LOCUS.feature_id = BIN.subject_id
-    INNER JOIN chado_featuremap CF ON FM.featuremap_id = CF.featuremap_id
+    INNER JOIN public.chado_featuremap CF ON FM.featuremap_id = CF.featuremap_id
     WHERE FR.type_id = 
      (SELECT cvterm_id 
       FROM cvterm

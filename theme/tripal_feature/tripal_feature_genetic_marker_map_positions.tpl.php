@@ -37,13 +37,14 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/m
      	    if (!$bin) {$bin = "N/A";}
      	    foreach($map_positions AS $pos) {
                $class = genetic_markerGetTableRowClass($counter);
+               $position = number_format($pos->locus_start, 2);
             	print "<tr class=\"$class\">
             	              <td>$counter</td>
             	              <td><a href=\"/node/$pos->nid\">$pos->name</a></td>
             	              <td>$pos->linkage_group</td>
             	              <td>$bin</td>
             	              <td>$pos->chr</td>
-            	              <td>$pos->locus_start</td>
+            	              <td>$position</td>
             	              <td>$pos->locus_name</td>
             	              <td><a href=\"$pos->urlprefix$pos->accession\">View</a></td>
             	           </tr>";
