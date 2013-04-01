@@ -54,7 +54,7 @@ $contacts = $featuremap->featuremap_contact;
 
    <table id="tripal_featuremap-base-table" class="tripal_featuremap-table tripal-table tripal-table-vert">
       <tr class="tripal_featuremap-table-even-row tripal-table-even-row">
-        <th width="160px">Name</th>
+        <th width="40%">Name</th>
         <td>
         <?php print $featuremap->name; ?>
         <?php if ($featuremap->cmap_url) {print " [<a href=\"$featuremap->cmap_url\" target=\"_blank\">View in CMap</a>]";}?>
