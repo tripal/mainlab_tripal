@@ -8,7 +8,7 @@ function getQTLDetails ($feature_id) {
    	   WHERE feature_id = %d";
    $qtl->study = db_result(chado_query($sql, $feature_id));
    
-   // Get Population
+   // Get Population (Stock) and its parents
    $sql = 
       "SELECT 
           POP.nid AS pop_nid,
@@ -47,7 +47,7 @@ function getQTLDetails ($feature_id) {
                                  ) PAT ON PAT.object_id = S.stock_id
           ) POP ON POP.featuremap_id = MAP.featuremap_id
        WHERE QTL.feature_id = %d";
-   $qtl->population = db_fetch_object(db_query($sql, $feature_id)); // chado_query() wouldn't work.
+   $qtl->population = db_fetch_object(db_query($sql, $feature_id)); // chado_query() wouldn't work as it prefixs 'chado.' to this statement
    
    // Get colocalizing markers
    $sql = 
@@ -64,7 +64,7 @@ function getQTLDetails ($feature_id) {
       AND V.cv_id = (SELECT cv_id FROM cv WHERE name = 'relationship')
      ) CO_LOC_M ON CO_LOC_M.object_id = QTL.feature_id
    WHERE QTL.feature_id = %d";
-   $qtl->colocalizing_marker = mainlab_tripal_dbresult_to_array(db_query($sql, $feature_id));
+   $qtl->colocalizing_marker = mainlab_tripal_dbresult_to_array(db_query($sql, $feature_id)); // chado_query() wouldn't work as it prefixs 'chado.' to this statement
    
    // Get neighboring markers
    $sql =
@@ -81,11 +81,75 @@ function getQTLDetails ($feature_id) {
       AND V.cv_id = (SELECT cv_id FROM cv WHERE name = 'relationship')
         ) CO_LOC_M ON CO_LOC_M.object_id = QTL.feature_id
       WHERE QTL.feature_id = %d";
-   $qtl->neighboring_marker = mainlab_tripal_dbresult_to_array(db_query($sql, $feature_id));
+   $qtl->neighboring_marker = mainlab_tripal_dbresult_to_array(db_query($sql, $feature_id)); // chado_query() wouldn't work as it prefixs 'chado.' to this statement
    
+   // Get map positions. This SQL is different from the 'genetic marker' map positions which joins feature table again for 'marker_locus' data
+   $sql = 
+   	"SELECT
+       CF.nid AS nid,
+       FM.name AS name,
+       X.accession,
+   	   DB.urlprefix,
+       LG.name AS linkage_group,
+       BIN.name AS bin,
+       LGP.value AS chr,
+       FPP.value AS QTL_start,
+       QTL.uniquename AS QTL_name
+    FROM feature QTL
+    INNER JOIN featurepos FP ON QTL.feature_id = FP.feature_id
+    INNER JOIN featuremap FM ON FP.featuremap_id = FM.featuremap_id
+   	LEFT JOIN featuremap_dbxref FD ON FP.featuremap_id = FD.featuremap_id
+   	INNER JOIN dbxref X ON FD.dbxref_id = X.dbxref_id
+   	INNER JOIN db ON db.db_id = X.db_id
+    INNER JOIN feature LG ON FP.map_feature_id = LG.feature_id
+    LEFT JOIN featureprop LGP ON LG.feature_id = LGP.feature_id
+    INNER JOIN featureposprop FPP ON FP.featurepos_id = FPP.featurepos_id
+    LEFT JOIN
+      (SELECT F2.name, FR2.subject_id FROM feature F2
+       INNER JOIN feature_relationship FR2 ON FR2.object_id = F2.feature_id
+       WHERE FR2.type_id =
+   	     (SELECT cvterm_id FROM cvterm WHERE name = 'located_in')
+      ) BIN ON QTL.feature_id = BIN.subject_id
+    INNER JOIN public.chado_featuremap CF ON FM.featuremap_id = CF.featuremap_id
+    AND QTL.type_id =
+      (SELECT cvterm_id
+       FROM cvterm
+       WHERE name = 'QTL'
+      )
+    AND FPP.type_id =
+      (SELECT cvterm_id
+       FROM cvterm
+       WHERE name = 'start'
+      )
+    AND LGP.type_id =
+      (SELECT cvterm_id
+       FROM cvterm
+       WHERE name = 'chr_number'
+      )
+    AND QTL.feature_id = %d";
+   $qtl->map_positions = mainlab_tripal_dbresult_to_array(chado_query($sql, $feature_id));
+
+   // Get publications. the publications for QTL is not linked by the 'feature_pub' linking table so it needs a special treatment
+   $sql = 
+   "SELECT 
+      P.pub_id,
+      max(P.uniquename) as uniquename,
+      max(P.pyear) as pyear,
+      max(P.title) as title
+    FROM feature QTL
+    INNER JOIN feature_project FP ON FP.feature_id = QTL.feature_id
+    INNER JOIN nd_experiment_project NEJ ON NEJ.project_id = FP.project_id
+    INNER JOIN nd_experiment_pub NEP ON NEP.nd_experiment_id = NEJ.nd_experiment_id
+    INNER JOIN pub P ON P.pub_id = NEP.pub_id
+    WHERE QTL.feature_id = %d
+    GROUP BY P.pub_id";
+   $qtl->publications = mainlab_tripal_dbresult_to_array(chado_query($sql, $feature_id));
+
+   // Return the data
    return $qtl;
 }
 
+// This is a function to convert a database resultset into an object array
 function mainlab_tripal_dbresult_to_array($dbresult) {
 	$arr = array();
 	while ($obj = db_fetch_object($dbresult)) {
@@ -94,7 +158,8 @@ function mainlab_tripal_dbresult_to_array($dbresult) {
 	return $arr;
 }
 
-function mainlab_tripal_array_agg($arr, $separator) {
+// The function will aggreate the content of a String array by using the specified separator
+function mainlab_tripal_stringarray_agg($arr, $separator) {
 	$text = "";
 	for ($i = 0; $i < count($arr); $i ++) {
 		$text .= $arr[$i];
