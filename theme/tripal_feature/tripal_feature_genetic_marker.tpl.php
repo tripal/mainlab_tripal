@@ -99,7 +99,7 @@ function showPolymorphism () {
    <table id="tripal_feature-base-table" class="tripal_feature-table tripal-table tripal-table-vert">
       <!-- Name -->
       <tr class="tripal_feature-table-even-row tripal-table-even-row">
-        <th style="width:160px;">Name</th>
+        <th style="width:40%;">Name</th>
         <td><?php print $feature->name; ?></td>
       </tr>
       <!-- Alias -->
