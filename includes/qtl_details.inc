@@ -4,8 +4,8 @@ function getQTLDetails ($feature_id) {
    // Get Trait Study
    $sql = 
       "SELECT P.name FROM {project} P 
-   	   INNER JOIN {feature_project} FP ON FP.project_id = P.project_id
-   	   WHERE feature_id = %d";
+          INNER JOIN {feature_project} FP ON FP.project_id = P.project_id
+          WHERE feature_id = %d";
    $qtl->study = db_result(chado_query($sql, $feature_id));
    
    // Get Population (Stock) and its parents
@@ -85,51 +85,67 @@ function getQTLDetails ($feature_id) {
    
    // Get map positions. This SQL is different from the 'genetic marker' map positions which joins feature table again for 'marker_locus' data
    $sql = 
-   	"SELECT
+       "SELECT
        CF.nid AS nid,
        FM.name AS name,
        X.accession,
-   	   DB.urlprefix,
+       DB.urlprefix,
        LG.name AS linkage_group,
        BIN.name AS bin,
        LGP.value AS chr,
-       FPP.value AS QTL_start,
+       START.value AS QTL_start,
+       STOP.value AS QTL_stop,
+       PEAK.value AS QTL_peak,
        QTL.uniquename AS QTL_name
     FROM feature QTL
     INNER JOIN featurepos FP ON QTL.feature_id = FP.feature_id
     INNER JOIN featuremap FM ON FP.featuremap_id = FM.featuremap_id
    	LEFT JOIN featuremap_dbxref FD ON FP.featuremap_id = FD.featuremap_id
-   	INNER JOIN dbxref X ON FD.dbxref_id = X.dbxref_id
-   	INNER JOIN db ON db.db_id = X.db_id
+   	LEFT JOIN dbxref X ON FD.dbxref_id = X.dbxref_id
+   	LEFT JOIN db ON db.db_id = X.db_id
     INNER JOIN feature LG ON FP.map_feature_id = LG.feature_id
-    LEFT JOIN featureprop LGP ON LG.feature_id = LGP.feature_id
-    INNER JOIN featureposprop FPP ON FP.featurepos_id = FPP.featurepos_id
+    LEFT JOIN (
+      SELECT FP.feature_id, FP.value FROM featureprop FP 
+      WHERE FP.type_id = 
+      (SELECT cvterm_id FROM cvterm WHERE name = 'chr_number'
+       AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))
+    ) LGP ON LG.feature_id = LGP.feature_id
+    LEFT JOIN (
+      SELECT featurepos_id, value FROM featureposprop FPP
+      WHERE FPP.type_id = 
+      (SELECT cvterm_id FROM cvterm WHERE name = 'start'
+       AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))
+    ) START ON FP.featurepos_id = START.featurepos_id
+    LEFT JOIN (
+      SELECT featurepos_id, value FROM featureposprop FPP
+      WHERE FPP.type_id = 
+      (SELECT cvterm_id FROM cvterm WHERE name = 'stop' 
+       AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))
+    ) STOP ON FP.featurepos_id = STOP.featurepos_id
+    LEFT JOIN (
+      SELECT featurepos_id, value FROM featureposprop FPP
+      WHERE FPP.type_id = 
+      (SELECT cvterm_id FROM cvterm WHERE name = 'qtl_peak' 
+       AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))
+    ) PEAK ON FP.featurepos_id = PEAK.featurepos_id
     LEFT JOIN
       (SELECT F2.name, FR2.subject_id FROM feature F2
        INNER JOIN feature_relationship FR2 ON FR2.object_id = F2.feature_id
        WHERE FR2.type_id =
    	     (SELECT cvterm_id FROM cvterm WHERE name = 'located_in')
       ) BIN ON QTL.feature_id = BIN.subject_id
-    INNER JOIN public.chado_featuremap CF ON FM.featuremap_id = CF.featuremap_id
-    AND QTL.type_id =
+    LEFT JOIN public.chado_featuremap CF ON FM.featuremap_id = CF.featuremap_id
+    WHERE QTL.type_id =
       (SELECT cvterm_id
        FROM cvterm
        WHERE name = 'QTL'
       )
-    AND FPP.type_id =
-      (SELECT cvterm_id
-       FROM cvterm
-       WHERE name = 'start'
-      )
-    AND LGP.type_id =
-      (SELECT cvterm_id
-       FROM cvterm
-       WHERE name = 'chr_number'
-      )
     AND QTL.feature_id = %d";
-   $qtl->map_positions = mainlab_tripal_dbresult_to_array(chado_query($sql, $feature_id));
 
-   // Get publications. the publications for QTL is not linked by the 'feature_pub' linking table so it needs a special treatment
+   $qtl->map_positions = mainlab_tripal_dbresult_to_array(db_query($sql, $feature_id));
+
+   // Get publications. the publications for QTL is not linked by the 'feature_pub' linking table so it needs a special treatment   
+   // Pub Query for CottonGen
    $sql = 
    "SELECT 
       P.pub_id,
@@ -143,29 +159,52 @@ function getQTLDetails ($feature_id) {
     INNER JOIN pub P ON P.pub_id = NEP.pub_id
     WHERE QTL.feature_id = %d
     GROUP BY P.pub_id";
+    // Pub Query for GDR
+    $sql = 
+    "SELECT 
+      P.pub_id,
+      P.uniquename,
+      P.pyear,
+      P.title,
+    	P.series_name,
+    	P.volume,
+    	P.pages
+     FROM feature QTL
+     INNER JOIN feature_pub FP ON FP.feature_id = QTL.feature_id
+     INNER JOIN pub P ON P.pub_id = FP.pub_id
+     WHERE QTL.feature_id = %d";
+    
    $qtl->publications = mainlab_tripal_dbresult_to_array(chado_query($sql, $feature_id));
-
+   
+   // Get aliases
+   $sql = 
+   "SELECT name 
+     FROM synonym S
+     INNER JOIN feature_synonym FS ON S.synonym_id = FS.synonym_id
+     WHERE FS.feature_id = %d";
+   $qtl->synonyms = mainlab_tripal_dbresult_to_array(chado_query($sql, $feature_id));
+   
    // Return the data
    return $qtl;
 }
 
 // This is a function to convert a database resultset into an object array
 function mainlab_tripal_dbresult_to_array($dbresult) {
-	$arr = array();
-	while ($obj = db_fetch_object($dbresult)) {
-		array_push($arr, $obj);
-	}
-	return $arr;
+    $arr = array();
+    while ($obj = db_fetch_object($dbresult)) {
+        array_push($arr, $obj);
+    }
+    return $arr;
 }
 
 // The function will aggreate the content of a String array by using the specified separator
 function mainlab_tripal_stringarray_agg($arr, $separator) {
-	$text = "";
-	for ($i = 0; $i < count($arr); $i ++) {
-		$text .= $arr[$i];
-		if ($i != count($arr) - 1) {
-			$text .= $separator;
-		}
-	}
-	return $text;
+    $text = "";
+    for ($i = 0; $i < count($arr); $i ++) {
+        $text .= $arr[$i];
+        if ($i != count($arr) - 1) {
+            $text .= $separator;
+        }
+    }
+    return $text;
 }
