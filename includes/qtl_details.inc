@@ -136,13 +136,10 @@ function getQTLDetails ($feature_id) {
       ) BIN ON QTL.feature_id = BIN.subject_id
     LEFT JOIN public.chado_featuremap CF ON FM.featuremap_id = CF.featuremap_id
     WHERE QTL.type_id =
-      (SELECT cvterm_id
-       FROM cvterm
-       WHERE name = 'QTL'
-      )
+      (SELECT type_id FROM feature WHERE feature_id = %d) 
     AND QTL.feature_id = %d";
 
-   $qtl->map_positions = mainlab_tripal_dbresult_to_array(db_query($sql, $feature_id));
+   $qtl->map_positions = mainlab_tripal_dbresult_to_array(db_query($sql, $feature_id, $feature_id));
 
    // Get publications. the publications for QTL is not linked by the 'feature_pub' linking table so it needs a special treatment   
    // Pub Query for CottonGen
