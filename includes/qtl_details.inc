@@ -163,12 +163,14 @@ function getQTLDetails ($feature_id) {
       P.uniquename,
       P.pyear,
       P.title,
-    	P.series_name,
-    	P.volume,
-    	P.pages
+      P.series_name,
+      P.volume,
+      P.pages,
+      CP.nid
      FROM feature QTL
      INNER JOIN feature_pub FP ON FP.feature_id = QTL.feature_id
      INNER JOIN pub P ON P.pub_id = FP.pub_id
+     LEFT JOIN chado_pub CP ON P.pub_id = CP.pub_id
      WHERE QTL.feature_id = %d";
     
    $qtl->publications = mainlab_tripal_dbresult_to_array(chado_query($sql, $feature_id));
