@@ -11,7 +11,15 @@
 require_once "includes/custom_schema.inc";
 require_once "includes/qtl_details.inc";
 require_once "includes/qtl_search.inc";
+require_once "includes/simple_seq_extract.inc";
 
+/**
+ *
+ * @ingroup tripal_feature
+ */
+function mainlab_tripal_init() {
+  drupal_add_css(drupal_get_path('module', 'mainlab_tripal') . 'theme/mainlab/css/mainlab_tripal.css');
+}
 
 /**
  * Provide information to drupal about the node types that we're creating
@@ -46,6 +54,17 @@ function mainlab_tripal_perm() {
  */
 function mainlab_tripal_menu() {
   $items = array();
+
+  // the custom sequence retrieval form
+  $items['retrieve/sequences'] = array(
+    'title' => 'Sequence Retrieval',
+    'description' => 'Download a file of sequences',
+    'page callback' => 'mainlab_tripal_seq_extract_page',
+    'access arguments' => array('access chado_feature content'),
+    'type' => MENU_CALLBACK,
+  );
+  
+
   // The polymorphism page
   $items['polymorphism/%'] = array(
   		'title' => 'Polymorphism',
@@ -239,6 +258,11 @@ function mainlab_tripal_theme() {
   			'template' => 'tripal_stock_image',
   			'path' => $path . '/tripal_stock',
   	),
+
+    // themed forms
+    'mainlab_tripal_seq_extract_form' => array(
+       'arguments' => array('form'),
+    )
   );
   return $themes;
 }
