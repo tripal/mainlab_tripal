@@ -18,7 +18,7 @@ require_once "includes/simple_seq_extract.inc";
  * @ingroup tripal_feature
  */
 function mainlab_tripal_init() {
-  drupal_add_css(drupal_get_path('module', 'mainlab_tripal') . 'theme/mainlab/css/mainlab_tripal.css');
+  drupal_add_css(drupal_get_path('module', 'mainlab_tripal') . '/theme/mainlab/css/mainlab_tripal.css');
 }
 
 /**
