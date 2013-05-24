@@ -261,7 +261,7 @@ function mainlab_tripal_seq_extract_get_features($analysis_name,
     }
     if ($type == 'mapped_genetic_marker') {
       $derive_from_parent = 1;
-      $type = 'genetic_marker';
+      $type = 'match';
     }
     $vars[] = $type; 
   }
