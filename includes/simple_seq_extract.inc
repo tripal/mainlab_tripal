@@ -86,6 +86,9 @@ function mainlab_tripal_seq_extract_form(&$form_state = NULL) {
   if ($_GET['downstream']) {
     $form_state['values']['downstream'] = $_GET['downstream'];  
   }
+  if ($_GET['clear']) {
+    unset($_SESSION['mainlab_tripal_seq_extract']);
+  }
 
   // get defaults
   $danalysis   = isset($form_state['values']['analysis'])   ? $form_state['values']['analysis']   : $_SESSION['mainlab_tripal_seq_extract']['analysis'];
@@ -261,7 +264,7 @@ function mainlab_tripal_seq_extract_get_features($analysis_name,
     }
     if ($type == 'mapped_genetic_marker') {
       $derive_from_parent = 1;
-      $type = 'genetic_marker';
+      $type = 'match';
     }
     $vars[] = $type; 
   }
@@ -287,7 +290,7 @@ function mainlab_tripal_seq_extract_get_features($analysis_name,
   $num_bases_per_line = 50;
   $num_seqs = 0;
   $q = chado_query($sql, $vars);
-  
+ 
   while ($feature = db_fetch_object($q)) {
     
     $feature_id = $feature->feature_id;
