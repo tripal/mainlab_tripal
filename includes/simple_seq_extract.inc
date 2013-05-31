@@ -143,8 +143,7 @@ function mainlab_tripal_seq_extract_form(&$form_state = NULL) {
     'EST'  => 'EST',
     'gene' => 'gene',
     'mRNA' => 'mRNA',
-    'genetic_marker' => 'genetic marker, original sequence',
-    'mapped_genetic_marker' => 'genetic marker, aligned sequence',
+    'genetic_marker' => 'genetic marker',
     'polypeptide' => 'protein',
     'scaffold'  => 'scaffold',
   );
