@@ -295,7 +295,7 @@ function mainlab_tripal_seq_extract_get_features($analysis_name,
     $feature_id = $feature->feature_id;
     
     // build the header for each FASTA entry
-    $feature_name = "$feature->uniquename $feature->name $feature->feature_type ($feature->genus $feature->species)";
+    $feature_name = "$feature->uniquename|$feature->name|$feature->genus $feature->species|$feature->feature_type";
       
     // generate the sequence
     if ($upstream > 0 or $downstream > 0) {
