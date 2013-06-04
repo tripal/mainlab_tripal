@@ -35,12 +35,12 @@ function getQTLDetails ($feature_id) {
            FROM stock S
            INNER JOIN featuremap_stock FS ON S.stock_id = FS.stock_id
            LEFT JOIN chado_stock CS ON CS.stock_id = S.stock_id
-           INNER JOIN (SELECT uniquename, object_id, CS2.nid FROM stock MP
+           LEFT JOIN (SELECT uniquename, object_id, CS2.nid FROM stock MP
                                   INNER JOIN stock_relationship SR ON MP.stock_id = SR.subject_id
                                   LEFT JOIN chado_stock CS2 ON CS2.stock_id = MP.stock_id
                                   WHERE SR.type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'is_a_maternal_parent_of')
                                  ) MAT ON MAT.object_id = S.stock_id
-           INNER JOIN (SELECT uniquename, object_id, CS3.nid FROM stock PP
+           LEFT JOIN (SELECT uniquename, object_id, CS3.nid FROM stock PP
                                   INNER JOIN stock_relationship SR2 ON PP.stock_id = SR2.subject_id
                                   LEFT JOIN chado_stock CS3 ON CS3.stock_id = PP.stock_id
                                   WHERE SR2.type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'is_a_paternal_parent_of')
