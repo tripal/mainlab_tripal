@@ -173,11 +173,11 @@ function getQTLDetails ($feature_id) {
     		FROM {feature} QTL
     		INNER JOIN {feature_pub} FP ON FP.feature_id = QTL.feature_id
     		INNER JOIN {pub} P ON P.pub_id = FP.pub_id
-    		LEFT JOIN {chado_pub} CP ON P.pub_id = CP.pub_id
+    		LEFT JOIN chado_pub CP ON P.pub_id = CP.pub_id
     		WHERE QTL.feature_id = %d";
    }
    $qtl->publications = mainlab_tripal_dbresult_to_array(chado_query($sql, $feature_id));
-   
+   //dpm($feature_id);
    // Get aliases
    $sql = 
    "SELECT name 
