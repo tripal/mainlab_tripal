@@ -6,12 +6,12 @@ function mainlab_show_allele ($marker, $alleleid) {
 	// Find the genotypes for this marker_allele
 	$sql = "SELECT
                   G.genotype_id
-                FROM genotype G
-                INNER JOIN feature_genotype FG ON G.genotype_id = FG.genotype_id
-                INNER JOIN nd_experiment_genotype NEG ON G.genotype_id = NEG.genotype_id
+                FROM {genotype} G
+                INNER JOIN {feature_genotype} FG ON G.genotype_id = FG.genotype_id
+                INNER JOIN {nd_experiment_genotype} NEG ON G.genotype_id = NEG.genotype_id
                 WHERE feature_id = 
 			          (SELECT feature_id 
-			           FROM feature 
+			           FROM {feature} 
 			           WHERE uniquename = '%s' AND type_id =
 			              (SELECT cvterm_id FROM cvterm WHERE name = 'genetic_marker')
 			          )
@@ -42,15 +42,15 @@ function mainlab_show_allele ($marker, $alleleid) {
 function mainlab_get_allele_associated_stocks ($genotype_id) {
 	// Find out the stocks associated with this genotype (allele)
 	$ssql = "SELECT S.stock_id, S.uniquename, DYE.value AS dye_color, P.name AS project
-                    FROM nd_experiment_genotype NDG
-                    INNER JOIN nd_experiment_stock NDS ON NDG.nd_experiment_id = NDS.nd_experiment_id
-                    INNER JOIN stock EXP ON EXP.stock_id = NDS.stock_id
-                    INNER JOIN stock_relationship SR ON SR.subject_id = EXP.stock_id
-                    INNER JOIN stock S ON S.stock_id = SR.object_id
-			           INNER JOIN nd_experiment_project NEP ON NEP.nd_experiment_id = NDG.nd_experiment_id
-                    INNER JOIN project P ON P.project_id = NEP.project_id
+                    FROM {nd_experiment_genotype} NDG
+                    INNER JOIN {nd_experiment_stock} NDS ON NDG.nd_experiment_id = NDS.nd_experiment_id
+                    INNER JOIN {stock} EXP ON EXP.stock_id = NDS.stock_id
+                    INNER JOIN {stock_relationship} SR ON SR.subject_id = EXP.stock_id
+                    INNER JOIN {stock} S ON S.stock_id = SR.object_id
+			           INNER JOIN {nd_experiment_project} NEP ON NEP.nd_experiment_id = NDG.nd_experiment_id
+                    INNER JOIN {project} P ON P.project_id = NEP.project_id
 			           LEFT JOIN 
-                      (SELECT nd_experiment_id, value FROM nd_experimentprop NEP 
+                      (SELECT nd_experiment_id, value FROM {nd_experimentprop} NEP 
                        WHERE type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'dye_color')
                       )DYE ON DYE.nd_experiment_id = NDG.nd_experiment_id
                     WHERE
@@ -63,7 +63,7 @@ function mainlab_get_allele_associated_stocks ($genotype_id) {
 	while ($stock = db_fetch_object($sresult)) {
 		// Find out the stock nid if there is one
 		if (db_table_exists('chado_stock')) {
-			$nsql = "SELECT nid FROM chado_stock WHERE stock_id = %d";
+			$nsql = "SELECT nid FROM {chado_stock} WHERE stock_id = %d";
 			$nid = db_result(db_query($nsql, $stock->stock_id));
 			$stock->nid = $nid;
 		}
