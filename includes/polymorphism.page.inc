@@ -27,7 +27,7 @@ function mainlab_show_polymorphism ($feature_id) {
                 GROUP BY G.genotype_id
                 ORDER BY G.genotype_id";
 	$result = chado_query($sql, $feature_id);
-
+ 
 	$counter = 0;
 	while ($poly = db_fetch_object($result)) {
 		$poly->marker_name = $mname;

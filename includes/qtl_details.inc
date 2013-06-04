@@ -97,68 +97,71 @@ function getQTLDetails ($feature_id) {
        STOP.value AS QTL_stop,
        PEAK.value AS QTL_peak,
        QTL.uniquename AS QTL_name
-    FROM feature QTL
-    INNER JOIN featurepos FP ON QTL.feature_id = FP.feature_id
-    INNER JOIN featuremap FM ON FP.featuremap_id = FM.featuremap_id
-   	LEFT JOIN featuremap_dbxref FD ON FP.featuremap_id = FD.featuremap_id
-   	LEFT JOIN dbxref X ON FD.dbxref_id = X.dbxref_id
-   	LEFT JOIN db ON db.db_id = X.db_id
-    INNER JOIN feature LG ON FP.map_feature_id = LG.feature_id
+    FROM {feature} QTL
+    INNER JOIN {featurepos} FP ON QTL.feature_id = FP.feature_id
+    INNER JOIN {featuremap} FM ON FP.featuremap_id = FM.featuremap_id
+   	LEFT JOIN {featuremap_dbxref} FD ON FP.featuremap_id = FD.featuremap_id
+   	LEFT JOIN {dbxref} X ON FD.dbxref_id = X.dbxref_id
+   	LEFT JOIN {db} ON db.db_id = X.db_id
+    INNER JOIN {feature} LG ON FP.map_feature_id = LG.feature_id
     LEFT JOIN (
-      SELECT FP.feature_id, FP.value FROM featureprop FP 
+      SELECT FP.feature_id, FP.value FROM {featureprop} FP 
       WHERE FP.type_id = 
-      (SELECT cvterm_id FROM cvterm WHERE name = 'chr_number'
-       AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))
+      (SELECT cvterm_id FROM {cvterm} WHERE name = 'chr_number'
+       AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
     ) LGP ON LG.feature_id = LGP.feature_id
     LEFT JOIN (
-      SELECT featurepos_id, value FROM featureposprop FPP
+      SELECT featurepos_id, value FROM {featureposprop} FPP
       WHERE FPP.type_id = 
-      (SELECT cvterm_id FROM cvterm WHERE name = 'start'
-       AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))
+      (SELECT cvterm_id FROM {cvterm} WHERE name = 'start'
+       AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
     ) START ON FP.featurepos_id = START.featurepos_id
     LEFT JOIN (
-      SELECT featurepos_id, value FROM featureposprop FPP
+      SELECT featurepos_id, value FROM {featureposprop} FPP
       WHERE FPP.type_id = 
-      (SELECT cvterm_id FROM cvterm WHERE name = 'stop' 
-       AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))
+      (SELECT cvterm_id FROM {cvterm} WHERE name = 'stop' 
+       AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
     ) STOP ON FP.featurepos_id = STOP.featurepos_id
     LEFT JOIN (
-      SELECT featurepos_id, value FROM featureposprop FPP
+      SELECT featurepos_id, value FROM {featureposprop} FPP
       WHERE FPP.type_id = 
-      (SELECT cvterm_id FROM cvterm WHERE name = 'qtl_peak' 
-       AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))
+      (SELECT cvterm_id FROM {cvterm} WHERE name = 'qtl_peak' 
+       AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
     ) PEAK ON FP.featurepos_id = PEAK.featurepos_id
     LEFT JOIN
-      (SELECT F2.name, FR2.subject_id FROM feature F2
-       INNER JOIN feature_relationship FR2 ON FR2.object_id = F2.feature_id
+      (SELECT F2.name, FR2.subject_id FROM {feature} F2
+       INNER JOIN {feature_relationship} FR2 ON FR2.object_id = F2.feature_id
        WHERE FR2.type_id =
-   	     (SELECT cvterm_id FROM cvterm WHERE name = 'located_in')
+   	     (SELECT cvterm_id FROM {cvterm} WHERE name = 'located_in')
       ) BIN ON QTL.feature_id = BIN.subject_id
     LEFT JOIN public.chado_featuremap CF ON FM.featuremap_id = CF.featuremap_id
     WHERE QTL.type_id =
-      (SELECT type_id FROM feature WHERE feature_id = %d) 
+      (SELECT type_id FROM {feature} WHERE feature_id = %d) 
     AND QTL.feature_id = %d";
 
    $qtl->map_positions = mainlab_tripal_dbresult_to_array(db_query($sql, $feature_id, $feature_id));
 
    // Get publications. the publications for QTL is not linked by the 'feature_pub' linking table so it needs a special treatment   
    // Pub Query for CottonGen
-   $sql = 
-   "SELECT 
+   global $base_url;
+   if (preg_match("/cottongen\.org/", $base_url)) {
+   	$sql =
+   	"SELECT
       P.pub_id,
       max(P.uniquename) as uniquename,
       max(P.pyear) as pyear,
       max(P.title) as title
-    FROM feature QTL
-    INNER JOIN feature_project FP ON FP.feature_id = QTL.feature_id
-    INNER JOIN nd_experiment_project NEJ ON NEJ.project_id = FP.project_id
-    INNER JOIN nd_experiment_pub NEP ON NEP.nd_experiment_id = NEJ.nd_experiment_id
-    INNER JOIN pub P ON P.pub_id = NEP.pub_id
-    WHERE QTL.feature_id = %d
-    GROUP BY P.pub_id";
+   			FROM {feature} QTL
+   			INNER JOIN {feature_project} FP ON FP.feature_id = QTL.feature_id
+   			INNER JOIN {nd_experiment_project} NEJ ON NEJ.project_id = FP.project_id
+   			INNER JOIN {nd_experiment_pub} NEP ON NEP.nd_experiment_id = NEJ.nd_experiment_id
+   			INNER JOIN {pub} P ON P.pub_id = NEP.pub_id
+   			WHERE QTL.feature_id = %d
+   			GROUP BY P.pub_id";
+   } else if (preg_match("/rosaceae\.org/", $base_url)) {
     // Pub Query for GDR
-    $sql = 
-    "SELECT 
+    $sql =
+    "SELECT
       P.pub_id,
       P.uniquename,
       P.pyear,
@@ -167,12 +170,12 @@ function getQTLDetails ($feature_id) {
       P.volume,
       P.pages,
       CP.nid
-     FROM feature QTL
-     INNER JOIN feature_pub FP ON FP.feature_id = QTL.feature_id
-     INNER JOIN pub P ON P.pub_id = FP.pub_id
-     LEFT JOIN chado_pub CP ON P.pub_id = CP.pub_id
-     WHERE QTL.feature_id = %d";
-    
+    		FROM {feature} QTL
+    		INNER JOIN {feature_pub} FP ON FP.feature_id = QTL.feature_id
+    		INNER JOIN {pub} P ON P.pub_id = FP.pub_id
+    		LEFT JOIN {chado_pub} CP ON P.pub_id = CP.pub_id
+    		WHERE QTL.feature_id = %d";
+   }
    $qtl->publications = mainlab_tripal_dbresult_to_array(chado_query($sql, $feature_id));
    
    // Get aliases

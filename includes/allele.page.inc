@@ -38,7 +38,7 @@ function mainlab_show_allele ($marker, $alleleid) {
 	$allele->id = $alleleid;
 	return theme('mainlab_allele', $allele);
 }
-
+ 
 function mainlab_get_allele_associated_stocks ($genotype_id) {
 	// Find out the stocks associated with this genotype (allele)
 	$ssql = "SELECT S.stock_id, S.uniquename, DYE.value AS dye_color, P.name AS project
