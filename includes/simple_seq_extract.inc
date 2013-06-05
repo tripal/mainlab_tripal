@@ -265,6 +265,11 @@ function mainlab_tripal_seq_extract_get_features($analysis_name,
       $derive_from_parent = 1;
       $type = 'match';
     }
+    if ($type == 'polypeptide') {
+      $derive_from_parent = 0;
+      $upstream = 0;
+      $downstream = 0;
+    }
     $vars[] = $type; 
   }
   if ($feature_name) {
