@@ -210,6 +210,12 @@ function mainlab_tripal_seq_extract_form_validate($form, &$form_state) {
       form_set_error('', 'Please provide a feature name, source or a feature type.');
     }
   }
+  if ($ftype == 'polypeptide' and $upstream) {
+    form_set_error('upstream', 'When selecting a protein the upstream value should not be set');
+  }
+  if ($ftype == 'polypeptide' and $downstream) {
+    form_set_error('upstream', 'When selecting a protein the downstream value should not be set');
+  }
 }
 
 /**
