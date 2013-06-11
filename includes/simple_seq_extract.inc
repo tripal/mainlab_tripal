@@ -300,10 +300,6 @@ function mainlab_tripal_seq_extract_get_features($analysis_name,
     // generate the sequence
     if ($upstream > 0 or $downstream > 0) {
       $derive_from_parent = 1;
-      if ($type == 'mRNA') {
-	      $aggregate = 1;
-	      $sub_features = array('CDS');	
-      }
     }
     $sequence = tripal_feature_get_formatted_sequence($feature_id, $feature_name, 
       $num_bases_per_line, $derive_from_parent, $aggregate, 'fasta_txt',
