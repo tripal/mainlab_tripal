@@ -112,14 +112,22 @@ function mainlab_tripal_seq_extract_form(&$form_state = NULL) {
   
   $analyses = array();
   $analyses[] = '';
-  $sql = "
-    SELECT DISTINCT A.analysis_id, A.name
-    FROM {analysis} A
-      INNER JOIN {analysisprop} AP ON A.analysis_id = AP.analysis_id
-      INNER JOIN {cvterm} CVT on CVT.cvterm_id = AP.type_id
-    WHERE CVT.name = 'Analysis Type' and AP.value = 'whole_genome'
-      
-  ";
+  global $base_url;
+  if (preg_match("/cottongen\.org/", $base_url)) {
+  	   $sql = 
+  	      "SELECT A.analysis_id, A.name 
+  	   	  FROM {analysis} A 
+  	        WHERE name IN ('Gossypium raimondii D Genome BGI-CGP v1.0', 'Gossypium raimondii D Genome JGI_221 v2.0 (annot v2.1)', 'NCBI Cotton Data', 'Gossypium unigene v1.0')";
+  } else {
+  	   $sql = "
+  			SELECT DISTINCT A.analysis_id, A.name
+  			FROM {analysis} A
+  			INNER JOIN {analysisprop} AP ON A.analysis_id = AP.analysis_id
+  			INNER JOIN {cvterm} CVT on CVT.cvterm_id = AP.type_id
+  			WHERE CVT.name = 'Analysis Type' and AP.value = 'whole_genome'
+
+  			";
+  }
   $args = array();
   $sql .=" ORDER BY A.name ";
   $results = chado_query($sql, $args);  
