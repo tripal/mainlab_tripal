@@ -145,11 +145,9 @@ $counter ++;
 print "<tr class=\"" . $class ."\">";
 print "<th nowrap>Publication</th><td>";
 if (is_array($pubs)) {
-   foreach ($pubs AS $pub) {
-	   print "<a class=\"tripal_featuremap_toc_item\" href=\"#tripal_featuremap-pub-box\">" . $pub->pub_id->uniquename . "</a><br>";
-   }
+	 print "[<a class=\"tripal_featuremap_toc_item\" href=\"#tripal_featuremap-pub-box\">view all " . count($pubs) . "</a>]<br>";
 } else {
-  print "<a class=\"tripal_featuremap_toc_item\" href=\"#tripal_featuremap-pub-box\">" . $pubs->pub_id->uniquename . "</a><br>";
+  print "[<a class=\"tripal_featuremap_toc_item\" href=\"#tripal_featuremap-pub-box\">view</a>]<br>";
 }
 
 // Print Contact

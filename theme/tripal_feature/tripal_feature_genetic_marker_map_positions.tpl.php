@@ -16,7 +16,7 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/m
 
       <script type="text/javascript">
          // Insert Marker position count to the base template
-         $('#tripal-feature-genetic_marker-map_position').html("[<a href='#' id='tripal-feature-genetic_marker-map_position-link'>view all <?php print $counter_pos;?></a>]");
+         $('#tripal-feature-genetic_marker-map_position').html("[<a href='#' id='tripal-feature-genetic_marker-map_position-link'>view<?php if ($counter_pos > 1) {print " all $counter_pos";}?></a>]");
          $('#tripal-feature-genetic_marker-map_position-link').click(function() {
 	         $('.tripal-info-box').hide();
 	         $('#tripal_feature-genetic_marker_map_positions-box').fadeIn('slow');

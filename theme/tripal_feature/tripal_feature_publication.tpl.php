@@ -25,12 +25,12 @@ if (is_array($pubs)) {
 	      $class = "tripal_featuremap-table-odd-row tripal-table-odd-row";
       }
 	   print "<tr class=\"" . $class ."\">";
-	    print "<td style=\"padding:5px 10px 5px 10px;\">". $pub->pub_id->pyear . "</td><td style=\"padding:5px 0px 5px 0px;\">" . $pub->pub_id->uniquename . "</td><td style=\"padding:5px 0px 5px 0px;\">" . $pub->pub_id->title . "</td></tr>";
+	    print "<td style=\"padding:5px 10px 5px 10px;\">". $pub->pub_id->pyear . "</td><td style=\"padding:5px 0px 5px 0px;\"><a href=\"/node/" . $pub->pub_id->nid . "\">" . $pub->pub_id->uniquename . "</a></td><td style=\"padding:5px 0px 5px 0px;\">" . $pub->pub_id->title . "</td></tr>";
 	   $counter ++;
    }
 } else {
    print "<tr class=\"tripal_featuremap-table-odd-row tripal-table-odd-row\">";
-   print "<td style=\"padding:5px 10px 5px 10px;\">". $pubs->pub_id->pyear . "</td><td style=\"padding:5px 0px 5px 0px;\">" . $pubs->pub_id->uniquename . "</td><td style=\"padding:5px 0px 5px 0px;\">" . $pubs->pub_id->title . "</td></tr>";
+   print "<td style=\"padding:5px 10px 5px 10px;\">". $pubs->pub_id->pyear . "</td><td style=\"padding:5px 0px 5px 0px;\"><a href=\"/node/" . $pubs->pub_id->nid . "\">" . $pubs->pub_id->uniquename . "</a></td><td style=\"padding:5px 0px 5px 0px;\">" . $pubs->pub_id->title . "</td></tr>";
 }
 ?>
    </table>
