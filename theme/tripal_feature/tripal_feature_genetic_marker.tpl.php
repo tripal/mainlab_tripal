@@ -44,6 +44,9 @@ if ($objs) {
 	}
 }
 $seq_name = $seq->name;
+if (!$seq_name) {
+	$seq_name = $seq->uniquename;
+}
 $seq_nid = $seq->nid;
 
 // get primer
@@ -123,7 +126,7 @@ function showPolymorphism () {
      	<!-- Stock (or Germplasm) -->
      	<?php $class = genetic_markerGetTableRowClass($counter); print "<tr class=\"" . $class ."\"><th>Germplasm</th><td>"; if ($stock) { print "<a href=\"/node/$stock_nid\">". $stock ."</a>";} else {print "N/A";} print "</td></tr>"; $counter ++;?>
      	<!-- Source Sequence -->
-     	<?php $class = genetic_markerGetTableRowClass($counter); print "<tr class=\"" . $class ."\"><th>Source Sequence</th><td>"; if ($seq_name && $seq_nid) { print "<a href=\"/node/$seq_nid\">". $seq_name ."</a>";} else {print "N/A";} print "</td></tr>"; $counter ++;?>
+     	<?php $class = genetic_markerGetTableRowClass($counter); print "<tr class=\"" . $class ."\"><th>Source Sequence</th><td>"; if ($seq_name) { print "<a href=\"/node/$seq_nid\">". $seq_name ."</a>";} else {print "N/A";} print "</td></tr>"; $counter ++;?>
      	<!-- Source Type -->
      	<?php $class = genetic_markerGetTableRowClass($counter); print "<tr class=\"" . $class ."\"><th>Source Type</th><td>"; if (key_exists('source', $kv_properties)) { print $kv_properties['source']; } else { print "N/A"; } print "</td></tr>"; $counter ++;?>
      	<!-- Repeat Motif -->
