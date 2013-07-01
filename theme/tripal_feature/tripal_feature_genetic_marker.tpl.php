@@ -35,19 +35,16 @@ $stock_nid = $fstock->feature_stock->stock_id->nid;
 // get sequence & primer
 $f_rel = tripal_core_expand_chado_vars($feature,'table','feature_relationship');
 $objs = $f_rel->feature_relationship->object_id;
-$seq = new stdClass();
+
+$seqs = array();
 if ($objs) {
 	foreach ($objs AS $obj) {
 		if ($obj->type_id->name == 'sequence_of') {
 			$seq = $obj->subject_id;
+			array_push($seqs, $seq);
 		}
 	}
 }
-$seq_name = $seq->name;
-if (!$seq_name) {
-	$seq_name = $seq->uniquename;
-}
-$seq_nid = $seq->nid;
 
 // get primer
 $subjs = $f_rel->feature_relationship->subject_id;
@@ -126,7 +123,7 @@ function showPolymorphism () {
      	<!-- Stock (or Germplasm) -->
      	<?php $class = genetic_markerGetTableRowClass($counter); print "<tr class=\"" . $class ."\"><th>Germplasm</th><td>"; if ($stock) { print "<a href=\"/node/$stock_nid\">". $stock ."</a>";} else {print "N/A";} print "</td></tr>"; $counter ++;?>
      	<!-- Source Sequence -->
-     	<?php $class = genetic_markerGetTableRowClass($counter); print "<tr class=\"" . $class ."\"><th>Source Sequence</th><td>"; if ($seq_name) { print "<a href=\"/node/$seq_nid\">". $seq_name ."</a>";} else {print "N/A";} print "</td></tr>"; $counter ++;?>
+     	<?php $class = genetic_markerGetTableRowClass($counter); print "<tr class=\"" . $class ."\"><th>Source Sequence</th><td>"; foreach ($seqs AS $seq) { print "<a href=\"/node/$seq->nid\">". $seq->name ."</a> "; }; if(count($seqs) == 0) {print "N/A";} print "</td></tr>"; $counter ++;?>
      	<!-- Source Type -->
      	<?php $class = genetic_markerGetTableRowClass($counter); print "<tr class=\"" . $class ."\"><th>Source Type</th><td>"; if (key_exists('source', $kv_properties)) { print $kv_properties['source']; } else { print "N/A"; } print "</td></tr>"; $counter ++;?>
      	<!-- Repeat Motif -->
