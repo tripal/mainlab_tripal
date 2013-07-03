@@ -38,6 +38,11 @@ $objs = $f_rel->feature_relationship->object_id;
 
 $seqs = array();
 if ($objs) {
+  if (!is_array($objs)) {
+    $tmp = $objs;
+    $objs = array();
+    array_push($objs, $tmp);
+  }
 	foreach ($objs AS $obj) {
 		if ($obj->type_id->name == 'sequence_of') {
 			$seq = $obj->subject_id;
