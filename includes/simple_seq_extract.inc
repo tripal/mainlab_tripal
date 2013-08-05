@@ -131,7 +131,6 @@ function mainlab_tripal_seq_extract_form(&$form_state = NULL) {
   			INNER JOIN {analysisprop} AP ON A.analysis_id = AP.analysis_id
   			INNER JOIN {cvterm} CVT on CVT.cvterm_id = AP.type_id
   			WHERE CVT.name = 'analysis_type' and AP.value = 'whole_genome'
-
   			";
   }
   $args = array();
