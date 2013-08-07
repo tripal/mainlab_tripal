@@ -10,7 +10,7 @@
 
 require_once "includes/custom_schema.inc";
 require_once "includes/qtl_details.inc";
-require_once "includes/qtl_search.inc";
+require_once "includes/custom_search.inc";
 require_once "includes/simple_seq_extract.inc";
 
 /**
