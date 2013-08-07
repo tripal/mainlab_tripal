@@ -38,12 +38,12 @@ function getQTLDetails ($feature_id) {
            LEFT JOIN (SELECT uniquename, object_id, CS2.nid FROM stock MP
                                   INNER JOIN stock_relationship SR ON MP.stock_id = SR.subject_id
                                   LEFT JOIN chado_stock CS2 ON CS2.stock_id = MP.stock_id
-                                  WHERE SR.type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'is_a_maternal_parent_of')
+                                  WHERE SR.type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'is_a_maternal_parent_of' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))
                                  ) MAT ON MAT.object_id = S.stock_id
            LEFT JOIN (SELECT uniquename, object_id, CS3.nid FROM stock PP
                                   INNER JOIN stock_relationship SR2 ON PP.stock_id = SR2.subject_id
                                   LEFT JOIN chado_stock CS3 ON CS3.stock_id = PP.stock_id
-                                  WHERE SR2.type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'is_a_paternal_parent_of')
+                                  WHERE SR2.type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'is_a_paternal_parent_of' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))
                                  ) PAT ON PAT.object_id = S.stock_id
           ) POP ON POP.featuremap_id = MAP.featuremap_id
        WHERE QTL.feature_id = %d";
@@ -150,12 +150,14 @@ function getQTLDetails ($feature_id) {
       P.pub_id,
       max(P.uniquename) as uniquename,
       max(P.pyear) as pyear,
-      max(P.title) as title
+      max(P.title) as title,
+   	max(CP.nid) as nid
    			FROM {feature} QTL
    			INNER JOIN {feature_project} FP ON FP.feature_id = QTL.feature_id
    			INNER JOIN {nd_experiment_project} NEJ ON NEJ.project_id = FP.project_id
    			INNER JOIN {nd_experiment_pub} NEP ON NEP.nd_experiment_id = NEJ.nd_experiment_id
    			INNER JOIN {pub} P ON P.pub_id = NEP.pub_id
+   			LEFT JOIN chado_pub CP ON CP.pub_id = P.pub_id
    			WHERE QTL.feature_id = %d
    			GROUP BY P.pub_id";
    } else if (preg_match("/rosaceae\.org/", $base_url)) {

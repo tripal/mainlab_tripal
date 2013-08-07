@@ -34,11 +34,11 @@ function mainlab_show_polymorphism ($feature_id) {
 		$poly->marker_nid = $mnid;
 		// Find out the stocks associated with this genotype. However, we only want to show 1 germplasm on the polymorphism page (SQL FIRST() function)
 		$ssql = "SELECT count(*) AS num_stocks, first(S.stock_id) AS first_stock_id, first(S.uniquename) AS first_stock_name
-                     FROM nd_experiment_genotype NDG 
-                     INNER JOIN nd_experiment_stock NDS ON NDG.nd_experiment_id = NDS.nd_experiment_id
-                     INNER JOIN stock EXP ON EXP.stock_id = NDS.stock_id
-                     INNER JOIN stock_relationship SR ON SR.subject_id = EXP.stock_id
-                     INNER JOIN stock S ON S.stock_id = SR.object_id
+                     FROM {nd_experiment_genotype} NDG 
+                     INNER JOIN {nd_experiment_stock} NDS ON NDG.nd_experiment_id = NDS.nd_experiment_id
+                     INNER JOIN {stock} EXP ON EXP.stock_id = NDS.stock_id
+                     INNER JOIN {stock_relationship} SR ON SR.subject_id = EXP.stock_id
+                     INNER JOIN {stock} S ON S.stock_id = SR.object_id
                      WHERE 
                        SR.type_id = 
                          (SELECT cvterm_id FROM cvterm WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))

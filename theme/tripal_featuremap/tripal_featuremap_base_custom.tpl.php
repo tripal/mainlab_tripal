@@ -97,20 +97,20 @@ $counter ++;
 print "<tr class=\"" . $class ."\">";
 print "<th nowrap>Map unit</th><td>" . $featuremap->unittype_id->name . "</td></tr>";
 
-// Print Paternal parents
-if ($paternal){
-   $class = featuremapGetTableRowClass($counter);
-   $counter ++;
-   print "<tr class=\"" . $class ."\">";
-   print "<th nowrap>Paternal parent</th><td><a href=\"/node/$paternal->nid\">". $paternal->uniquename . "</a></td></tr>";
-}
-
 // Print Maternal parents
 if ($maternal) {
    $class = featuremapGetTableRowClass($counter);
    $counter ++;
    print "<tr class=\"" . $class ."\">";
    print "<th nowrap>Maternal parent</th><td><a href=\"/node/$maternal->nid\">". $maternal->uniquename . "</a></td></tr>";
+}
+
+// Print Paternal parents
+if ($paternal){
+	$class = featuremapGetTableRowClass($counter);
+	$counter ++;
+	print "<tr class=\"" . $class ."\">";
+	print "<th nowrap>Paternal parent</th><td><a href=\"/node/$paternal->nid\">". $paternal->uniquename . "</a></td></tr>";
 }
 
 // Print Population size
@@ -145,11 +145,9 @@ $counter ++;
 print "<tr class=\"" . $class ."\">";
 print "<th nowrap>Publication</th><td>";
 if (is_array($pubs)) {
-   foreach ($pubs AS $pub) {
-	   print "<a class=\"tripal_featuremap_toc_item\" href=\"#tripal_featuremap-pub-box\">" . $pub->pub_id->uniquename . "</a><br>";
-   }
+	 print "[<a class=\"tripal_featuremap_toc_item\" href=\"#tripal_featuremap-pub-box\">view all " . count($pubs) . "</a>]<br>";
 } else {
-  print "<a class=\"tripal_featuremap_toc_item\" href=\"#tripal_featuremap-pub-box\">" . $pubs->pub_id->uniquename . "</a><br>";
+  print "[<a class=\"tripal_featuremap_toc_item\" href=\"#tripal_featuremap-pub-box\">view</a>]<br>";
 }
 
 // Print Contact
