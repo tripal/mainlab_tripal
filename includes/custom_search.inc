@@ -47,14 +47,14 @@ function  mainlab_tripal_views_pre_execute(&$view){
       $data = $view->exposed_data;
       $stock_name = $data['stock_name'];
       if ($stock_name) {
-        preg_match('/(WHERE .+) AND .+/', $query, $matches);
-        $where = $matches[1];
-        if (!$where) {
-        	preg_match('/(WHERE .+)/', $query, $matches);
-        	$where = $matches[1];
+        preg_match('/(WHERE .+)/', $query, $matches);
+        $conditions = explode(" AND ", $matches[1]);
+        foreach ( $conditions AS $con) {
+          if (preg_match("/search_by_collection\.stock_name/", $con)) {
+          	$where = str_replace("WHERE ", "", $con);
+          }
         }
-        $where = str_replace('WHERE', 'WHERE (', $where);
-        $where .= 
+        $replace = "(" . $where .
         " OR (stock_id 
           IN (SELECT distinct stock_id FROM stockprop 
                 WHERE type_id = 
@@ -62,8 +62,8 @@ function  mainlab_tripal_views_pre_execute(&$view){
                  WHERE name = 'alias' AND cv_id = 
                   (SELECT cv_id FROM cv WHERE name = 'MAIN'))
                 AND UPPER(value) = UPPER('$stock_name'))))";
-        $query = str_replace($matches[1], $where, $query);
-        $count_query = str_replace($matches[1], $where, $count_query);
+        $query = str_replace($where, $replace, $query);
+        $count_query = str_replace($where, $replace, $count_query);
         // Now return the query to Drupal Views
         $view->build_info['query'] = $query;
         $view->build_info['count_query'] = $count_query;
