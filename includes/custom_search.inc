@@ -46,6 +46,7 @@ function  mainlab_tripal_views_pre_execute(&$view){
 
       $data = $view->exposed_data;
       $stock_name = $data['stock_name'];
+
       if ($stock_name) {
         preg_match('/(WHERE .+)/', $query, $matches);
         $conditions = explode(" AND ", $matches[1]);
@@ -54,14 +55,25 @@ function  mainlab_tripal_views_pre_execute(&$view){
           	$where = str_replace("WHERE ", "", $con);
           }
         }
+        if ($data['stock_name_op'] != '!=') {
         $replace = "(" . $where .
-        " OR (stock_id 
-          IN (SELECT distinct stock_id FROM stockprop 
+          " OR (stock_id 
+            IN (SELECT distinct stock_id FROM stockprop 
                 WHERE type_id = 
                 (SELECT cvterm_id FROM cvterm 
                  WHERE name = 'alias' AND cv_id = 
                   (SELECT cv_id FROM cv WHERE name = 'MAIN'))
                 AND UPPER(value) = UPPER('$stock_name'))))";
+        } else {
+          $replace = "(" . $where .
+            " AND (stock_id
+              NOT IN (SELECT distinct stock_id FROM stockprop
+              WHERE type_id =
+              (SELECT cvterm_id FROM cvterm
+              WHERE name = 'alias' AND cv_id =
+              (SELECT cv_id FROM cv WHERE name = 'MAIN'))
+              AND UPPER(value) = UPPER('$stock_name'))))";
+        }
         $query = str_replace($where, $replace, $query);
         $count_query = str_replace($where, $replace, $count_query);
         // Now return the query to Drupal Views
