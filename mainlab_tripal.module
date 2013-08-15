@@ -12,6 +12,7 @@ require_once "includes/custom_schema.inc";
 require_once "includes/qtl_details.inc";
 require_once "includes/custom_search.inc";
 require_once "includes/simple_seq_extract.inc";
+require_once "includes/stock_listing.page.inc";
 
 /**
  *
@@ -90,6 +91,13 @@ function mainlab_tripal_menu() {
   		'page arguments' => array(1,2,3),
   		'access arguments' => array('access content'),
   		'file' => 'includes/feature_listing.page.inc',
+  		'type' => MENU_CALLBACK
+  );
+  // Switching page for the stock listing
+  $items['stock_listing_page/%/%'] = array(
+  		'page callback' => 'mainlab_stock_listing_switch_page',
+  		'page arguments' => array(1,2),
+  		'access arguments' => array('access content'),
   		'type' => MENU_CALLBACK
   );
   return $items;
