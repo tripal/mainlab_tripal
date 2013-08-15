@@ -53,7 +53,7 @@ function mainlab_stock_listing ($organism, $page) {
 	$header = array('Name', 'Type');
 	$attribute = array('class' => 'tripal-table tripal-table-horz');
 	$table = theme_table($header, $rows, $attribute);
-	$pager = "</br><div style=\"float:right;\"><select onChange=\"mainlab_tripal_stock_listing_change_page(this.selectedIndex + 1)\">";
+	$pager = "</br><div style=\"float:right;\">Page <select onChange=\"mainlab_tripal_stock_listing_change_page(this.selectedIndex + 1)\">";
 	for ($i = 1; $i <= $pages; $i ++) {
 		if ($i == $page) {
 			$pager .= "<option selected=\"selected\">$i</option>";
