@@ -24,11 +24,11 @@ function mainlab_stock_listing ($organism, $page) {
 	)";
 	$count_sql = "SELECT count(*) FROM (" . $sql . ") A";
 	$total = db_result(db_query($count_sql, $genus, $species));
-	$pages = $total / $num_per_page;
+	$pages = (int) ($total / $num_per_page);
 	if ($total % $num_per_page != 0) {
 		$pages ++;
 	}
-	$sql .= " LIMIT $num_per_page OFFSET $offset";
+	$sql .= " ORDER BY uniquename LIMIT $num_per_page OFFSET $offset";
 	$result = chado_query($sql, $genus, $species);
 	
 	// Make the table
@@ -61,7 +61,7 @@ function mainlab_stock_listing ($organism, $page) {
 			$pager .= "<option>$i</option>";
 		}
 	}
-	$pager .= "</select></div>";
+	$pager .= "</select> of $pages</div>";
 	$stock->total_number = $total;
 	$stock->table = "<div id=\"mainlab_tripal-stock_listing-table\">" . $table . $pager . "</div>";
 	global $base_url;
