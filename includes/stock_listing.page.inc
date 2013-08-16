@@ -64,8 +64,7 @@ function mainlab_stock_listing ($organism, $page) {
 	$pager .= "</select> of $pages</div>";
 	$stock->total_number = $total;
 	$stock->table = "<div id=\"mainlab_tripal-stock_listing-table\">" . $table . $pager . "</div>";
-	global $base_url;
-	$ajax_link = $base_url . "/stock_listing_page/$organism/";
+	$ajax_link = "/stock_listing_page/$organism/";
 	$stock->js = 
 	"<script type=\"text/javascript\">
    // Switch pages for stock listing
