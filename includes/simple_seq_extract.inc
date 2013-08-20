@@ -113,26 +113,14 @@ function mainlab_tripal_seq_extract_form(&$form_state = NULL) {
   $analyses = array();
   $analyses[] = '';
   global $base_url;
-  if (preg_match("/cottongen\.org/", $base_url)) {
-  	$sql =
-  	     "SELECT A.analysis_id, A.name
-  			FROM analysis A
-  			LEFT JOIN
-  			(SELECT * FROM analysisprop 
-  	     	 WHERE type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'analysis_type')
-  			) AP ON A.analysis_id = AP.analysis_id
-  			WHERE A.analysis_id IN (SELECT distinct analysis_id FROM analysisfeature) 
-  	     	AND AP.value IS NULL OR AP.value = 'tripal_analysis_unigene'
-  			";
-  } else {
-  	   $sql = "
-  			SELECT DISTINCT A.analysis_id, A.name
-  			FROM {analysis} A
-  			INNER JOIN {analysisprop} AP ON A.analysis_id = AP.analysis_id
-  			INNER JOIN {cvterm} CVT on CVT.cvterm_id = AP.type_id
-  			WHERE CVT.name = 'analysis_type' and AP.value = 'whole_genome'
-  			";
-  }
+  $sql = "
+    SELECT DISTINCT A.analysis_id, A.name
+    FROM {analysis} A
+      INNER JOIN {analysisprop} AP ON A.analysis_id = AP.analysis_id
+      INNER JOIN {cvterm} CVT on CVT.cvterm_id = AP.type_id
+    WHERE CVT.name = 'Analysis Type' and 
+      (AP.value = 'whole_genome' or AP.value = 'bulk_data' or AP.value = 'unigene')
+  ";
   $args = array();
   $sql .=" ORDER BY A.name ";
   $results = chado_query($sql, $args);  
