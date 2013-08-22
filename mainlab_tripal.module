@@ -518,11 +518,11 @@ function tripal_stock_preprocess_tripal_stock_trait_scores(&$variables) {
 	$results = chado_query(
 			"SELECT
 			P.uniquename, P.value, J.name AS project
-			FROM nd_experiment_phenotype NEP
-			INNER JOIN phenotype P ON NEP.phenotype_id = P.phenotype_id
-			INNER JOIN nd_experiment_stock NES ON NES.nd_experiment_id = NEP.nd_experiment_id
-			INNER JOIN nd_experiment_project NEJ ON NES.nd_experiment_id = NEJ.nd_experiment_id
-			INNER JOIN project J ON J.project_id = NEJ.project_id
+			FROM {nd_experiment_phenotype} NEP
+			INNER JOIN {phenotype} P ON NEP.phenotype_id = P.phenotype_id
+			INNER JOIN {nd_experiment_stock} NES ON NES.nd_experiment_id = NEP.nd_experiment_id
+			INNER JOIN {nd_experiment_project} NEJ ON NES.nd_experiment_id = NEJ.nd_experiment_id
+			INNER JOIN {project} J ON J.project_id = NEJ.project_id
 			WHERE stock_id = %d",  $stock->stock_id);
 	$trait_scores = NULL;
 	$counter = 0;
