@@ -146,7 +146,7 @@ function mainlab_tripal_seq_extract_form(&$form_state = NULL) {
     'mRNA' => 'mRNA',
     'genetic_marker' => 'genetic marker',
     'polypeptide' => 'protein',
-    'scaffold'  => 'scaffold',
+    'supercontig'  => 'scaffold',
   );
   $form['ftype'] = array(
     '#title'         => t('Feature Type'),
