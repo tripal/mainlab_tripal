@@ -4,8 +4,21 @@ $featuremap  = $variables['node']->featuremap;
 
 // expand featuremap to include the organism
 $featuremap = tripal_core_expand_chado_vars($featuremap,'table','featuremap_organism');
-$organism = $featuremap->featuremap_organism->organism_id;
-
+$organisms = $featuremap->featuremap_organism;
+if (is_array($organisms)) {
+	foreach ($organisms AS $org) {
+		$organism = $org->organism_id;
+		if ($organism->nid) {	$display_organism .= "<a href=\"/node/$organism->nid\" target=\"_blank\">";	}
+		$display_organism .= "$organism->genus $organism->species";
+		if ($organism->nid) {	$display_organism .= "</a>";	}
+		$display_organism .= "<br>";
+	}
+} else {
+	$organism = $organisms->organism_id;
+	if ($organism->nid) {	$display_organism = "<a href=\"/node/$organism->nid\" target=\"_blank\">";	}
+	$display_organism .= "$organism->genus $organism->species";
+	if ($organism->nid) {	$display_organism .= "</a>";	}
+}
 // expand featuremap to include the properties.
 $featuremap = tripal_core_expand_chado_vars($featuremap,'table','featuremapprop');
 $featuremapprop = $featuremap->featuremapprop;
@@ -77,9 +90,7 @@ $counter = 0;
 $class = featuremapGetTableRowClass($counter);
 print "<tr class=\"" . $class ."\">";
 print "<th nowrap>Species</th><td>";
-if ($organism->nid) {	print "<a href=\"/node/$organism->nid\" target=\"_blank\">";	}
-print "$organism->genus $organism->species";
-if ($organism->nid) {	print "</a>";	}
+print $display_organism;
 print "</td></tr>";
 $counter ++;
 

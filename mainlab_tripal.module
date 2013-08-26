@@ -12,6 +12,7 @@ require_once "includes/custom_schema.inc";
 require_once "includes/qtl_details.inc";
 require_once "includes/custom_search.inc";
 require_once "includes/simple_seq_extract.inc";
+require_once "includes/stock_listing.page.inc";
 
 /**
  *
@@ -90,6 +91,13 @@ function mainlab_tripal_menu() {
   		'page arguments' => array(1,2,3),
   		'access arguments' => array('access content'),
   		'file' => 'includes/feature_listing.page.inc',
+  		'type' => MENU_CALLBACK
+  );
+  // Switching page for the stock listing
+  $items['stock_listing_page/%/%'] = array(
+  		'page callback' => 'mainlab_stock_listing_switch_page',
+  		'page arguments' => array(1,2),
+  		'access arguments' => array('access content'),
   		'type' => MENU_CALLBACK
   );
   return $items;
@@ -291,7 +299,7 @@ function tripal_organism_preprocess_tripal_organism_relationships(&$variables) {
   // query, therefore we will manually perform the query
   $sql = "
     SELECT O.genus, O.species, O.organism_id, CO.nid, CVT.name as rel_type
-    FROM organism_relationship ORel
+    FROM {organism_relationship} ORel
       INNER JOIN organism O on ORel.object_organism_id = O.organism_id
       INNER JOIN cvterm CVT on ORel.type_id = CVT.cvterm_id
       LEFT JOIN chado_organism CO on O.organism_id = CO.organism_id
@@ -417,25 +425,25 @@ function tripal_featuremap_preprocess_tripal_featuremap_base_custom(&$variables)
 	$featuremap = $variables['node']->featuremap;
 	$num_loci = db_result(chado_query(
 			"SELECT count (distinct F.uniquename) 
-			  FROM featurepos FP 
-			  INNER JOIN feature F ON F.feature_id = FP.feature_id 
+			  FROM {featurepos} FP 
+			  INNER JOIN {feature} F ON F.feature_id = FP.feature_id 
 			  WHERE F.type_id = (SELECT cvterm_id 
-			                                      FROM cvterm 
-			                                      WHERE name = 'marker_locus' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'sequence')) 
+			                                      FROM {cvterm} 
+			                                      WHERE name = 'marker_locus' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'sequence')) 
 			  AND featuremap_id = %d", $featuremap->featuremap_id));
 	$num_lg = db_result(chado_query(
 			"SELECT count (distinct F.uniquename) 
-			  FROM featurepos FP 
-			  INNER JOIN feature F ON F.feature_id = FP.map_feature_id 
+			  FROM {featurepos} FP 
+			  INNER JOIN {feature} F ON F.feature_id = FP.map_feature_id 
 			  WHERE F.type_id = (SELECT cvterm_id 
-			                                      FROM cvterm 
-			                                      WHERE name = 'linkage_group' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'sequence')) 
+			                                      FROM {cvterm} 
+			                                      WHERE name = 'linkage_group' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'sequence')) 
 			  AND featuremap_id = %d", $featuremap->featuremap_id));
 	$cmap_r = chado_query(
 			"SELECT db.urlprefix, X.accession 
-			 FROM featuremap_dbxref FD
-			 INNER JOIN dbxref X ON FD.dbxref_id = X.dbxref_id
-			 INNER JOIN db ON db.db_id = X.db_id
+			 FROM {featuremap_dbxref} FD
+			 INNER JOIN {dbxref} X ON FD.dbxref_id = X.dbxref_id
+			 INNER JOIN {db} ON db.db_id = X.db_id
 			 WHERE featuremap_id = %d
 			", $featuremap->featuremap_id);
 	$cmap = db_fetch_object($cmap_r);
@@ -453,14 +461,14 @@ function tripal_stock_preprocess_tripal_stock_maternal_parent(&$variables) {
 	$stock = $variables['node']->stock;
 	$results = chado_query(
 			"SELECT S2.stock_id, S2.uniquename, S2.description, V.name AS type
-			 FROM stock S1 
-         INNER JOIN stock_relationship SR ON SR.subject_id = S1.stock_id 
-         INNER JOIN stock S2 ON S2.stock_id = SR.object_id 
-         INNER JOIN cvterm V ON V.cvterm_id = S2.type_id
+			 FROM {stock} S1 
+         INNER JOIN {stock_relationship} SR ON SR.subject_id = S1.stock_id 
+         INNER JOIN {stock} S2 ON S2.stock_id = SR.object_id 
+         INNER JOIN {cvterm} V ON V.cvterm_id = S2.type_id
          WHERE SR.type_id = 
          (SELECT cvterm_id 
-          FROM cvterm 
-          WHERE name = 'is_a_maternal_parent_of' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))
+          FROM {cvterm} 
+          WHERE name = 'is_a_maternal_parent_of' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
           AND S1.stock_id = %d",  $stock->stock_id);
 	$maternal_parent = NULL;
 	$counter = 0;
@@ -481,14 +489,14 @@ function tripal_stock_preprocess_tripal_stock_paternal_parent(&$variables) {
 	$stock = $variables['node']->stock;
 	$results = chado_query(
 			"SELECT S2.stock_id, S2.uniquename, S2.description, V.name AS type
-			 FROM stock S1
-         INNER JOIN stock_relationship SR ON SR.subject_id = S1.stock_id
-         INNER JOIN stock S2 ON S2.stock_id = SR.object_id
-         INNER JOIN cvterm V ON V.cvterm_id = S2.type_id
+			 FROM {stock} S1
+         INNER JOIN {stock_relationship} SR ON SR.subject_id = S1.stock_id
+         INNER JOIN {stock} S2 ON S2.stock_id = SR.object_id
+         INNER JOIN {cvterm} V ON V.cvterm_id = S2.type_id
          WHERE SR.type_id =
          (SELECT cvterm_id
-          FROM cvterm
-          WHERE name = 'is_a_paternal_parent_of' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))
+          FROM {cvterm}
+          WHERE name = 'is_a_paternal_parent_of' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
           AND S1.stock_id = %d",  $stock->stock_id);
 	$paternal_parent = NULL;
 	$counter = 0;
@@ -510,11 +518,11 @@ function tripal_stock_preprocess_tripal_stock_trait_scores(&$variables) {
 	$results = chado_query(
 			"SELECT
 			P.uniquename, P.value, J.name AS project
-			FROM nd_experiment_phenotype NEP
-			INNER JOIN phenotype P ON NEP.phenotype_id = P.phenotype_id
-			INNER JOIN nd_experiment_stock NES ON NES.nd_experiment_id = NEP.nd_experiment_id
-			INNER JOIN nd_experiment_project NEJ ON NES.nd_experiment_id = NEJ.nd_experiment_id
-			INNER JOIN project J ON J.project_id = NEJ.project_id
+			FROM {nd_experiment_phenotype} NEP
+			INNER JOIN {phenotype} P ON NEP.phenotype_id = P.phenotype_id
+			INNER JOIN {nd_experiment_stock} NES ON NES.nd_experiment_id = NEP.nd_experiment_id
+			INNER JOIN {nd_experiment_project} NEJ ON NES.nd_experiment_id = NEJ.nd_experiment_id
+			INNER JOIN {project} J ON J.project_id = NEJ.project_id
 			WHERE stock_id = %d",  $stock->stock_id);
 	$trait_scores = NULL;
 	$counter = 0;
@@ -533,17 +541,17 @@ function tripal_stock_preprocess_tripal_stock_genotypic_data(&$variables) {
 	$results = chado_query(
 			"SELECT
 			G.uniquename, G.description, J.name AS project
-			FROM nd_experiment_genotype NEG
-			INNER JOIN genotype G ON NEG.genotype_id = G.genotype_id
-			INNER JOIN nd_experiment_stock NES ON NES.nd_experiment_id = NEG.nd_experiment_id
-			INNER JOIN nd_experiment_project NEJ ON NES.nd_experiment_id = NEJ.nd_experiment_id
-			INNER JOIN project J ON J.project_id = NEJ.project_id
+			FROM {nd_experiment_genotype} NEG
+			INNER JOIN {genotype} G ON NEG.genotype_id = G.genotype_id
+			INNER JOIN {nd_experiment_stock} NES ON NES.nd_experiment_id = NEG.nd_experiment_id
+			INNER JOIN {nd_experiment_project} NEJ ON NES.nd_experiment_id = NEJ.nd_experiment_id
+			INNER JOIN {project} J ON J.project_id = NEJ.project_id
 			WHERE stock_id IN 
 			  (SELECT stock_id 
-			   FROM stock S
-			   INNER JOIN stock_relationship SR ON S.stock_id = SR.subject_id
+			   FROM {stock} S
+			   INNER JOIN {stock_relationship} SR ON S.stock_id = SR.subject_id
 			   WHERE SR.type_id = 
-			      (SELECT cvterm_id FROM cvterm WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))
+			      (SELECT cvterm_id FROM {cvterm} WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
 			   AND SR.object_id = %d)",  $stock->stock_id);
 	$gdata = NULL;
 	$counter = 0;
@@ -565,12 +573,12 @@ function tripal_stock_preprocess_tripal_stock_in_collection(&$variables) {
 			max(db.name) AS db,
 			max(db.urlprefix) AS urlprefix,
 			string_agg(X.accession, '; ') AS accession
-			FROM stockcollection SC
-			INNER JOIN stockcollection_stock SS ON SS.stockcollection_id = SC.stockcollection_id
-			INNER JOIN stockcollection_db SD ON SC.stockcollection_id = SD.stockcollection_id
-			INNER JOIN db ON db.db_id = SD.db_id
-			INNER JOIN stock_dbxref SX ON SX.stock_id = SS.stock_id
-			INNER JOIN dbxref X ON SX.dbxref_id = X.dbxref_id AND X.db_id = db.db_id
+			FROM {stockcollection} SC
+			INNER JOIN {stockcollection_stock} SS ON SS.stockcollection_id = SC.stockcollection_id
+			INNER JOIN {stockcollection_db} SD ON SC.stockcollection_id = SD.stockcollection_id
+			INNER JOIN {db} ON db.db_id = SD.db_id
+			INNER JOIN {stock_dbxref} SX ON SX.stock_id = SS.stock_id
+			INNER JOIN {dbxref} X ON SX.dbxref_id = X.dbxref_id AND X.db_id = db.db_id
 			WHERE SS.stock_id = %d
 			GROUP BY SC.stockcollection_id
 			",  $stock->stock_id);
@@ -593,17 +601,17 @@ function tripal_stock_preprocess_tripal_stock_population_map(&$variables) {
 			"SELECT 
            M.featuremap_id, 
 			  M.name
-           FROM featuremap M
-           INNER JOIN featuremap_stock MS ON M.featuremap_id = MS.featuremap_id
+           FROM {featuremap} M
+           INNER JOIN {featuremap_stock} MS ON M.featuremap_id = MS.featuremap_id
            WHERE MS.stock_id = %d
            OR MS.stock_id in 
-			     (SELECT SR.object_id FROM stock S1
-               INNER JOIN stock_relationship SR ON S1.stock_id = SR.subject_id
+			     (SELECT SR.object_id FROM {stock} S1
+               INNER JOIN {stock_relationship} SR ON S1.stock_id = SR.subject_id
                WHERE SR.type_id IN 
                   (SELECT cvterm_id 
-                   FROM cvterm 
+                   FROM {cvterm} 
                    WHERE (name = 'is_a_maternal_parent_of' 
-                   OR name = 'is_a_paternal_parent_of') AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))
+                   OR name = 'is_a_paternal_parent_of') AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
                AND S1.stock_id = %d)",  $stock->stock_id,  $stock->stock_id);
 	$maps = NULL;
 	$counter = 0;
@@ -629,13 +637,13 @@ function tripal_stock_preprocess_tripal_stock_image(&$variables) {
 	// We want to show maps for this stock and maps of its children
 	$results = chado_query(
 			"SELECT eimage_type, image_uri, value as legend 
-			 FROM stock_image SI 
-			 INNER JOIN eimage I ON SI.eimage_id = I.eimage_id 
-			 INNER JOIN eimageprop IP ON I.eimage_id = IP.eimage_id 
+			 FROM {stock_image} SI 
+			 INNER JOIN {eimage} I ON SI.eimage_id = I.eimage_id 
+			 INNER JOIN {eimageprop} IP ON I.eimage_id = IP.eimage_id 
 			 WHERE IP.type_id = (SELECT cvterm_id 
-			                                      FROM cvterm 
+			                                      FROM {cvterm} 
 			                                      WHERE name = 'description' 
-			                                      AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN')
+			                                      AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN')
 			                                    )
 			AND stock_id = %d", 
 			$stock->stock_id);

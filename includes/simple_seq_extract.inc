@@ -113,26 +113,14 @@ function mainlab_tripal_seq_extract_form(&$form_state = NULL) {
   $analyses = array();
   $analyses[] = '';
   global $base_url;
-  if (preg_match("/cottongen\.org/", $base_url)) {
-  	$sql =
-  	     "SELECT A.analysis_id, A.name
-  			FROM analysis A
-  			LEFT JOIN
-  			(SELECT * FROM analysisprop 
-  	     	 WHERE type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'analysis_type')
-  			) AP ON A.analysis_id = AP.analysis_id
-  			WHERE A.analysis_id IN (SELECT distinct analysis_id FROM analysisfeature) 
-  	     	AND AP.value IS NULL OR AP.value = 'tripal_analysis_unigene'
-  			";
-  } else {
-  	   $sql = "
-  			SELECT DISTINCT A.analysis_id, A.name
-  			FROM {analysis} A
-  			INNER JOIN {analysisprop} AP ON A.analysis_id = AP.analysis_id
-  			INNER JOIN {cvterm} CVT on CVT.cvterm_id = AP.type_id
-  			WHERE CVT.name = 'analysis_type' and AP.value = 'whole_genome'
-  			";
-  }
+  $sql = "
+    SELECT DISTINCT A.analysis_id, A.name
+    FROM {analysis} A
+      INNER JOIN {analysisprop} AP ON A.analysis_id = AP.analysis_id
+      INNER JOIN {cvterm} CVT on CVT.cvterm_id = AP.type_id
+    WHERE CVT.name = 'Analysis Type' and 
+      (AP.value = 'whole_genome' or AP.value = 'bulk_data' or AP.value = 'unigene')
+  ";
   $args = array();
   $sql .=" ORDER BY A.name ";
   $results = chado_query($sql, $args);  
@@ -157,8 +145,9 @@ function mainlab_tripal_seq_extract_form(&$form_state = NULL) {
     'gene' => 'gene',
     'mRNA' => 'mRNA',
     'genetic_marker' => 'genetic marker',
-    'polypeptide' => 'protein',
-    'scaffold'  => 'scaffold',
+    'mapped_genetic_marker' => 'aligned genetic marker',
+    'polypeptide'     => 'protein',
+    'supercontig'    => 'scaffold',
   );
   $form['ftype'] = array(
     '#title'         => t('Feature Type'),
@@ -260,6 +249,9 @@ function mainlab_tripal_seq_extract_form_submit($form, &$form_state) {
  */
 function mainlab_tripal_seq_extract_get_features($analysis_name, 
   $type, $feature_name, $upstream, $downstream) {
+
+  $relationship = '';
+  $rel_part = '';
     
   // get the list of features
   $vars = array();
@@ -279,15 +271,32 @@ function mainlab_tripal_seq_extract_get_features($analysis_name,
       $aggregate = 1;
       $sub_features = array('CDS');
       $type = 'mRNA';
+      $vars[] = $type;
     }
-    if ($type == 'mapped_genetic_marker') {
+    elseif ($type == 'gene') {
+      $derive_from_parent = 1;
+      $type = 'gene';
+      $vars[] = $type;
+    }
+    elseif ($type == 'mapped_genetic_marker') {
       $derive_from_parent = 1;
       $type = 'match';
+      $vars[] = $type;
     }
-    if ($type == 'polypeptide') {
+    elseif ($type == 'genetic_marker') {
+      $relationship = 'sequence_of';
+      $rel_part = 'object';
+      $vars[] = $type;
+      $upstream = 0;
+      $downstream = 0;
+    }
+    elseif ($type == 'polypeptide') {
       $derive_from_parent = 0;
       $upstream = 0;
       $downstream = 0;
+    }
+    else {
+      $vars[] = $type;
     }
     $vars[] = $type; 
   }
@@ -327,7 +336,7 @@ function mainlab_tripal_seq_extract_get_features($analysis_name,
     }
     $sequence = tripal_feature_get_formatted_sequence($feature_id, $feature_name, 
       $num_bases_per_line, $derive_from_parent, $aggregate, 'fasta_txt',
-      $upstream, $downstream, $sub_features);
+      $upstream, $downstream, $sub_features, $relationship, $rel_part);
     
     // print the sequence
     print $sequence;
