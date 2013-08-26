@@ -145,8 +145,9 @@ function mainlab_tripal_seq_extract_form(&$form_state = NULL) {
     'gene' => 'gene',
     'mRNA' => 'mRNA',
     'genetic_marker' => 'genetic marker',
-    'polypeptide' => 'protein',
-    'supercontig'  => 'scaffold',
+    'mapped_genetic_marker' => 'aligned genetic marker',
+    'polypeptide'     => 'protein',
+    'supercontig'    => 'scaffold',
   );
   $form['ftype'] = array(
     '#title'         => t('Feature Type'),
@@ -242,6 +243,9 @@ function mainlab_tripal_seq_extract_form_submit($form, &$form_state) {
  */
 function mainlab_tripal_seq_extract_get_features($analysis_name, 
   $type, $feature_name, $upstream, $downstream) {
+
+  $relationship = '';
+  $rel_part = '';
     
   // get the list of features
   $vars = array();
@@ -261,12 +265,26 @@ function mainlab_tripal_seq_extract_get_features($analysis_name,
       $aggregate = 1;
       $sub_features = array('CDS');
       $type = 'mRNA';
+      $vars[] = $type;
     }
-    if ($type == 'mapped_genetic_marker') {
+    elseif ($type == 'gene') {
+      $derive_from_parent = 1;
+      $type = 'gene';
+      $vars[] = $type;
+    }
+    elseif ($type == 'mapped_genetic_marker') {
       $derive_from_parent = 1;
       $type = 'match';
+      $vars[] = $type;
     }
-    $vars[] = $type; 
+    elseif ($type == 'genetic_marker') {
+      $relationship = 'sequence_of';
+      $rel_part = 'object';
+      $vars[] = $type;
+    }
+    else {
+      $vars[] = $type;
+    }
   }
   if ($feature_name) {
     if (is_array($feature_name)) {
@@ -304,7 +322,7 @@ function mainlab_tripal_seq_extract_get_features($analysis_name,
     }
     $sequence = tripal_feature_get_formatted_sequence($feature_id, $feature_name, 
       $num_bases_per_line, $derive_from_parent, $aggregate, 'fasta_txt',
-      $upstream, $downstream, $sub_features);
+      $upstream, $downstream, $sub_features, $relationship, $rel_part);
     
     // print the sequence
     print $sequence;
