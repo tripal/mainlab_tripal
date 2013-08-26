@@ -265,8 +265,8 @@ function mainlab_tripal_seq_extract_get_features($analysis_name,
   }         
   $sql .= "WHERE (1=1) ";
   if ($type) {
-    $sql .= "AND CVT.name = '%s' ";
     if ($type == 'CDS') {
+      $sql .= "AND CVT.name = '%s' ";
       $derive_from_parent = 1;
       $aggregate = 1;
       $sub_features = array('CDS');
@@ -274,16 +274,19 @@ function mainlab_tripal_seq_extract_get_features($analysis_name,
       $vars[] = $type;
     }
     elseif ($type == 'gene') {
+      $sql .= "AND CVT.name = '%s' ";
       $derive_from_parent = 1;
       $type = 'gene';
       $vars[] = $type;
     }
     elseif ($type == 'mapped_genetic_marker') {
+      $sql .= "AND (CVT.name = '%s' or CVT.name = 'genetic_marker') ";
       $derive_from_parent = 1;
       $type = 'match';
       $vars[] = $type;
     }
     elseif ($type == 'genetic_marker') {
+      $sql .= "AND CVT.name = '%s' ";
       $relationship = 'sequence_of';
       $rel_part = 'object';
       $vars[] = $type;
@@ -291,14 +294,15 @@ function mainlab_tripal_seq_extract_get_features($analysis_name,
       $downstream = 0;
     }
     elseif ($type == 'polypeptide') {
+      $sql .= "AND CVT.name = '%s' ";
       $derive_from_parent = 0;
       $upstream = 0;
       $downstream = 0;
     }
     else {
+      $sql .= "AND CVT.name = '%s' ";
       $vars[] = $type;
     }
-    $vars[] = $type; 
   }
   if ($feature_name) {
     if (is_array($feature_name)) {
