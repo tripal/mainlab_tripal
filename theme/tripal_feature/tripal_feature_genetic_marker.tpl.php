@@ -110,7 +110,7 @@ function showPolymorphism () {
       <!-- Alias -->
      	<?php $class = genetic_markerGetTableRowClass($counter); print "<tr class=\"" . $class ."\"><th>Alias</th><td>"; if (key_exists('alias', $kv_properties)) { print $kv_properties['alias'];} else { print "N/A";} print "</td></tr>"; $counter ++;?>
       <!-- Genbank ID -->
-     	<?php $class = genetic_markerGetTableRowClass($counter); print "<tr class=\"" . $class ."\"><th>Genbank ID</th><td>"; if ($accession) { print "<a href=\"http://www.ncbi.nlm.nih.gov/nuccore/$accession\" target=\"_blank\">" . $accession . "</a>";} else { print "N/A";} print "</td></tr>"; $counter ++;?>
+     	<?php $class = genetic_markerGetTableRowClass($counter); print "<tr class=\"" . $class ."\"><th>Genbank ID</th><td>"; if ($accession && $accession != 'GDR_markers') { print "<a href=\"http://www.ncbi.nlm.nih.gov/nuccore/$accession\" target=\"_blank\">" . $accession . "</a>";} else { print "N/A";} print "</td></tr>"; $counter ++;?>
       <!-- Type -->
      	<?php $class = genetic_markerGetTableRowClass($counter); print "<tr class=\"" . $class ."\"><th>Type</th><td>"; if (key_exists('marker_type', $kv_properties)) { print $kv_properties['marker_type'];} else { print "N/A";} print "</td></tr>"; $counter ++;?>
       <!-- Species -->
