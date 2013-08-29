@@ -33,8 +33,10 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/m
       					<table id=\"cottongen-genetic_marker-mappositions-table\"class=\"tripal_feature-table tripal-table tripal-table-horz\" style=\"margin-top:15px;margin-bottom:15px;border-bottom:2px solid #999999;;border-top:2px solid #999999\">
       						<tr><th style=\"width:20px;\">#</th><th>Map Name</th><th>Linkage Group</th><th>Bin</th><th>Chromosome</th><th>Position</th><th>Locus</th><th>CMap</th></tr>";
      	    $counter = 1;
-     	    $bin = $pos->bin;
-     	    if (!$bin) {$bin = "N/A";}
+     	    // Set values to N/A if not available
+     	    $bin = $pos->bin; if (!$bin) {$bin = "N/A";}
+     	    $chr = $pos->chr; if (!$chr) {$chr = "N/A";}
+     	    $cmap = "<a href=\"$pos->urlprefix$pos->accession\">View</a>"; if (!$pos->urlprefix || !$pos->accession) {$cmap = "N/A";}
      	    foreach($map_positions AS $pos) {
                $class = genetic_markerGetTableRowClass($counter);
                $position = number_format($pos->locus_start, 2);
@@ -43,10 +45,10 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/m
             	              <td><a href=\"/node/$pos->nid\">$pos->name</a></td>
             	              <td>$pos->linkage_group</td>
             	              <td>$bin</td>
-            	              <td>$pos->chr</td>
+            	              <td>$chr</td>
             	              <td>$position</td>
             	              <td>$pos->locus_name</td>
-            	              <td><a href=\"$pos->urlprefix$pos->accession\">View</a></td>
+            	              <td>$cmap</td>
             	           </tr>";
             	$counter ++;
           }
