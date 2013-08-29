@@ -18,6 +18,9 @@ if (is_array($organisms)) {
 	if ($organism->nid) {	$display_organism = "<a href=\"/node/$organism->nid\" target=\"_blank\">";	}
 	$display_organism .= "$organism->genus $organism->species";
 	if ($organism->nid) {	$display_organism .= "</a>";	}
+	if (!trim($display_organism)) {
+		$display_organism = "N/A";
+	}
 }
 // expand featuremap to include the properties.
 $featuremap = tripal_core_expand_chado_vars($featuremap,'table','featuremapprop');
@@ -172,7 +175,13 @@ if (is_array($contacts)) {
 	   print "<a class=\"tripal_featuremap_toc_item\" href=\"#tripal_featuremap-contact-box\">" . $contact->contact_id->name . "</a><br>";
    }
 } else {
-   print "<a class=\"tripal_featuremap_toc_item\" href=\"#tripal_featuremap-contact-box\">" . $contacts->contact_id->name . "</a><br>";
+   $cont = $contacts->contact_id->name;
+   if ($cont) {
+      print "<a class=\"tripal_featuremap_toc_item\" href=\"#tripal_featuremap-contact-box\">" . $contacts->contact_id->name . "</a><br>";
+   }else {
+      print "N/A";
+   }
+   
 }
 ?>
    </table>
