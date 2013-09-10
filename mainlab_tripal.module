@@ -84,6 +84,12 @@ function mainlab_tripal_menu() {
   		'file' => 'includes/allele.page.inc',
   		'type' => MENU_CALLBACK
   );
+  global $base_url;
+  if (preg_match('/rosaceae\.org/', $base_url) || preg_match('/rosaceae\.org/', $_SERVER['PWD'])) {
+  	$items['polymorphism/%']['file'] = 'includes/gdr_polymorphism.page.inc';
+  	$items['allele/%/%']['file'] = 'includes/gdr_allele.page.inc';
+  }
+  
   // The sequence listing page
   $items['feature_listing/%/%/%'] = array(
   		'title' => 'Sequences',
@@ -231,6 +237,16 @@ function mainlab_tripal_theme() {
   			'template' => 'mainlab_allele',
   			'path' => $path . '/mainlab',
   	),
+ 	'gdr_mainlab_polymorphism' => array(
+ 			'arguments' => array('node' => NULL),
+ 			'template' => 'gdr_mainlab_polymorphism',
+ 			'path' => $path . '/mainlab',
+ 	),
+ 	'gdr_mainlab_allele' => array(
+ 			'arguments' => array('node' => NULL),
+ 			'template' => 'gdr_mainlab_allele',
+ 			'path' => $path . '/mainlab',
+ 	),
   	'tripal_stock_maternal_parent' => array(
   			'arguments' => array('node' => NULL),
   			'template' => 'tripal_stock_maternal_parent',
