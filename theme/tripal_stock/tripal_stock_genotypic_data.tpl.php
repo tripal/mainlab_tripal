@@ -42,12 +42,15 @@ $('#tripal_stock-table-genotypic_data_value-link').click(function() {
          }
          $descriptor = explode("_", $data->uniquename);
          $marker = $descriptor[0];
-         $gtype = $descriptor[1];
+         for ($i = 1; $i < count($descriptor) - 1; $i ++) {
+            $marker .= '_' . $descriptor[$i];
+         }
+         $gtype = $descriptor[count($descriptor) - 1];
          $alleles = explode("|", $gtype );
          $link_alleles = "";
          $index = 0;
          foreach($alleles AS $allele) {
-            $link_alleles .= "<a href=\"/allele/$marker/$allele\">" .$marker ."_" . $allele . "</a>";
+            $link_alleles .= "<a href=\"/allele/$marker/$allele/$data->organism_id\">" .$marker ."_" . $allele . "</a>";
             if ($index < count($alleles) - 1) {
                $link_alleles .= "; ";
             }
