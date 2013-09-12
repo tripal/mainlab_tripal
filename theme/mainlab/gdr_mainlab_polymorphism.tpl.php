@@ -29,8 +29,8 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/m
 	              $class = "tripal_feature-table-odd-row tripal-table-odd-row";
              }
              $name = explode("_", $poly->uniquename);;
-             $allele = $name [1];
-             $allelepage = "/allele/$poly->marker_name/$allele";
+             $allele = $name [count($name) - 1];
+             $allelepage = "/allele/$poly->marker_name/$allele/$poly->marker_oid";
              if (!$dye_color) { $dye_color = "N/A";}
              print "<tr class=\"$class\">
                            <td>$counter</td>

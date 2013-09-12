@@ -6,6 +6,7 @@ function mainlab_show_polymorphism ($feature_id) {
 	
 	// Get  the marker name and nid if there is one
 	$mname = db_result(chado_query("SELECT uniquename FROM {feature} WHERE feature_id = %d", $feature_id));
+	$moid = db_result(chado_query("SELECT organism_id FROM {feature} WHERE feature_id = %d", $feature_id));
 	$mnid = NULL;
 	if (db_table_exists('chado_feature')) {
 		$mnid = db_result(db_query("SELECT nid FROM {chado_feature} WHERE feature_id = %d", $feature_id));
@@ -25,7 +26,7 @@ function mainlab_show_polymorphism ($feature_id) {
                 INNER JOIN {project} P ON P.project_id = NEP.project_id
 			    LEFT JOIN (SELECT * FROM projectprop WHERE type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'project_type' AND cv_id = (SELECT cv_id FROM cv WHERE name ='MAIN'))) PP ON P.project_id = PP.project_id
                 WHERE feature_id = %d
-			    AND (PP.value = 'diversity' OR P.name LIKE '%CRS' OR P.name = 'Apple_KE')
+			    AND (PP.value = 'diversity' OR P.name LIKE '%_CRS%' OR (P.name LIKE 'Apple_KE%' AND P.name NOT LIKE 'Apple_KE_PRV_%'))
                 GROUP BY G.genotype_id
                 ORDER BY G.genotype_id";
 	$result = chado_query($sql, $feature_id);
@@ -34,6 +35,7 @@ function mainlab_show_polymorphism ($feature_id) {
 	while ($poly = db_fetch_object($result)) {
 		$poly->marker_name = $mname;
 		$poly->marker_nid = $mnid;
+		$poly->marker_oid = $moid;
 		// Find out the stocks associated with this genotype. However, we only want to show 1 germplasm on the polymorphism page (SQL FIRST() function)
 		$ssql = "SELECT count(*) AS num_stocks, first(S.stock_id) AS first_stock_id, first(S.uniquename) AS first_stock_name
                      FROM {nd_experiment_genotype} NDG 
@@ -45,7 +47,7 @@ function mainlab_show_polymorphism ($feature_id) {
                      WHERE 
                        SR.type_id = 
                          (SELECT cvterm_id FROM cvterm WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))
-					 AND SP.value <> 'PRIVATE'
+					 AND (SP.value <> 'PRIVATE' OR SP.value IS NULL)
                      AND genotype_id = %d GROUP BY genotype_id";
 		$stock = db_fetch_object(chado_query($ssql, $poly->genotype_id));
    	// Find out the stock nid if there is one
@@ -97,6 +99,7 @@ function mainlab_show_polymorphism ($feature_id) {
 					$new_p->project = $p->project;
 					$new_p->marker_name = $mname;
 					$new_p->marker_nid = $mnid;
+					$new_p->marker_oid = $moid;
 					$hashed_poly [$key] = $new_p;
 				}
 			}

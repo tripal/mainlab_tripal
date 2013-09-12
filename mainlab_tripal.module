@@ -76,10 +76,10 @@ function mainlab_tripal_menu() {
   		'type' => MENU_CALLBACK
   );
   // The allele page
-  $items['allele/%/%'] = array(
+  $items['allele/%/%/%'] = array(
   		'title' => 'Allele',
   		'page callback' => 'mainlab_show_allele',
-  		'page arguments' => array(1,2),
+  		'page arguments' => array(1,2,3),
   		'access arguments' => array('access content'),
   		'file' => 'includes/allele.page.inc',
   		'type' => MENU_CALLBACK
@@ -87,7 +87,7 @@ function mainlab_tripal_menu() {
   global $base_url;
   if (preg_match('/rosaceae\.org/', $base_url) || preg_match('/rosaceae\.org/', $_SERVER['PWD'])) {
   	$items['polymorphism/%']['file'] = 'includes/gdr_polymorphism.page.inc';
-  	$items['allele/%/%']['file'] = 'includes/gdr_allele.page.inc';
+  	$items['allele/%/%/%']['file'] = 'includes/gdr_allele.page.inc';
   }
   
   // The sequence listing page

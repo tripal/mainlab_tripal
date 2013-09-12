@@ -2,7 +2,7 @@
 /*
  * Create an allele page that lists all germplasms (i.e. stocks) by using a marker's name (i.e. $marker) and the genotype name (i.e. $alleleid)
 */
-function mainlab_show_allele ($marker, $alleleid) {
+function mainlab_show_allele ($marker, $alleleid, $oid) {
 	// Find the genotypes for this marker_allele
 	$sql = "SELECT
                   G.genotype_id
@@ -14,11 +14,12 @@ function mainlab_show_allele ($marker, $alleleid) {
 			           FROM {feature} 
 			           WHERE uniquename = '%s' AND type_id =
 			              (SELECT cvterm_id FROM cvterm WHERE name = 'genetic_marker')
+					   AND organism_id = %d
 			          )
 			       AND string_to_array(description, '|') @> ARRAY['%s']
                 GROUP BY G.genotype_id
                 ORDER BY G.genotype_id";
-	$results = chado_query($sql, $marker, $alleleid);
+	$results = chado_query($sql, $marker, $oid, $alleleid);
 	
 	$genotypes  = array();
 	$counter = 0;
@@ -58,7 +59,7 @@ function mainlab_get_allele_associated_stocks ($genotype_id) {
                         (SELECT cvterm_id FROM cvterm WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))
                     AND genotype_id = %d";
 	$sresult = chado_query($ssql, $genotype_id);
-	$stocks = NULL;
+	$stocks = array();
 	$scounter = 0;
 	while ($stock = db_fetch_object($sresult)) {
 		// Find out the stock nid if there is one

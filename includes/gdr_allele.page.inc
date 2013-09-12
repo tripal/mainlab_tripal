@@ -2,7 +2,7 @@
 /*
  * Create an allele page that lists all germplasms (i.e. stocks) by using a marker's name (i.e. $marker) and the genotype name (i.e. $alleleid)
 */
-function mainlab_show_allele ($marker, $alleleid) {
+function mainlab_show_allele ($marker, $alleleid, $oid) {
 	// Find the genotypes for this marker_allele
 	$sql = "SELECT
                   G.genotype_id
@@ -13,12 +13,13 @@ function mainlab_show_allele ($marker, $alleleid) {
 			          (SELECT feature_id 
 			           FROM {feature} 
 			           WHERE uniquename = '%s' AND type_id =
-			              (SELECT cvterm_id FROM cvterm WHERE name = 'genetic_marker')
+			              (SELECT cvterm_id FROM {cvterm} WHERE name = 'genetic_marker')
+			           AND organism_id = %d
 			          )
 			       AND string_to_array(description, '|') @> ARRAY['%s']
                 GROUP BY G.genotype_id
                 ORDER BY G.genotype_id";
-	$results = chado_query($sql, $marker, $alleleid);
+	$results = chado_query($sql, $marker, $oid, $alleleid);
 	
 	$genotypes  = array();
 	$counter = 0;
@@ -54,11 +55,11 @@ function mainlab_get_allele_associated_stocks ($genotype_id) {
                     WHERE
                       SR.type_id =
                         (SELECT cvterm_id FROM cvterm WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))
-			        AND (PP.value = 'diversity' OR P.name LIKE '%CRS' OR P.name = 'Apple_KE')
-	                AND SP.value <> 'PRIVATE'
+			        AND (PP.value = 'diversity' OR P.name LIKE '%_CRS%' OR (P.name LIKE 'Apple_KE%' AND P.name NOT LIKE 'Apple_KE_PRV_%'))
+	                AND (SP.value <> 'PRIVATE' OR SP.value IS NULL)
                     AND genotype_id = %d";
 	$sresult = chado_query($ssql, $genotype_id);
-	$stocks = NULL;
+	$stocks = array();
 	$scounter = 0;
 	while ($stock = db_fetch_object($sresult)) {
 		// Find out the stock nid if there is one

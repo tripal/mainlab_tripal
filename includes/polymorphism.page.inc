@@ -6,6 +6,7 @@ function mainlab_show_polymorphism ($feature_id) {
 	
 	// Get  the marker name and nid if there is one
 	$mname = db_result(chado_query("SELECT uniquename FROM {feature} WHERE feature_id = %d", $feature_id));
+	$moid = db_result(chado_query("SELECT organism_id FROM {feature} WHERE feature_id = %d", $feature_id));
 	$mnid = NULL;
 	if (db_table_exists('chado_feature')) {
 		$mnid = db_result(db_query("SELECT nid FROM {chado_feature} WHERE feature_id = %d", $feature_id));
@@ -32,6 +33,7 @@ function mainlab_show_polymorphism ($feature_id) {
 	while ($poly = db_fetch_object($result)) {
 		$poly->marker_name = $mname;
 		$poly->marker_nid = $mnid;
+		$poly->marker_oid = $moid;
 		// Find out the stocks associated with this genotype. However, we only want to show 1 germplasm on the polymorphism page (SQL FIRST() function)
 		$ssql = "SELECT count(*) AS num_stocks, first(S.stock_id) AS first_stock_id, first(S.uniquename) AS first_stock_name
                      FROM {nd_experiment_genotype} NDG 
@@ -91,6 +93,7 @@ function mainlab_show_polymorphism ($feature_id) {
 					$new_p->project = $p->project;
 					$new_p->marker_name = $mname;
 					$new_p->marker_nid = $mnid;
+					$new_p->marker_oid = $moid;
 					$hashed_poly [$key] = $new_p;
 				}
 			}
