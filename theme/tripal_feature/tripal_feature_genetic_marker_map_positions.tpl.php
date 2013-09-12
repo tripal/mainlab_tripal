@@ -28,11 +28,21 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/m
      	<?php 
      	  $counter_pos = count($map_positions);
      	  if ($counter_pos > 0) {
+     	  	// Test if there is a Chr
+     	  	$hasChr = false;
+     	  	foreach($map_positions AS $pos) {
+     	  		if ($pos->chr) {
+     	  			$hasChr = true;
+     	  		}
+     	  	}
      	    print "Total $counter_pos map positions";
      	    print "<div id=\"cottongen-genetic_marker-mappositions\">
       					<table id=\"cottongen-genetic_marker-mappositions-table\"class=\"tripal_feature-table tripal-table tripal-table-horz\" style=\"margin-top:15px;margin-bottom:15px;border-bottom:2px solid #999999;;border-top:2px solid #999999\">
-      						<tr><th style=\"width:20px;\">#</th><th>Map Name</th><th>Linkage Group</th><th>Bin</th><th>Chromosome</th><th>Position</th><th>Locus</th><th>CMap</th></tr>";
+      						<tr><th style=\"width:20px;\">#</th><th>Map Name</th><th>Linkage Group</th><th>Bin</th>";
+      		if ($hasChr) {print "<th>Chromosome</th>";}
+      		print "<th>Position</th><th>Locus</th><th>CMap</th></tr>";
      	    $counter = 1;
+
      	    foreach($map_positions AS $pos) {
                 // Set values to N/A if not available
                $bin = $pos->bin; if (!$bin) {$bin = "N/A";}
@@ -44,9 +54,9 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/m
             	              <td>$counter</td>
             	              <td><a href=\"/node/$pos->nid\">$pos->name</a></td>
             	              <td>$pos->linkage_group</td>
-            	              <td>$bin</td>
-            	              <td>$chr</td>
-            	              <td>$position</td>
+            	              <td>$bin</td>";
+            	if ($hasChr) { print "<td>$chr</td>";}
+            	print "    <td>$position</td>
             	              <td>$pos->locus_name</td>
             	              <td>$cmap</td>
             	           </tr>";
