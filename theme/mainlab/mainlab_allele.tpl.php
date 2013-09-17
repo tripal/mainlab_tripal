@@ -17,8 +17,8 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/m
        <!-- Stocks -->
      	<?php 
      	    print "Total $count_stock germplasms.";
-     	    print "<div id=\"cottongen-allele\">
-      					<table id=\"cottongen-allele-table\"class=\"tripal_feature-table tripal-table tripal-table-horz\" style=\"margin-top:15px;margin-bottom:15px;border-bottom:2px solid #999999;;border-top:2px solid #999999\">
+     	    print "<div id=\"mainlab-allele\">
+      					<table id=\"mainlab-allele-table\"class=\"tripal_feature-table tripal-table tripal-table-horz\" style=\"margin-top:15px;margin-bottom:15px;border-bottom:2px solid #999999;;border-top:2px solid #999999\">
       						<tr><th>#</th><th>Germplasm</th><th>Dye_color</th><th>Dataset</th></tr>";
      	    $counter = 1;
      	    foreach($stocks AS $stock) {
@@ -49,5 +49,5 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/m
     
 <script type="text/javascript">
 // Create a pager for the allele table
-tripal_table_make_pager ('cottongen-allele-table', 0, 15);
+tripal_table_make_pager ('mainlab-allele-table', 0, 15);
 </script>

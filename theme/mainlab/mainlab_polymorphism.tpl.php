@@ -17,8 +17,8 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/m
        <!-- Polymorphism -->
      	<?php 
      	    print "Total $counter_poly polymorphisms. <p><i>Note: </i>click on allele name to see all stocks.</p>";
-     	    print "<div id=\"cottongen-genetic_marker-polymorphism\">
-      					<table id=\"cottongen-genetic_marker-polymorphism-table\"class=\"tripal_feature-table tripal-table tripal-table-horz\" style=\"margin-top:15px;margin-bottom:15px;border-bottom:2px solid #999999;;border-top:2px solid #999999\">
+     	    print "<div id=\"mainlab-genetic_marker-polymorphism\">
+      					<table id=\"mainlab-genetic_marker-polymorphism-table\"class=\"tripal_feature-table tripal-table tripal-table-horz\" style=\"margin-top:15px;margin-bottom:15px;border-bottom:2px solid #999999;;border-top:2px solid #999999\">
       						<tr><th style=\"width:20px;\">#</th><th style=\"width:160px;\">Marker_Allele</th><th>Allele</th><th>Germplasm</th><th>Dataset</th></tr>";
      	    $counter = 1;
      	    foreach($polymorphism AS $poly) {
@@ -52,5 +52,5 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/m
     
 <script type="text/javascript">
 // Create a pager for the polymorphism
-tripal_table_make_pager ('cottongen-genetic_marker-polymorphism-table', 0, 15);
+tripal_table_make_pager ('mainlab-genetic_marker-polymorphism-table', 0, 15);
 </script>

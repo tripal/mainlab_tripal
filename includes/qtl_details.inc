@@ -143,8 +143,7 @@ function getQTLDetails ($feature_id) {
 
    // Get publications. the publications for QTL is not linked by the 'feature_pub' linking table so it needs a special treatment   
    // Pub Query for CottonGen
-   global $base_url;
-   if (preg_match("/cottongen\.org/", $base_url)) {
+   if (mainlab_tripal_get_site() == 'cottongen') {
    	$sql =
    	"SELECT
       P.pub_id,
@@ -160,26 +159,9 @@ function getQTLDetails ($feature_id) {
    			LEFT JOIN chado_pub CP ON CP.pub_id = P.pub_id
    			WHERE QTL.feature_id = %d
    			GROUP BY P.pub_id";
-   } else if (preg_match("/rosaceae\.org/", $base_url)) {
-    // Pub Query for GDR
-    $sql =
-    "SELECT
-      P.pub_id,
-      P.uniquename,
-      P.pyear,
-      P.title,
-      P.series_name,
-      P.volume,
-      P.pages,
-      CP.nid
-    		FROM {feature} QTL
-    		INNER JOIN {feature_pub} FP ON FP.feature_id = QTL.feature_id
-    		INNER JOIN {pub} P ON P.pub_id = FP.pub_id
-    		LEFT JOIN chado_pub CP ON P.pub_id = CP.pub_id
-    		WHERE QTL.feature_id = %d";
-   }
-   $qtl->publications = mainlab_tripal_dbresult_to_array(chado_query($sql, $feature_id));
-   //dpm($feature_id);
+   	$qtl->publications = mainlab_tripal_dbresult_to_array(chado_query($sql, $feature_id));
+   } 
+
    // Get aliases
    $sql = 
    "SELECT name 

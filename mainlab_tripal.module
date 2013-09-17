@@ -84,8 +84,8 @@ function mainlab_tripal_menu() {
   		'file' => 'includes/allele.page.inc',
   		'type' => MENU_CALLBACK
   );
-  global $base_url;
-  if (preg_match('/rosaceae\.org/', $base_url) || preg_match('/rosaceae\.org/', $_SERVER['PWD'])) {
+  
+  if (mainlab_tripal_get_site() == 'gdr') {
   	$items['polymorphism/%']['file'] = 'includes/gdr_polymorphism.page.inc';
   	$items['allele/%/%/%']['file'] = 'includes/gdr_allele.page.inc';
   }
@@ -674,4 +674,15 @@ function tripal_stock_preprocess_tripal_stock_image(&$variables) {
 		$counter ++;
 	}
 	$stock->images = $images;
+}
+
+function mainlab_tripal_get_site () {
+	global $base_url;
+	if (preg_match('/rosaceae\.org/', $base_url) || preg_match('/rosaceae\.org/', $_SERVER['PWD'])) {
+		return 'gdr';
+	} else if (preg_match('/cottongen\.org/', $base_url) || preg_match('/cottongen\.org/', $_SERVER['PWD'])) {
+		return 'cottongen';
+	} else {
+		return 'unknown';
+	}
 }
