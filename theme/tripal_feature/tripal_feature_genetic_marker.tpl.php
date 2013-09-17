@@ -51,16 +51,21 @@ if ($objs) {
 	}
 }
 
-// get primer
+// get primers and associated with 
 $subjs = $f_rel->feature_relationship->subject_id;
 $primers = array();
+$assoc_with = array();
 if ($subjs) {
-	foreach ($subjs AS $subj) {
-      if ($subj->type_id->name == 'adjacent_to') {
-			array_push($primers, $subj->object_id);
-		}
-	}
+  foreach ($subjs AS $subj) {
+    if ($subj->type_id->name == 'adjacent_to') {
+      array_push($primers, $subj->object_id);
+    }
+    if ($subj->type_id->name == 'associated_with') {
+      array_push($assoc_with, $subj->object_id);
+    }
+  }
 }
+dpm($assoc_with);
 
 // expand feature to include polymorphism
 $feature = tripal_core_expand_chado_vars($feature, 'table', 'feature_genotype');
@@ -192,6 +197,30 @@ function showPolymorphism () {
                print "N/A";
             }
          }
-    ?>
+        ?>
+        <!-- Associated With -->
+        <?php
+          if (count($assoc_with) == 0) {
+            $class = genetic_markerGetTableRowClass($counter); 
+            print "<tr class=\"" . $class ."\"><th>Associated With</th><td>N/A</td></tr>"; 
+            $counter ++;
+          } 
+          else {
+            $no_assoc = 1;
+            $class = genetic_markerGetTableRowClass($counter); 
+            print "<tr class=\"" . $class ."\"><th>Associated With</th><td>";
+            foreach($assoc_with AS $assoc) {
+              if ($assoc->nid) {
+                print l($assoc->name, 'node/' . $assoc->nid);
+              } 
+              else {
+                print $assoc->name . "<br>";
+              }
+              $no_assoc ++;
+            }
+            print "</td></tr>";
+          }
+        ?>
+
    </table>
 </div>
