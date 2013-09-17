@@ -65,7 +65,6 @@ if ($subjs) {
     }
   }
 }
-dpm($assoc_with);
 
 // expand feature to include polymorphism
 $feature = tripal_core_expand_chado_vars($feature, 'table', 'feature_genotype');
