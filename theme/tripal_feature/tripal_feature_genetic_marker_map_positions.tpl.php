@@ -36,8 +36,8 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/m
      	  		}
      	  	}
      	    print "Total $counter_pos map positions";
-     	    print "<div id=\"cottongen-genetic_marker-mappositions\">
-      					<table id=\"cottongen-genetic_marker-mappositions-table\"class=\"tripal_feature-table tripal-table tripal-table-horz\" style=\"margin-top:15px;margin-bottom:15px;border-bottom:2px solid #999999;;border-top:2px solid #999999\">
+     	    print "<div id=\"mainlab-genetic_marker-mappositions\">
+      					<table id=\"mainlab-genetic_marker-mappositions-table\"class=\"tripal_feature-table tripal-table tripal-table-horz\" style=\"margin-top:15px;margin-bottom:15px;border-bottom:2px solid #999999;;border-top:2px solid #999999\">
       						<tr><th style=\"width:20px;\">#</th><th>Map Name</th><th>Linkage Group</th><th>Bin</th>";
       		if ($hasChr) {print "<th>Chromosome</th>";}
       		print "<th>Position</th><th>Locus</th><th>CMap</th></tr>";
@@ -71,9 +71,9 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/m
     
 <script type="text/javascript">
 // Create a pager for the marker position
-tripal_table_make_pager ('cottongen-genetic_marker-mappositions-table', 0, 15);
+tripal_table_make_pager ('mainlab-genetic_marker-mappositions-table', 0, 15);
 // Adjust hieght of two columns whenever the page changes
-$('#cottongen-genetic_marker-mappositions-table-pager').click(function () {
+$('#mainlab-genetic_marker-mappositions-table-pager').click(function () {
   $("#tripal_feature_toc").height($("#tripal_feature-genetic_marker_map_positions-box").parent().height());
 });
 </script>
