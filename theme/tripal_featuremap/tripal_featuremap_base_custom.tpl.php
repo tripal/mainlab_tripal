@@ -73,7 +73,7 @@ $contacts = $featuremap->featuremap_contact;
         <th width="40%">Name</th>
         <td>
         <?php print $featuremap->name; ?>
-        <?php if ($featuremap->cmap_url) {print " [<a href=\"$featuremap->cmap_url\" target=\"_blank\">View in CMap</a>]";}?>
+        <?php if ($featuremap->cmap_url) {print " [<a href=\"" . $featuremap->cmap_url . "&ref_map_accs=-1\" target=\"_blank\">View in CMap</a>]";}?>
         </td>
       </tr>
 <?php 
