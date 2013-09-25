@@ -25,7 +25,9 @@ foreach($properties AS $property) {
 
 // get genbank accession
 $feature = tripal_core_expand_chado_vars($feature,'table','feature_dbxref');
-$accession = $feature->feature_dbxref->dbxref_id->accession;
+if ($feature->feature_dbxref->dbxref_id->db_id->name == 'nuccore') {
+  $accession = $feature->feature_dbxref->dbxref_id->accession;
+}
 
 // get germplasm
 $fstock = tripal_core_expand_chado_vars($feature,'table','feature_stock');
