@@ -25,7 +25,7 @@ foreach($properties AS $property) {
 
 // get genbank accession
 $feature = tripal_core_expand_chado_vars($feature,'table','feature_dbxref');
-if ($feature->feature_dbxref->dbxref_id->db_id->name == 'nuccore') {
+if ($feature->feature_dbxref->dbxref_id->db_id->name == 'DB:genbank') {
   $accession = $feature->feature_dbxref->dbxref_id->accession;
 }
 
