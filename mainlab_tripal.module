@@ -106,6 +106,22 @@ function mainlab_tripal_menu() {
   		'access arguments' => array('access content'),
   		'type' => MENU_CALLBACK
   );
+  
+  // Replicate Tripal Pub Search URLs
+  $items['search/publications' ]= array(
+      'title' => 'Publication Search',
+      'description' => ('Search for publications'),
+      'page callback' => 'tripal_pub_search_page',
+      'access arguments' => array('access chado_pub content'),
+      'type' => MENU_CALLBACK
+  );  
+  $items['search/publications/criteria/%/%'] = array(
+      'page callback' => 'tripal_pub_search_page_update_criteria',
+      'page arguments' => array(5, 6),
+      'access arguments' => array('access chado_pub content'),
+      'type ' => MENU_CALLBACK,
+  );
+  
   return $items;
 }
 
