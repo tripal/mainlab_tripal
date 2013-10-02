@@ -709,5 +709,5 @@ function mainlab_tripal_get_site () {
  */
 function mainlab_tripal_form_tripal_pub_search_form_alter (&$form, &$form_state) {
   $val = $form['instructions']['#value'];
-  $form['instructions']['#value'] = $val . "(<a href=\"/tutorial/publication_search\">Help</a>)";
+  $form['instructions']['#value'] = $val . "(<a href=\"/tutorial/publication_search\"><b>Help</b></a>)";
 }
