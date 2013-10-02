@@ -702,3 +702,12 @@ function mainlab_tripal_get_site () {
 		return 'unknown';
 	}
 }
+/**
+ * Hook to Tripal Pub form to add a tutorial link
+ * @param unknown $form
+ * @param unknown $form_state
+ */
+function mainlab_tripal_form_tripal_pub_search_form_alter (&$form, &$form_state) {
+  $val = $form['instructions']['#value'];
+  $form['instructions']['#value'] = $val . "(<a href=\"/tutorial/publication_search\">Help</a>)";
+}
