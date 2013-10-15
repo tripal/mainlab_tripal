@@ -47,7 +47,7 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/m
                 // Set values to N/A if not available
                $bin = $pos->bin; if (!$bin) {$bin = "N/A";}
                $chr = $pos->chr; if (!$chr) {$chr = "N/A";}
-               $cmap = "<a href=\"$pos->urlprefix$pos->accession" . "&ref_map_accs=-1&hightlight=" . $node->feature->name . "\">View</a>"; if (!$pos->urlprefix || !$pos->accession) {$cmap = "N/A";}
+               $cmap = "<a href=\"$pos->urlprefix$pos->accession" . "&ref_map_acc=-1&highlight=" . $pos->locus_name . "\">View</a>"; if (!$pos->urlprefix || !$pos->accession) {$cmap = "N/A";}
                $class = genetic_markerGetTableRowClass($counter);
                $position = number_format($pos->locus_start, 2);
             	print "<tr class=\"$class\">
