@@ -56,7 +56,7 @@ $('#tripal_stock-table-genotypic_data_value-link').click(function() {
             }
             $index ++;
          }
-         print "<tr class=\"$class\"><td>". ($counter + 1) . "</td><td>$data->project</td><td><a href=\"/feature/$marker\">$marker</a></td><td>$descriptor[1]</td><td>$link_alleles</td></tr>";
+         print "<tr class=\"$class\"><td>". ($counter + 1) . "</td><td>$data->project</td><td><a href=\"/node/$data->marker_nid\">$marker</a></td><td>$descriptor[1]</td><td>$link_alleles</td></tr>";
          $counter ++;
       }
     ?>

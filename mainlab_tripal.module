@@ -574,7 +574,7 @@ function tripal_stock_preprocess_tripal_stock_genotypic_data(&$variables) {
 	$stock = $variables['node']->stock;
 	$results = chado_query(
 			"SELECT
-			G.uniquename, G.description, J.name AS project, F.organism_id
+			G.uniquename, G.description, J.name AS project, F.organism_id, (SELECT nid FROM chado_feature WHERE feature_id = F.feature_id) AS marker_nid
 			FROM {nd_experiment_genotype} NEG
 			INNER JOIN {genotype} G ON NEG.genotype_id = G.genotype_id
 			INNER JOIN {feature_genotype} FG ON G.genotype_id = FG.genotype_id 

@@ -1,7 +1,6 @@
 <?php
 $stock = $variables['node']->stock;
 $images = $stock->images;
-
 //$path = file_directory_path() . '/tripal/tripal_stock/images/';
 
 $icon_path = file_directory_path() . '/bulk_data/www.cottongen.org/cotton_photo/web_images/icon/icon-';
