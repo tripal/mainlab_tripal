@@ -45,9 +45,20 @@ if (!is_array($pubs)) {
 		if (!$citation) {
 			$citation = $pub->pub_id->uniquename;
 		}
-	   print "<tr class=\"" . $class ."\">";
-	    print "<td style=\"padding:5px 10px 5px 10px;\">". $pub->pub_id->pyear . "</td><td style=\"padding:5px 0px 5px 0px;\"><a href=\"/node/" . $pub->pub_id->nid . "\">" . $citation . "</a></td><td style=\"padding:5px 0px 5px 0px;\">" . $pub->pub_id->title . "</td></tr>";
-	   $counter ++;
+	  print "<tr class=\"" . $class ."\">";
+    if ($pub->pub_id->pyear) {
+      $year = $pub->pub_id->pyear;
+    } else {
+      $year = "n/a";
+    }
+	  print "<td style=\"padding:5px 10px 5px 10px;\">". $year . "</td><td style=\"padding:5px 0px 5px 0px;\">";
+	  if ($pub->pub_id->nid) {
+      print "<a href=\"/node/" . $pub->pub_id->nid . "\">" . $citation . "</a>";
+    } else {
+      print $citation;
+    }
+    print "</td><td style=\"padding:5px 0px 5px 0px;\">" . $pub->pub_id->title . "</td></tr>";
+    $counter ++;
    }
 
 ?>
