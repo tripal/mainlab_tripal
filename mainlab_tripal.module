@@ -678,7 +678,7 @@ function tripal_stock_preprocess_tripal_stock_image(&$variables) {
 			 INNER JOIN {eimageprop} IP ON I.eimage_id = IP.eimage_id 
 			 WHERE IP.type_id = (SELECT cvterm_id 
 			                                      FROM {cvterm} 
-			                                      WHERE name = 'description' 
+			                                      WHERE name = 'legend' 
 			                                      AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN')
 			                                    )
 			AND stock_id = %d", 

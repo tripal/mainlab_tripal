@@ -2,7 +2,7 @@
 $stock = $variables['node']->stock;
 $images = $stock->images;
 //$path = file_directory_path() . '/tripal/tripal_stock/images/';
-
+$theme_path = path_to_theme();
 $icon_path = file_directory_path() . '/bulk_data/www.cottongen.org/cotton_photo/web_images/icon/icon-';
 $img_path = file_directory_path() . '/bulk_data/www.cottongen.org/cotton_photo/web_images/watermark/';
 
