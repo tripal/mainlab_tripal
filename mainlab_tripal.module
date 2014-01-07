@@ -9,7 +9,7 @@
  */
 
 require_once "includes/custom_schema.inc";
-require_once "includes/qtl_details.inc";
+#require_once "includes/qtl_details.inc";
 require_once "includes/custom_search.inc";
 require_once "includes/simple_seq_extract.inc";
 require_once "includes/stock_listing.page.inc";
@@ -678,7 +678,7 @@ function tripal_stock_preprocess_tripal_stock_image(&$variables) {
 			 INNER JOIN {eimageprop} IP ON I.eimage_id = IP.eimage_id 
 			 WHERE IP.type_id = (SELECT cvterm_id 
 			                                      FROM {cvterm} 
-			                                      WHERE name = 'description' 
+			                                      WHERE name = 'legend' 
 			                                      AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN')
 			                                    )
 			AND stock_id = %d", 
