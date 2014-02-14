@@ -222,6 +222,8 @@ function showPolymorphism () {
             print "</td></tr>";
           }
         ?>
+      <!-- Comment -->
+     	<?php $class = genetic_markerGetTableRowClass($counter); print "<tr class=\"" . $class ."\"><th>Comments</th><td>"; if (key_exists('comments', $kv_properties)) { print $kv_properties['comments'];} else { print "N/A";} print "</td></tr>"; $counter ++;?>
 
    </table>
 </div>
