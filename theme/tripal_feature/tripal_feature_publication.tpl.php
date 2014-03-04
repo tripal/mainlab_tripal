@@ -3,7 +3,13 @@ $feature  = $variables['node']->feature;
 
 // expand feature to include pubs 
 $feature = tripal_core_expand_chado_vars($feature, 'table', 'feature_pub');
-$feature_pubs = $feature->feature_pub;  ?>
+$feature_pubs = $feature->feature_pub; 
+if ($feature_pubs && !is_array($feature_pubs)) {
+  $tmp_fp = $feature_pubs;
+  $feature_pubs = array();
+  $feature_pubs [0] = $tmp_fp;
+}
+?>
 
 <div id="tripal_feature-pub-box" class="tripal_feature-info-box tripal-info-box">
   <div class="tripal_feature-info-box-title tripal-info-box-title">Publications</div>

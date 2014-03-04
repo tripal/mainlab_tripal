@@ -10,7 +10,7 @@ $library_stocks = $stock->library_stock;
 if (count($library_stocks) > 0) {?>
   <div id="tripal_stock-maps-box" class="tripal_stock-info-box tripal-info-box">
     <div class="tripal_stock-info-box-title tripal-info-box-title">Libraries</div>
-<!--    <div class="tripal_stock-info-box-desc tripal-info-box-desc">This stock has been used with the following maps.</div> -->
+    <!--<div class="tripal_stock-info-box-desc tripal-info-box-desc">This stock has been used with the following maps.</div> -->
     <table id="tripal_stock-table-collection" class="tripal_stock-table tripal-table tripal-table-horz">     
       <tr class="tripal_stock-table-odd-row tripal-table-even-row">
         <th>Library Name</th>
