@@ -12,7 +12,7 @@ function mainlab_show_allele ($marker, $alleleid, $oid) {
                 WHERE feature_id = 
 			          (SELECT feature_id 
 			           FROM {feature} 
-			           WHERE uniquename = '%s' AND type_id =
+			           WHERE lower(uniquename) = lower('%s') AND type_id =
 			              (SELECT cvterm_id FROM cvterm WHERE name = 'genetic_marker')
 					   AND organism_id = %d
 			          )

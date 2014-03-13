@@ -1,6 +1,9 @@
 <?php
 
 $feature  = $variables['node']->feature;
+if (!$feature->name) {
+  $feature->name = $feature->uniquename; // show uniquname if there is no name
+}
 $feature = tripal_core_expand_chado_vars($feature,'table','featureprop');
 
 // get marker properties
