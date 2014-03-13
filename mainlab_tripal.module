@@ -170,8 +170,11 @@ function mainlab_tripal_nodeapi(&$node, $op, $teaser, $page) {
   // Remove the leading comma from the title if feature name is empty and is used to create the page title
   if ($node->type == 'chado_feature' && $node->feature->name == '' && variable_get('chado_feature_title', 'unique_constraint') == 'unique_constraint') {
     $node->title = trim($node->title, ' ,');  
-    $feature_id = $node->feature->feature_id;
-  } 
+  }
+  // Remove the leading comma from the title if stock name is empty and is used to create the page title
+  if ($node->type == 'chado_stock' && $node->stock->name == '' && variable_get('chado_stock_title', 'unique_constraint') == 'unique_constraint') {
+    $node->title = trim($node->title, ' ,');
+  }
 }
 
 /**
