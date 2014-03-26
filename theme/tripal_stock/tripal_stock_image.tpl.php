@@ -4,8 +4,8 @@ $images = $stock->images;
 
 //$path = file_directory_path() . '/tripal/tripal_stock/images/';
 
-$icon_path = file_directory_path() . '/bulk_data/www.cottongen.org/cotton_photo/web_images/icon/icon-';
-$img_path = file_directory_path() . '/bulk_data/www.cottongen.org/cotton_photo/web_images/watermark/';
+$icon_path = file_directory_path() . '/bulk_data/www.cottongen.org/cotton_photo/germplasm/icon/icon-';
+$img_path = file_directory_path() . '/bulk_data/www.cottongen.org/cotton_photo/germplasm/image/';
 
 if (count($images) > 0) { ?>
   <div id="tripal_stock-images-box" class="tripal_stock-info-box tripal-info-box">
