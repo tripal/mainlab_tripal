@@ -223,6 +223,11 @@ function mainlab_tripal_theme() {
   		'template' => 'tripal_feature_genetic_marker_map_positions',
   		'path' => $path . '/tripal_feature',
   	 ),
+     'tripal_feature_genetic_marker_image' => array(
+        'arguments' => array('node' => NULL),
+        'template' => 'tripal_feature_genetic_marker_image',
+        'path' => $path . '/tripal_feature',
+     ),
   	 'tripal_feature_sequence_feature' => array(
   				'arguments' => array('node' => NULL),
   				'template' => 'tripal_feature_sequence_feature',
@@ -303,7 +308,11 @@ function mainlab_tripal_theme() {
   			'template' => 'tripal_stock_image',
   			'path' => $path . '/tripal_stock',
   	),
-
+    'tripal_pub_image' => array(
+        'arguments' => array('node' => NULL),
+        'template' => 'tripal_pub_image',
+        'path' => $path . '/tripal_pub',
+    ),
     // themed forms
     'mainlab_tripal_seq_extract_form' => array(
        'arguments' => array('form'),
@@ -458,6 +467,35 @@ function tripal_feature_preprocess_tripal_feature_genetic_marker_map_positions(&
 }
 
 /**
+ *
+ *
+ * @ingroup tripal_feature
+ */
+function tripal_feature_preprocess_tripal_feature_genetic_marker_image(&$variables) {
+  $feature = $variables['node']->feature;
+  // We want to show maps for this stock and maps of its children
+  $results = chado_query(
+      "SELECT eimage_type, image_uri, value as legend
+			 FROM {feature_image} FI
+			 INNER JOIN {eimage} I ON FI.eimage_id = I.eimage_id
+			 INNER JOIN {eimageprop} IP ON I.eimage_id = IP.eimage_id
+			 WHERE IP.type_id = (SELECT cvterm_id
+			                                      FROM {cvterm}
+			                                      WHERE name = 'legend'
+			                                      AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN')
+			                                    )
+			AND feature_id = %d",
+      $feature->feature_id);
+  $images = NULL;
+  $counter = 0;
+  while ($img = db_fetch_object($results)) {
+    $images[$counter] = $img;
+    $counter ++;
+  }
+  $feature->images = $images;
+}
+
+/**
  * @ingroup tripal_featuremap
  */
 function tripal_featuremap_preprocess_tripal_featuremap_base_custom(&$variables) {
@@ -556,13 +594,25 @@ function tripal_stock_preprocess_tripal_stock_trait_scores(&$variables) {
 	$stock = $variables['node']->stock;
 	$results = chado_query(
 			"SELECT
-			P.uniquename, P.value, J.name AS project
+			P.uniquename, P.value, J.name AS project, GEO.environment, SP.value AS replications
 			FROM {nd_experiment_phenotype} NEP
 			INNER JOIN {phenotype} P ON NEP.phenotype_id = P.phenotype_id
 			INNER JOIN {nd_experiment_stock} NES ON NES.nd_experiment_id = NEP.nd_experiment_id
 			INNER JOIN {nd_experiment_project} NEJ ON NES.nd_experiment_id = NEJ.nd_experiment_id
 			INNER JOIN {project} J ON J.project_id = NEJ.project_id
-			WHERE stock_id = %d",  $stock->stock_id);
+			INNER JOIN {nd_experiment} NE ON NE.nd_experiment_id = NEP.nd_experiment_id
+			LEFT JOIN 
+			(SELECT 
+			   NG.nd_geolocation_id,
+	           NGP.value AS environment
+			 FROM {nd_geolocation} NG 
+			 INNER JOIN {nd_geolocationprop} NGP ON NG.nd_geolocation_id = NGP.nd_geolocation_id
+			 AND NGP.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'site_code' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
+			) GEO ON GEO.nd_geolocation_id = NE.nd_geolocation_id
+	        LEFT JOIN {stockprop} SP ON NES.stock_id = SP.stock_id AND SP.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'rep' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
+			WHERE NES.stock_id = %d OR NES.stock_id IN (SELECT subject_id FROM {stock_relationship} WHERE object_id = %d
+			AND type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))) 
+	        ORDER BY project, environment, replications, uniquename", $stock->stock_id, $stock->stock_id);
 	$trait_scores = NULL;
 	$counter = 0;
 	while ($traits = db_fetch_object($results)) {
@@ -695,6 +745,33 @@ function tripal_stock_preprocess_tripal_stock_image(&$variables) {
 		$counter ++;
 	}
 	$stock->images = $images;
+}
+
+/**
+ * @ingroup tripal_stock
+ */
+function tripal_pub_preprocess_tripal_pub_image(&$variables) {
+  $pub = $variables['node']->pub;
+  // We want to show maps for this pub and maps of its children
+  $results = chado_query(
+      "SELECT eimage_type, image_uri, value as legend
+			 FROM {pub_image} SI
+			 INNER JOIN {eimage} I ON SI.eimage_id = I.eimage_id
+			 INNER JOIN {eimageprop} IP ON I.eimage_id = IP.eimage_id
+			 WHERE IP.type_id = (SELECT cvterm_id
+			                                      FROM {cvterm}
+			                                      WHERE name = 'legend'
+			                                      AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN')
+			                                    )
+			AND pub_id = %d",
+      $pub->pub_id);
+  $images = NULL;
+  $counter = 0;
+  while ($img = db_fetch_object($results)) {
+    $images[$counter] = $img;
+    $counter ++;
+  }
+  $pub->images = $images;
 }
 
 function mainlab_tripal_get_site () {

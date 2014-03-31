@@ -21,7 +21,7 @@ $('#tripal_stock-table-trait_scores_value-link').click(function() {
 </script>
 
   <div id="tripal_stock-trait_scores-box" class="tripal_stock-info-box tripal-info-box">
-    <div class="tripal_stock-info-box-title tripal-info-box-title">Trait Score</div>
+    <div class="tripal_stock-info-box-title tripal-info-box-title">Phenotypic Data</div>
     Total <?php print $num_trait_scores;?> trait scores</br></br>
     <table id="tripal_stock-trait_scores-table" class="tripal_stock-table tripal-table tripal-table-horz" style="margin-bottom:20px;">
              <tr>
@@ -29,6 +29,8 @@ $('#tripal_stock-table-trait_scores_value-link').click(function() {
                <th>Dataset</th>
                <th>Descriptor</th>
                <th>Value</th>
+               <th>Environment</th>
+               <th>Replication</th>
              </tr>
     <?php
       $counter = 0;
@@ -39,8 +41,10 @@ $('#tripal_stock-table-trait_scores_value-link').click(function() {
          } else {
             $class = "tripal_stock-table-odd-row tripal-table-odd-row";
          }
-         $descriptor = explode("_", $score->uniquename);
-         print "<tr class=\"$class\"><td>". ($counter + 1) . "</td><td>$score->project</td><td>$descriptor[0]</td><td>$score->value</td></tr>";
+         $descriptors = explode("_", $score->uniquename);
+         $descriptor = $descriptors[count($descriptors) - 2];
+         $env = str_replace("COTTONDB_", "", $score->environment);
+         print "<tr class=\"$class\"><td>". ($counter + 1) . "</td><td>$score->project</td><td>$descriptor</td><td>$score->value</td><td>$env</td><td>$score->replications</td></tr>";
          $counter ++;
       }
     ?>
