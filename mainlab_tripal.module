@@ -283,9 +283,9 @@ function mainlab_tripal_theme() {
   			'template' => 'tripal_stock_paternal_parent',
   			'path' => $path . '/tripal_stock',
   	),
-  	'tripal_stock_trait_scores' => array(
+  	'tripal_stock_phenotypic_data' => array(
   			'arguments' => array('node' => NULL),
-  			'template' => 'tripal_stock_trait_scores',
+  			'template' => 'tripal_stock_phenotypic_data',
   			'path' => $path . '/tripal_stock',
   	),
   	'tripal_stock_genotypic_data' => array(
@@ -590,7 +590,7 @@ function tripal_stock_preprocess_tripal_stock_paternal_parent(&$variables) {
 /**
  * @ingroup tripal_stock
  */
-function tripal_stock_preprocess_tripal_stock_trait_scores(&$variables) {
+function tripal_stock_preprocess_tripal_stock_phenotypic_data(&$variables) {
 	$stock = $variables['node']->stock;
 	$results = chado_query(
 			"SELECT
@@ -613,13 +613,13 @@ function tripal_stock_preprocess_tripal_stock_trait_scores(&$variables) {
 			WHERE NES.stock_id = %d OR NES.stock_id IN (SELECT subject_id FROM {stock_relationship} WHERE object_id = %d
 			AND type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))) 
 	        ORDER BY project, environment, replications, uniquename", $stock->stock_id, $stock->stock_id);
-	$trait_scores = NULL;
+	$phenotypic_data = NULL;
 	$counter = 0;
 	while ($traits = db_fetch_object($results)) {
-		$trait_scores[$counter] = $traits;
+		$phenotypic_data[$counter] = $traits;
 		$counter ++;
 	}
-	$stock->trait_scores = $trait_scores;
+	$stock->phenotypic_data = $phenotypic_data;
 }
 
 /**
