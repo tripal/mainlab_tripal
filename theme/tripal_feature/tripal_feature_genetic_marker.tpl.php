@@ -15,15 +15,11 @@ if (!$properties) {
 }
 $kv_properties = array();
 foreach($properties AS $property) {
-	if ($property->type_id->name == 'alias') {
-		if ($kv_properties['alias']) {
-	      $kv_properties['alias'] = $kv_properties['alias'] . "<br>" . $property->value;
-		} else {
-			$kv_properties['alias'] = $property->value;
-		}
-	} else {
-	   $kv_properties[$property->type_id->name] = $property->value;
-	}
+   if ($kv_properties[$property->type_id->name]) {
+     $kv_properties[$property->type_id->name] = $kv_properties[$property->type_id->name] . "<br>" . $property->value;
+   } else {
+     $kv_properties[$property->type_id->name] = $property->value;
+   }
 }
 
 // get genbank accession
