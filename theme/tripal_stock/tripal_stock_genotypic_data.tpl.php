@@ -30,6 +30,7 @@ $('#tripal_stock-table-genotypic_data_value-link').click(function() {
         }
         $download = $dir . '/genotypic_data_stock_id_' . $stock->stock_id . '.csv';
         $handle = fopen($download, "w");
+        fwrite($handle, "Genotypic Data for Germplasm '" . $stock->uniquename. "'\n");
         fwrite($handle, '"#","Dataset","Marker","Genotype","Marker_Allele"' . "\n");
     ?>
     <div style="float: right">Download <a href="<?php print '/' . $download;?>">Table</a></div>

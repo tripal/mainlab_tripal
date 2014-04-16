@@ -30,6 +30,7 @@ $('#tripal_stock-table-phenotypic_data_value-link').click(function() {
       }
       $download = $dir . '/phenotypic_data_stock_id_' . $stock->stock_id . '.csv';
       $handle = fopen($download, "w");
+      fwrite($handle, "Phenotypic Data for Germplasm '" . $stock->uniquename. "'\n");
       fwrite($handle, '"#","Dataset","Descriptor","Value","Environment","Replication"' . "\n");
     ?>
     <div style="float: right">Download <a href="<?php print '/' . $download;?>">Table</a></div>
