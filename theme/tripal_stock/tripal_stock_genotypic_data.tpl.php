@@ -22,7 +22,17 @@ $('#tripal_stock-table-genotypic_data_value-link').click(function() {
 
   <div id="tripal_stock-genotypic_data-box" class="tripal_stock-info-box tripal-info-box">
     <div class="tripal_stock-info-box-title tripal-info-box-title">Genotypic Data</div>
-      Total <?php print $num_genotypic_data;?> genotypic data</br></br>
+       <div style="float:left; margin-bottom: 15px;">Total <?php print $num_genotypic_data;?> genotypic data</div>
+       <?php
+        $dir = file_directory_path() . '/tripal/mainlab_tripal/download';
+        if (!file_exists($dir)) {
+          mkdir ($dir, 0777);
+        }
+        $download = $dir . '/genotypic_data_stock_id_' . $stock->stock_id . '.csv';
+        $handle = fopen($download, "w");
+        fwrite($handle, '"#","Dataset","Marker","Genotype","Marker_Allele"' . "\n");
+    ?>
+    <div style="float: right">Download <a href="<?php print '/' . $download;?>">Table</a></div>
     <table id="tripal_stock-genotypic_data-table" class="tripal_stock-table tripal-table tripal-table-horz" style="margin-bottom:20px;">
              <tr>
              <th>#</th>
@@ -48,17 +58,23 @@ $('#tripal_stock-table-genotypic_data_value-link').click(function() {
          $gtype = $descriptor[count($descriptor) - 1];
          $alleles = explode("|", $gtype );
          $link_alleles = "";
+         $alleles_wo_link = "";
          $index = 0;
          foreach($alleles AS $allele) {
             $link_alleles .= "<a href=\"/allele/$marker/$allele/$data->organism_id\">" .$marker ."_" . $allele . "</a>";
+            $alleles_wo_link .= $marker ."_" . $allele;
             if ($index < count($alleles) - 1) {
                $link_alleles .= "; ";
+               $alleles_wo_link .= "; ";
             }
             $index ++;
          }
          print "<tr class=\"$class\"><td>". ($counter + 1) . "</td><td>$data->project</td><td><a href=\"/node/$data->marker_nid\">$marker</a></td><td>$descriptor[1]</td><td>$link_alleles</td></tr>";
+         global $base_url;
+         fwrite($handle, '"' . ($counter + 1) . '","'. $data->project . '","=HYPERLINK(""' . $base_url . '/node/' . $data->marker_nid . '"",""' . $marker . '"")","'. $descriptor[1] . '","'. $alleles_wo_link . '"' . "\n");
          $counter ++;
       }
+      fclose($handle);
     ?>
     </table>
   </div>

@@ -22,7 +22,17 @@ $('#tripal_stock-table-phenotypic_data_value-link').click(function() {
 
   <div id="tripal_stock-phenotypic_data-box" class="tripal_stock-info-box tripal-info-box">
     <div class="tripal_stock-info-box-title tripal-info-box-title">Phenotypic Data</div>
-    Total <?php print $num_phenotypic_data;?> trait scores</br></br>
+    <div style="float:left; margin-bottom: 15px;">Total <?php print $num_phenotypic_data;?> trait scores</div>
+    <?php
+      $dir = file_directory_path() . '/tripal/mainlab_tripal/download';
+      if (!file_exists($dir)) {
+        mkdir ($dir, 0777);
+      }
+      $download = $dir . '/phenotypic_data_stock_id_' . $stock->stock_id . '.csv';
+      $handle = fopen($download, "w");
+      fwrite($handle, '"#","Dataset","Descriptor","Value","Environment","Replication"' . "\n");
+    ?>
+    <div style="float: right">Download <a href="<?php print '/' . $download;?>">Table</a></div>
     <table id="tripal_stock-phenotypic_data-table" class="tripal_stock-table tripal-table tripal-table-horz" style="margin-bottom:20px;">
              <tr>
                <th>#</th>
@@ -45,8 +55,10 @@ $('#tripal_stock-table-phenotypic_data_value-link').click(function() {
          $descriptor = $descriptors[count($descriptors) - 2];
          $env = str_replace("COTTONDB_", "", $score->environment);
          print "<tr class=\"$class\"><td>". ($counter + 1) . "</td><td>$score->project</td><td>$descriptor</td><td>$score->value</td><td>$env</td><td>$score->replications</td></tr>";
+         fwrite($handle, '"' . ($counter + 1) . '","'. $score->project . '","' . $descriptor . '","' . $score->value . '","' . $env . '","' . $score->replications . '"' . "\n");
          $counter ++;
       }
+      fclose($handle);
     ?>
     </table>
   </div>
