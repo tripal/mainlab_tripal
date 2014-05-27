@@ -9,7 +9,6 @@
  */
 
 require_once "includes/custom_schema.inc";
-#require_once "includes/qtl_details.inc";
 require_once "includes/custom_search.inc";
 require_once "includes/simple_seq_extract.inc";
 require_once "includes/stock_listing.page.inc";
@@ -316,7 +315,30 @@ function mainlab_tripal_theme() {
     // themed forms
     'mainlab_tripal_seq_extract_form' => array(
        'arguments' => array('form'),
-    )
+    ),
+    // nd_geolocation
+    'tripal_nd_geolocation_base_custom' => array(
+        'arguments' => array('node' => NULL),
+        'template' => 'tripal_nd_geolocation_base_custom',
+        'path' => $path . '/tripal_natural_diversity',
+    ),
+    'tripal_nd_geolocation_associated_dataset' => array(
+        'arguments' => array('node' => NULL),
+        'template' => 'tripal_nd_geolocation_associated_dataset',
+        'path' => $path . '/tripal_natural_diversity',
+    ),
+    // eimage
+    'cottongen_tripal_eimage_base' => array(
+        'arguments' => array('node' => NULL),
+        'template' => 'cottongen_tripal_eimage_base',
+        'path' => $path . '/tripal_eimage',
+    ),
+    // eimage
+    'tripal_eimage_contact' => array(
+        'arguments' => array('node' => NULL),
+        'template' => 'tripal_eimage_contact',
+        'path' => $path . '/tripal_eimage',
+    ),
   );
   return $themes;
 }
@@ -774,6 +796,178 @@ function tripal_pub_preprocess_tripal_pub_image(&$variables) {
   $pub->images = $images;
 }
 
+/**
+ * @ingroup tripal_natural_diversity
+ */
+function tripal_pub_preprocess_tripal_nd_geolocation_base_custom(&$variables) {
+  $nd_geolocation = $variables['node']->nd_geolocation;
+  $sql = 
+      "SELECT nid, name FROM {project} P
+       LEFT JOIN public.chado_project CP ON CP.project_id = P.project_id
+       WHERE P.project_id IN 
+       (SELECT project_id 
+        FROM {nd_geolocation} NG 
+        INNER JOIN {nd_experiment} NE on NE.nd_geolocation_id = NG.nd_geolocation_id
+        INNER JOIN {nd_experiment_project} NP ON NE.nd_experiment_id = NP.nd_experiment_id
+        WHERE NG.nd_geolocation_id = %d
+        GROUP BY project_id)";
+  $results = chado_query($sql, $nd_geolocation->nd_geolocation_id);
+  $projects = array();
+  while ($d = db_fetch_object($results)) {
+    array_push($projects, $d);
+  }
+  $nd_geolocation->projects = $projects;
+}
+
+/**
+ * @ingroup tripal_natural_diversity
+ */
+function tripal_pub_preprocess_tripal_nd_geolocation_associated_dataset(&$variables) {
+  $nd_geolocation = $variables['node']->nd_geolocation;
+  $sql =
+  "SELECT nid, name, PP.value AS description FROM {project} P
+       LEFT JOIN public.chado_project CP ON CP.project_id = P.project_id
+       LEFT JOIN {projectprop} PP ON P.project_id = PP.project_id 
+         AND PP.type_id = (SELECT cvterm_id FROM {cvterm} 
+         WHERE name = 'description' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
+       WHERE P.project_id IN
+       (SELECT project_id
+        FROM {nd_geolocation} NG
+        INNER JOIN {nd_experiment} NE on NE.nd_geolocation_id = NG.nd_geolocation_id
+        INNER JOIN {nd_experiment_project} NP ON NE.nd_experiment_id = NP.nd_experiment_id
+        WHERE NG.nd_geolocation_id = %d
+        GROUP BY project_id)";
+  $results = chado_query($sql, $nd_geolocation->nd_geolocation_id);
+  $projects = array();
+  while ($d = db_fetch_object($results)) {
+    array_push($projects, $d);
+  }
+  $nd_geolocation->projects = $projects;
+}
+
+/**
+ * @ingroup tripal_eimage
+ */
+function tripal_pub_preprocess_cottongen_tripal_eimage_base(&$variables) {
+  $eimage = $variables['node']->eimage;
+  // Get Eimage legend
+  $sql =
+  "SELECT value 
+      FROM {eimage} E 
+      LEFT JOIN {eimageprop} EP ON E.eimage_id = EP.eimage_id
+      AND type_id = 
+        (SELECT cvterm_id FROM {cvterm} WHERE name = 'legend'
+         AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN')
+        ) 
+      WHERE E.eimage_id = %d";
+  $results = chado_query($sql, $eimage->eimage_id);
+  $legends = array();
+  while ($result = db_fetch_object($results)) {
+    array_push($legends, $result->value);
+  }
+  $eimage->legends = $legends;
+  // Get Eimage contact
+  $sql =
+  "SELECT C.contact_id, name, description
+      FROM {contact} C
+      INNER JOIN {contact_image} CI ON CI.contact_id = C.contact_id
+      WHERE CI.eimage_id = %d";
+  $results = chado_query($sql, $eimage->eimage_id);
+  $contacts = array();
+  while ($result = db_fetch_object($results)) {
+    $detail_contact = new stdClass();
+    $detail_sql = "SELECT (SELECT name FROM {cvterm} WHERE cvterm_id = type_id) AS type, value FROM {contactprop} WHERE contact_id = %d";
+    $detail_results = chado_query($detail_sql, $result->contact_id);
+    while ($details = db_fetch_object($detail_results)) {
+      $type = $details->type;
+      $value = $details->value;
+      if (property_exists($detail_contact, $type)) {
+        $detail_contact->$type .= ". " . $value;
+      } else {
+        $detail_contact->$type = $value;
+      }
+    }
+    $detail_contact->name = $result->name;
+    $detail_contact->description = $result->description;
+    array_push($contacts, $detail_contact);
+  }
+  $eimage->contacts = $contacts;
+  
+  // Get image pubs
+  $sql =
+  "SELECT uniquename, nid, P.pub_id
+      FROM {pub} P
+      INNER JOIN {pub_image} PI ON PI.pub_id = P.pub_id
+      LEFT JOIN chado_pub CP ON CP.pub_id = P.pub_id
+      WHERE PI.eimage_id = %d";
+  $results = chado_query($sql, $eimage->eimage_id);
+  $pubs = array();
+  while ($result = db_fetch_object($results)) {
+    array_push($pubs, $result);
+  }
+  $eimage->pubs = $pubs;
+  // See if this image belong to a marker
+  $sql =
+  "SELECT uniquename, nid
+      FROM {feature} F
+      INNER JOIN {feature_image} FI ON FI.feature_id = F.feature_id
+      LEFT JOIN chado_feature CF ON F.feature_id = CF.feature_id
+      WHERE FI.eimage_id = %d
+      AND F.type_id = 
+        (SELECT cvterm_id FROM {cvterm} WHERE name = 'genetic_marker'
+         AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'sequence'))";
+  $marker = db_fetch_object(chado_query($sql, $eimage->eimage_id));
+  $eimage->marker = $marker;
+  // See if this image belong to a stock
+  $sql =
+  "SELECT uniquename, nid, S.stock_id
+      FROM {stock} S
+      INNER JOIN {stock_image} SI ON SI.stock_id = S.stock_id
+      LEFT JOIN chado_stock CS ON CS.stock_id = S.stock_id
+      WHERE SI.eimage_id = %d";
+  $stock = db_fetch_object(chado_query($sql, $eimage->eimage_id));
+  $eimage->stock = $stock;
+  
+  // Get associated projects
+  $project = array();
+  if ($stock) {
+    $sql =
+      "SELECT distinct name, nid
+        FROM {project} P
+        INNER JOIN {nd_experiment_project} NEP ON NEP.project_id = P.project_id
+        INNER JOIN {nd_experiment_stock} NES ON NES.nd_experiment_id = NEP.nd_experiment_id
+        LEFT JOIN chado_project CP ON CP.project_id = P.project_id
+        WHERE NES.stock_id = %d";
+    $results = chado_query($sql, $stock->stock_id);
+    while ($result = db_fetch_object($results)) {
+      array_push($project, $result);
+    }
+  } else if (count($pubs) > 0) {
+    $sql =
+    "SELECT distinct name, nid
+      FROM {project} P
+      INNER JOIN {nd_experiment_project} NEP ON NEP.project_id = P.project_id
+      INNER JOIN {nd_experiment_pub} NEU ON NEU.nd_experiment_id = NEP.nd_experiment_id
+      LEFT JOIN chado_project CP ON CP.project_id = P.project_id
+      WHERE NEU.pub_id IN (%s)";
+    foreach ($pubs AS $p) {
+      $pub_ids .= $p->pub_id . ",";
+    }
+    $pub_ids = trim($pub_ids, ',');
+    $results = chado_query($sql, $pub_ids);
+    while ($result = db_fetch_object($results)) {
+      array_push($project, $result);
+    }
+  }
+  $eimage->project = $project;
+}
+
+/**
+ * Return the site name
+ * @return string:
+ *  'gdr' for Rosaceae Genomic Database
+ *  'cottongen' for CottonGen
+ */
 function mainlab_tripal_get_site () {
 	global $base_url;
 	if (preg_match('/rosaceae\.org/', $base_url) || preg_match('/rosaceae\.org/', $_SERVER['PWD'])) {
