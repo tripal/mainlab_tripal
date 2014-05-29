@@ -33,6 +33,7 @@ if ($feature_pubs && !is_array($feature_pubs)) {
     foreach ($feature_pubs AS $feature_pub) {
       $pub = $feature_pub->pub_id;
       $pub = tripal_core_expand_chado_vars($pub, 'field', 'pub.title');
+      $pub = tripal_core_expand_chado_vars($pub, 'field', 'pub.uniquename');
       $pub = tripal_core_expand_chado_vars($pub, 'table', 'pubprop'); 
       $props = $pub->pubprop;
       if ($counter % 2 == 1) {
@@ -64,7 +65,7 @@ if ($feature_pubs && !is_array($feature_pubs)) {
       else {
         $year = "n/a";
       }
-      print "<td style=\"padding:5px 10px 5px 10px;\">". $year . "</td><td style=\"padding:5px 0px 5px 0px;\">";
+      print "<td style=\"padding:5px 10px 5px 10px;\">". $year . "</td><td width=\"30%\" style=\"padding:5px 0px 5px 0px;\">";
       if ($pub->nid) {
         print "<a href=\"/node/" . $pub->nid . "\">" . $citation . "</a>";
       } 
