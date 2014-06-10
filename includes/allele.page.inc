@@ -42,7 +42,7 @@ function mainlab_show_allele ($marker, $alleleid, $oid) {
  
 function mainlab_get_allele_associated_stocks ($genotype_id) {
 	// Find out the stocks associated with this genotype (allele)
-	$ssql = "SELECT S.stock_id, S.uniquename, DYE.value AS dye_color, P.name AS project
+	$ssql = "SELECT DISTINCT S.stock_id, S.uniquename, DYE.value AS dye_color, P.name AS project
                     FROM {nd_experiment_genotype} NDG
                     INNER JOIN {nd_experiment_stock} NDS ON NDG.nd_experiment_id = NDS.nd_experiment_id
                     INNER JOIN {stock} EXP ON EXP.stock_id = NDS.stock_id

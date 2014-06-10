@@ -2,7 +2,8 @@
 /*
  * Create an allele page that lists all germplasms (i.e. stocks) by using a marker's name (i.e. $marker) and the genotype name (i.e. $alleleid)
 */
-function mainlab_show_allele ($marker, $alleleid, $oid) {
+function mainlab_show_allele ($marker, $alleleid, $oid, $project = 0, $stock_uniquename = 0, $species = 0) {
+	
 	// Find the genotypes for this marker_allele
 	$sql = "SELECT
                   G.genotype_id
@@ -29,7 +30,7 @@ function mainlab_show_allele ($marker, $alleleid, $oid) {
 	}
 	$stocks = array();
 	foreach($genotypes AS $gtype) {
-		$stock = mainlab_get_allele_associated_stocks($gtype);
+		$stock = mainlab_get_allele_associated_stocks($gtype, $project, $stock_uniquename, $species);
 	   $stocks = array_merge($stocks, $stock);
 	}
 	$allele->stock = $stocks;
@@ -40,9 +41,9 @@ function mainlab_show_allele ($marker, $alleleid, $oid) {
 	return theme('gdr_mainlab_allele', $allele);
 }
  
-function mainlab_get_allele_associated_stocks ($genotype_id) {
+function mainlab_get_allele_associated_stocks ($genotype_id, $project = 0, $stock_uniquename = 0, $species = 0) {
 	// Find out the stocks associated with this genotype (allele)
-	$ssql = "SELECT S.stock_id, S.uniquename, P.name AS project
+	$ssql = "SELECT DISTINCT S.stock_id, S.uniquename, P.name AS project
                     FROM {nd_experiment_genotype} NDG
                     INNER JOIN {nd_experiment_stock} NDS ON NDG.nd_experiment_id = NDS.nd_experiment_id
                     INNER JOIN {stock} EXP ON EXP.stock_id = NDS.stock_id
@@ -58,6 +59,9 @@ function mainlab_get_allele_associated_stocks ($genotype_id) {
 			        AND (PP.value = 'diversity' OR P.name LIKE '%_CRS%' OR (P.name LIKE 'Apple_KE%' AND P.name NOT LIKE 'Apple_KE_PRV_%'))
 	                AND (SP.value <> 'PRIVATE' OR SP.value IS NULL)
                     AND genotype_id = %d";
+	if ($project) {$ssql .= " AND P.name = '$project'";}
+	if ($stock_uniquename) {$ssql .= " AND S.uniquename = '$stock_uniquename'";}
+	if ($species) {$ssql .= " AND (SELECT genus || ' ' || species FROM organism WHERE organism_id =S.organism_id) = '$species'";}
 	$sresult = chado_query($ssql, $genotype_id);
 	$stocks = array();
 	$scounter = 0;
