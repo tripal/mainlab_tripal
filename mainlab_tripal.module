@@ -930,34 +930,15 @@ function tripal_pub_preprocess_cottongen_tripal_eimage_base(&$variables) {
   
   // Get associated projects
   $project = array();
-  if ($stock) {
-    $sql =
-      "SELECT distinct name, nid
-        FROM {project} P
-        INNER JOIN {nd_experiment_project} NEP ON NEP.project_id = P.project_id
-        INNER JOIN {nd_experiment_stock} NES ON NES.nd_experiment_id = NEP.nd_experiment_id
-        LEFT JOIN chado_project CP ON CP.project_id = P.project_id
-        WHERE NES.stock_id = %d";
-    $results = chado_query($sql, $stock->stock_id);
-    while ($result = db_fetch_object($results)) {
-      array_push($project, $result);
-    }
-  } else if (count($pubs) > 0) {
-    $sql =
-    "SELECT distinct name, nid
-      FROM {project} P
-      INNER JOIN {nd_experiment_project} NEP ON NEP.project_id = P.project_id
-      INNER JOIN {nd_experiment_pub} NEU ON NEU.nd_experiment_id = NEP.nd_experiment_id
-      LEFT JOIN chado_project CP ON CP.project_id = P.project_id
-      WHERE NEU.pub_id IN (%s)";
-    foreach ($pubs AS $p) {
-      $pub_ids .= $p->pub_id . ",";
-    }
-    $pub_ids = trim($pub_ids, ',');
-    $results = chado_query($sql, $pub_ids);
-    while ($result = db_fetch_object($results)) {
-      array_push($project, $result);
-    }
+  $sql = 
+    "SELECT value FROM {eimageprop} 
+     WHERE type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'project_id' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN')) 
+     AND eimage_id = %d";
+  $result_pj = chado_query($sql, $eimage->eimage_id);
+  $sql_pj = "SELECT distinct name, nid FROM {project} P LEFT JOIN chado_project CP ON CP.project_id = P.project_id WHERE P.project_id = %d";
+  while ($pj = db_fetch_object($result_pj)) {
+  	$result = db_fetch_object(chado_query($sql_pj, $pj->value));
+  	array_push($project, $result);
   }
   $eimage->project = $project;
 }
