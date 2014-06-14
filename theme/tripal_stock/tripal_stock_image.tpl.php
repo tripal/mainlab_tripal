@@ -3,9 +3,17 @@ $stock = $variables['node']->stock;
 $images = $stock->images;
 
 //$path = file_directory_path() . '/tripal/tripal_stock/images/';
+$site = mainlab_tripal_get_site();
+if ($site == 'gdr') {
+	$icons = '/bulk_data/www.rosaceae.org/gdr_photo/germplasm/icon/';
+	$imgs = '/bulk_data/www.rosaceae.org/gdr_photo/germplasm/image/';
+} else if ($site == 'cottongen') {
+	$icons = '/bulk_data/www.cottongen.org/cotton_photo/germplasm/icon/icon-';
+	$imgs = '/bulk_data/www.cottongen.org/cotton_photo/germplasm/image/';
+}
 
-$icon_path = file_directory_path() . '/bulk_data/www.cottongen.org/cotton_photo/germplasm/icon/icon-';
-$img_path = file_directory_path() . '/bulk_data/www.cottongen.org/cotton_photo/germplasm/image/';
+$icon_path = file_directory_path() . $icons;
+$img_path = file_directory_path() . $imgs;
 
 if (count($images) > 0) { ?>
   <div id="tripal_stock-images-box" class="tripal_stock-info-box tripal-info-box">
