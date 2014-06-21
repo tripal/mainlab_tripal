@@ -24,23 +24,30 @@ if (count($images) > 0) { ?>
         <tr>
           <?php 
             $count = 1;
+            $private_data_only = 1;
             foreach($images as $img) {
-              $iconurl = url($icon_path . $img->image_uri);
-              $imgurl = url($img_path . $img->image_uri);
-              print "<td  style=\"width:200px;padding:20px 0px 0px 20px;\">";
-              print "<a href=$imgurl target=_blank><img src=\"$iconurl\" style=\"cursor:pointer;\"></a>"; 
-              print "<div style=\"clear:left;margin-bottom:10px;\">" . $img->legend ."</div></td>";
-              if ($count % 3 == 0) {
-                print "</tr><tr>";
+              if (file_exists($icon_path . $img->image_uri)) {
+                $iconurl = url($icon_path . $img->image_uri);
+                $imgurl = url($img_path . $img->image_uri);
+                $private_data_only = 0;
+                print "<td  style=\"width:200px;padding:20px 0px 0px 20px;\">";
+                print "<a href=$imgurl target=_blank><img src=\"$iconurl\" style=\"cursor:pointer;\"></a>"; 
+                print "<div style=\"clear:left;margin-bottom:10px;\">" . $img->legend ."</div></td>";
+                if ($count % 3 == 0) {
+                  print "</tr><tr>";
+                }
+                $count ++;
               }
-            $count ++; 
             }
-            // Add more td to ensure the width of each cell is fixed
-            $more = 3 - (count($images) % 3);
-            for ($i = 0; $i < $more; $i ++) {
-              print "<td  style=\"width:200px;padding:20px 0px 0px 20px;\"></td>";
-              
+            if ($private_data_only) {
+              print "<td>no public data</td>";
+            } else {
+              // Add more td to ensure the width of each cell is fixed
+              $more = 3 - (count($images) % 3);
+              for ($i = 0; $i < $more; $i ++) {
+	            print "<td  style=\"width:200px;padding:20px 0px 0px 20px;\"></td>";
             }
+}
         ?>
       </tr> 
     </table>
