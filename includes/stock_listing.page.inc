@@ -17,8 +17,8 @@ function mainlab_stock_listing ($organism, $page) {
 	FROM {stock}
 	WHERE organism_id = (SELECT organism_id FROM {organism} WHERE genus = '%s' AND species = '%s')
 	AND 
-	(type_id <> 
-		(SELECT cvterm_id FROM {cvterm} WHERE name = 'sample' AND cv_id = 
+	(type_id NOT IN 
+		(SELECT cvterm_id FROM {cvterm} WHERE name IN ('sample', 'clone') AND cv_id = 
 			(SELECT cv_id FROM {cv} WHERE name = 'MAIN')
 		)
 	)";
