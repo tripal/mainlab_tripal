@@ -45,12 +45,14 @@ $options = array(
 );
 $feature = tripal_core_expand_chado_vars($feature, 'table', 'feature_dbxref', $options);
 $feature_dbxrefs = $feature->feature_dbxref;
-foreach ($feature_dbxrefs as $feature_dbxref) {
-  if ($feature_dbxref->dbxref_id->db_id->name == 'dbSNP') {
-    $dbSNP_accession = $feature_dbxref->dbxref_id;
-  }
-  if ($feature_dbxref->dbxref_id->db_id->name == 'dbSNP:rs') {
-    $dbSNPrs_accession = $feature_dbxref->dbxref_id;
+if ($feature_dbxrefs) {
+  foreach ($feature_dbxrefs as $feature_dbxref) {
+    if ($feature_dbxref->dbxref_id->db_id->name == 'dbSNP') {
+      $dbSNP_accession = $feature_dbxref->dbxref_id;
+    }
+    if ($feature_dbxref->dbxref_id->db_id->name == 'dbSNP:rs') {
+      $dbSNPrs_accession = $feature_dbxref->dbxref_id;
+    }
   }
 }
 
