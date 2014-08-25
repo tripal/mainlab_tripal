@@ -4,21 +4,19 @@ $feature  = $variables['node']->feature;
 if (!$feature->name) {
   $feature->name = $feature->uniquename; // show uniquname if there is no name
 }
-$feature = tripal_core_expand_chado_vars($feature,'table','featureprop');
+$feature = tripal_core_expand_chado_vars($feature, 'table', 'featureprop', array('return_array' => TRUE));
 
 // get marker properties
 $properties = $feature->featureprop;
-if (!$properties) {
-  $properties = array();
-} 
-elseif (!is_array($properties)) {
-  $properties = array($properties);
-}
 $kv_properties = array();
 $marker_type = '';
+$snp = '';
 foreach($properties as $property) {
   if ($property->type_id->name == "marker_type") {
     $marker_type = $property->value;
+  }
+  if ($property->type_id->name == "SNP") {
+    $snp = $property->value;
   }
   if ($kv_properties[$property->type_id->name]) {
     $kv_properties[$property->type_id->name] = $kv_properties[$property->type_id->name] . "<br>" . $property->value;
@@ -186,27 +184,43 @@ $counter = 0; ?>
           if ($dbSNP_accession) { ?>
              <a href="<?print $dbSNP_accession->db_id->url . $dbSNP_accession->accession?>" target="_blank"><?php print $dbSNP_accession->accession ?></a> <?php
           } 
-          elseif ($dbSNPrs_accession) { ?>
+          if ($dbSNPrs_accession) { ?>
              <a href="<?print $dbSNPrs_accession->db_id->url . $dbSNPrs_accession->accession?>" target="_blank"><?php print $dbSNPrs_accession->accession ?></a> <?php
           }
-          else { 
+          if (!$dbSNP_accession and !$dbSNPrs_accession ) { 
              print "N/A";
           } ?>
         </td>
       </tr> <?php
     }?>
 
-    <!-- Type --><?php 
-    $class = genetic_markerGetTableRowClass($counter);
-    print "<tr class=\"" . $class ."\"><th>Type</th><td>"; 
-    if (key_exists('marker_type', $kv_properties)) {
-      print $kv_properties['marker_type'];
-    }
-    else {
-      print "N/A";
-    }
-    print "</td></tr>";
-    $counter ++;?>
+    <!-- Type -->
+    <tr class="<?php print genetic_markerGetTableRowClass($counter++) ?>">
+      <th>Type</th>
+      <td> <?php
+        if (key_exists('marker_type', $kv_properties)) {
+          print $kv_properties['marker_type'];
+        }
+        else {
+          print "N/A";
+        } ?>
+      </td>
+    </tr> 
+ 
+    <!-- SNP --><?php
+    if ($marker_type == "SNP") {  ?>
+      <tr class="<?php print genetic_markerGetTableRowClass($counter++) ?>"> 
+        <th>SNP</th>
+        <td> <?php
+          if ($snp) {
+            print $snp;
+          }
+          else {
+            print "N/A";
+          } ?>
+        </td>
+      </tr>  <?php
+    } ?>
 
     <!-- Species --><?php
     $class = genetic_markerGetTableRowClass($counter); $counter ++?>
