@@ -59,11 +59,11 @@ $fstock = tripal_core_expand_chado_vars($feature,'table','feature_stock');
 $stock = $fstock->feature_stock->stock_id->uniquename;
 $stock_nid = $fstock->feature_stock->stock_id->nid;
 
-// get sequence & primer
+// get source sequence & probes
 $f_rel = tripal_core_expand_chado_vars($feature,'table','feature_relationship');
 $objs = $f_rel->feature_relationship->object_id;
-
 $seqs = array();
+$probes = array();
 if ($objs) {
   if (!is_array($objs)) {
     $tmp = $objs;
@@ -75,6 +75,28 @@ if ($objs) {
       $seq = $obj->subject_id;
       array_push($seqs, $seq);
     }
+    if ($obj->type_id->name == 'associated_with') {
+      $probes[$obj->subject_id->uniquename] = $obj->subject_id;
+    }
+  }
+}
+
+// reorder probes by allele order
+$allele_order = explode('/', $snp);
+if (count($allele_order) > 0) {
+  $ordered_probes = array();
+  $order_failed = false;
+  foreach ($allele_order AS $ao) {
+    $probe_key = $feature->uniquename . '_' . $ao;
+    if (key_exists($probe_key, $probes)) {
+      array_push($ordered_probes, $probes[$probe_key]);
+    }
+    else {
+      $order_failed = true;
+    }
+  }
+  if (!$order_failed) {
+    $probes = $ordered_probes;
   }
 }
 
@@ -85,13 +107,14 @@ $assoc_with = array();
 if ($subjs) {
   foreach ($subjs AS $subj) {
     if ($subj->type_id->name == 'adjacent_to') {
-      array_push($primers, $subj->object_id);
+      $primers[$subj->object_id->uniquename] = $subj->object_id;
     }
     if ($subj->type_id->name == 'associated_with') {
       array_push($assoc_with, $subj->object_id);
     }
   }
 }
+ksort($primers);
 
 // expand feature to include polymorphism
 $feature = tripal_core_expand_chado_vars($feature, 'table', 'feature_genotype');
@@ -210,7 +233,7 @@ $counter = 0; ?>
     <!-- SNP --><?php
     if ($marker_type == "SNP") {  ?>
       <tr class="<?php print genetic_markerGetTableRowClass($counter++) ?>"> 
-        <th>SNP</th>
+        <th>SNP Alleles</th>
         <td> <?php
           if ($snp) {
             print $snp;
@@ -221,6 +244,21 @@ $counter = 0; ?>
         </td>
       </tr>  <?php
     } ?>
+    
+    <!-- Probes --><?php
+      if (count($probes) == 0) {
+        $class = genetic_markerGetTableRowClass($counter); print "<tr class=\"" . $class ."\"><th>Probe</th><td>N/A</td></tr>"; $counter ++;
+      }
+      else {
+        $no_probes = 1;
+        foreach($probes AS $probe) {
+          if ($probe->type_id->name == 'probe') {
+            $class = genetic_markerGetTableRowClass($counter);
+            print "<tr class=\"" . $class ."\"><th>Probe $no_probes</th><td>" . $probe->uniquename . ": " . $probe->residues ."</td></tr>"; $counter ++;
+            $no_probes ++;
+          }
+        }
+      }?>
 
     <!-- Species --><?php
     $class = genetic_markerGetTableRowClass($counter); $counter ++?>
