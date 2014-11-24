@@ -291,7 +291,7 @@ $counter = 0; ?>
         foreach($primers AS $primer) {
           if ($primer->type_id->name == 'primer') {
             $class = genetic_markerGetTableRowClass($counter);
-            print "<tr class=\"" . $class ."\"><th>Primer $no_primers</th><td>" . $primer->name . ": " . $primer->residues ."</td></tr>"; $counter ++;
+            print "<tr class=\"" . $class ."\"><th>Primer $no_primers</th><td>" . $primer->uniquename . ": " . $primer->residues ."</td></tr>"; $counter ++;
             $no_primers ++;
           }
         }
