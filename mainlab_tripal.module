@@ -106,6 +106,24 @@ function mainlab_tripal_menu() {
   		'type' => MENU_CALLBACK
   );
   
+  // The gene class browser
+  $items['gene_class_listing'] = array(
+  		'page callback' => 'mainlab_gene_class_listing_page',
+  		'page arguments' => array(1),
+  		'access arguments' => array('access content'),
+  		'type' => MENU_CALLBACK,
+  		'file' => 'includes/gene_class_listing.page.inc',
+  );
+  
+  // The gene class page
+  $items['gene_class'] = array(
+  		'page callback' => 'mainlab_gene_class_page',
+  		'page arguments' => array(1),
+  		'access arguments' => array('access content'),
+  		'type' => MENU_CALLBACK,
+  		'file' => 'includes/gene_class.page.inc',
+  );
+  
   // Replicate Tripal Pub Search URLs
   $items['search/publications' ]= array(
       'title' => 'Publication Search',
