@@ -5,6 +5,9 @@
  * in value = '_' (i.e. underscore). P.S. This function requires tripal_feature module
 */
 function mainlab_gene_class_page ($symbol = '') {
+  if ($symbol == '') {
+    drupal_goto('gene_class_listing');
+  }
 	$output = "";
 	$output .= "<p>Genes with symbol <strong>$symbol</strong>.</p>";
 	
