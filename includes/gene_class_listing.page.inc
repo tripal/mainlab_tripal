@@ -19,9 +19,9 @@ function mainlab_gene_class_listing_page ($letter = '') {
 				GROUP BY name, uniquename) CNT";
 	$total = db_result(chado_query($qcount, $letter));
 	$output = "<strong>List of All Gene Symbols</strong>
-<div style=\"margin:10px 0px\">The list of gene symbols in Rosaceae have been put together from data in NCBI nr database and user-submitted data. 
-			Please <a href=\"/contact\">contact us</a> if you would like to submit a new gene data or edit the existing gene data. 
-			Gene data submission form is available from the <a href=\"/data/submission\">data submission page</a>.</div>
+<div style=\"margin:10px 0px\">The list of gene symbols in Rosaceae have been put together from data in the NCBI nr database and user-submitted data. 
+			Please <a href=\"/contact\"><strong>contact us</strong></a> if you would like to submit new gene data or edit the existing gene data. The
+			Gene data submission form is available from the <a href=\"/data/submission\"><strong>data submission page</strong></a>.</div>
 <div style=\"text-align:center\">";
 	$output .= $letter == '' ? "All&nbsp;&nbsp" : "<a href=\"/gene_class_listing\">All&nbsp;&nbsp</a>";
 	foreach (range('A', 'Z') AS $page) {
