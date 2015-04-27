@@ -296,6 +296,7 @@ function mainlab_tripal_seq_extract_get_features($analysis_name,
     elseif ($type == 'polypeptide') {
       $sql .= "AND CVT.name = '%s' ";
       $derive_from_parent = 0;
+      $vars[] = $type;
       $upstream = 0;
       $downstream = 0;
     }
