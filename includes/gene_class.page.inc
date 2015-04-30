@@ -16,7 +16,7 @@ function mainlab_gene_class_page ($symbol = '') {
 			(SELECT nid FROM chado_feature WHERE feature_id = GENE.feature_id) AS nid,
 			GENE.uniquename,
 			(SELECT genus || ' ' || species FROM organism WHERE organism_id = F.organism_id) AS organism,
-			 C.name AS contact
+			string_agg(C.name, '; ') AS contact
 			FROM {feature} F
 			INNER JOIN {feature_relationship} FR ON F.feature_id = subject_id
 			INNER JOIN {feature} GENE ON GENE.feature_id = object_id 
@@ -28,7 +28,8 @@ function mainlab_gene_class_page ($symbol = '') {
 				WHERE name = 'gene_class' 
 				AND cv_id = 
 				(SELECT cv_id FROM {cv} 
-				WHERE name = 'sequence'))";
+				WHERE name = 'sequence'))
+	       GROUP BY nid,GENE.uniquename, organism";
 	
 	$result = chado_query($sql, $symbol);
 	$rows = array();
