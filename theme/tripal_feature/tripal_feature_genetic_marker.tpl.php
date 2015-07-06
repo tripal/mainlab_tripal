@@ -254,7 +254,8 @@ $counter = 0; ?>
         foreach($probes AS $probe) {
           if ($probe->type_id->name == 'probe') {
             $class = genetic_markerGetTableRowClass($counter);
-            print "<tr class=\"" . $class ."\"><th>Probe $no_probes</th><td>" . $probe->uniquename . ": " . $probe->residues ."</td></tr>"; $counter ++;
+            $probename = mainlab_tripal_get_site() == 'cottongen' ? $probe->name : $probe->uniquename;
+            print "<tr class=\"" . $class ."\"><th>Probe $no_probes</th><td>" . $probename . ": " . $probe->residues ."</td></tr>"; $counter ++;
             $no_probes ++;
           }
         }
@@ -343,7 +344,8 @@ $counter = 0; ?>
         foreach($primers AS $primer) {
           if ($primer->type_id->name == 'primer') {
             $class = genetic_markerGetTableRowClass($counter);
-            print "<tr class=\"" . $class ."\"><th>Primer $no_primers</th><td>" . $primer->uniquename . ": " . $primer->residues ."</td></tr>"; $counter ++;
+            $primername = mainlab_tripal_get_site() == 'cottongen' ? $primer->name : $primer->uniquename;
+            print "<tr class=\"" . $class ."\"><th>Primer $no_primers</th><td>" . $primername . ": " . $primer->residues ."</td></tr>"; $counter ++;
             $no_primers ++;
           }
         }
