@@ -2,13 +2,13 @@
 $featuremap  = $variables['node']->featuremap;
 
 // expand featuremap to include contacts
-$featuremap = tripal_core_expand_chado_vars($featuremap, 'table', 'featuremap_contact');
+$featuremap = chado_expand_var($featuremap, 'table', 'featuremap_contact');
 $contacts = $featuremap->featuremap_contact;
 $mycontacts = array();
 if (is_array($contacts)) {
 	$index = 0;
 	foreach($contacts AS $contact) {
-		$contact = tripal_core_expand_chado_vars($contact, 'table', 'contactprop');
+		$contact = chado_expand_var($contact, 'table', 'contactprop');
 	   $contactprops = $contact->contact_id->contactprop;
 	   $contact_info = array();
 	   $contact_info['contact_name'] = $contact->contact_id->name;
@@ -20,7 +20,7 @@ if (is_array($contacts)) {
 	   $index ++;
 	}
 } else {
-	$contacts = tripal_core_expand_chado_vars($contacts, 'table', 'contactprop');
+	$contacts = chado_expand_var($contacts, 'table', 'contactprop');
 	$contactprops = $contacts->contact_id->contactprop;
 	$contact_info = array();
 	$contact_info['contact_name'] = $contacts->contact_id->name;

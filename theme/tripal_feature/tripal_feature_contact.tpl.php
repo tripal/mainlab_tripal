@@ -8,7 +8,7 @@ $options = array(
     'contact_id' => 1
   )
 );
-$feature = tripal_core_expand_chado_vars($feature, 'table', 'feature_contact', $options);
+$feature = chado_expand_var($feature, 'table', 'feature_contact', $options);
 $feature_contacts = $feature->feature_contact;
 $mycontacts = array();
 if(!is_array($feature_contacts)) {
@@ -17,7 +17,7 @@ if(!is_array($feature_contacts)) {
 $index = 0;
 foreach($feature_contacts AS $feature_contact) {
    $contact = $feature_contact->contact_id;
-   $contact = tripal_core_expand_chado_vars($contact, 'table', 'contactprop');
+   $contact = chado_expand_var($contact, 'table', 'contactprop');
    $contactprops = $contact->contactprop;
    $contact_info = array();
    $contact_info['contact_name'] = $contact->name;

@@ -13,18 +13,18 @@ function mainlab_show_allele ($marker, $alleleid, $oid, $project = 0, $stock_uni
                 WHERE feature_id = 
 			          (SELECT feature_id 
 			           FROM {feature} 
-			           WHERE uniquename = '%s' AND type_id =
+			           WHERE uniquename = :uniquename AND type_id =
 			              (SELECT cvterm_id FROM {cvterm} WHERE name = 'genetic_marker')
-			           AND organism_id = %d
+			           AND organism_id = :organism_id
 			          )
-			       AND string_to_array(description, '|') @> ARRAY['%s']
+			       AND string_to_array(description, '|') @> ARRAY[:allele_id]
                 GROUP BY G.genotype_id
                 ORDER BY G.genotype_id";
-	$results = chado_query($sql, $marker, $oid, $alleleid);
+	$results = chado_query($sql, array(':uniquename' => $marker, ':organism_id' => $oid, ':allele_id' => $alleleid));
 	
 	$genotypes  = array();
 	$counter = 0;
-	while ($g = db_fetch_object($results)) {
+	while ($g = $results->fetchObject()) {
 		$genotypes[$counter] = $g->genotype_id;
 		$counter ++;
 	}
@@ -51,25 +51,25 @@ function mainlab_get_allele_associated_stocks ($genotype_id, $project = 0, $stoc
                     INNER JOIN {stock} S ON S.stock_id = SR.object_id
 			        INNER JOIN {nd_experiment_project} NEP ON NEP.nd_experiment_id = NDG.nd_experiment_id
                     INNER JOIN {project} P ON P.project_id = NEP.project_id
-			        LEFT JOIN (SELECT * FROM projectprop WHERE type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'project_type' AND cv_id = (SELECT cv_id FROM cv WHERE name ='MAIN'))) PP ON P.project_id = PP.project_id
-			        LEFT JOIN (SELECT * FROM stockprop WHERE type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'permission' AND cv_id = (SELECT cv_id FROM cv WHERE name ='MAIN'))) SP ON S.stock_id = SP.stock_id
+			        LEFT JOIN (SELECT * FROM {projectprop} WHERE type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'project_type' AND cv_id = (SELECT cv_id FROM {cv} WHERE name ='MAIN'))) PP ON P.project_id = PP.project_id
+			        LEFT JOIN (SELECT * FROM {stockprop} WHERE type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'permission' AND cv_id = (SELECT cv_id FROM {cv} WHERE name ='MAIN'))) SP ON S.stock_id = SP.stock_id
                     WHERE
                       SR.type_id =
-                        (SELECT cvterm_id FROM cvterm WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))
+                        (SELECT cvterm_id FROM {cvterm} WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
 			        AND (PP.value = 'diversity' OR P.name LIKE '%_CRS%' OR (P.name LIKE 'Apple_KE%' AND P.name NOT LIKE 'Apple_KE_PRV_%'))
 	                AND (SP.value <> 'PRIVATE' OR SP.value IS NULL)
-                    AND genotype_id = %d";
+                    AND genotype_id = :genotyp_id";
 	if ($project) {$ssql .= " AND P.name = '$project'";}
 	if ($stock_uniquename) {$ssql .= " AND S.uniquename = '$stock_uniquename'";}
 	if ($species) {$ssql .= " AND (SELECT genus || ' ' || species FROM organism WHERE organism_id =S.organism_id) = '$species'";}
-	$sresult = chado_query($ssql, $genotype_id);
+	$sresult = chado_query($ssql, array(':genotype_id' => $genotype_id));
 	$stocks = array();
 	$scounter = 0;
-	while ($stock = db_fetch_object($sresult)) {
+	while ($stock = $sresult->fetchObject()) {
 		// Find out the stock nid if there is one
 		if (db_table_exists('chado_stock')) {
-			$nsql = "SELECT nid FROM {chado_stock} WHERE stock_id = %d";
-			$nid = db_result(db_query($nsql, $stock->stock_id));
+			$nsql = "SELECT nid FROM chado_stock WHERE stock_id = :stock_id";
+			$nid = db_result(db_query($nsql, array(':stock_id' => $stock->stock_id)));
 			$stock->nid = $nid;
 		}
 		$stocks [$scounter] = $stock;
