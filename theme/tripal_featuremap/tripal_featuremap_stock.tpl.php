@@ -2,7 +2,7 @@
 $featuremap  = $variables['node']->featuremap;
 
 // expand featuremap to include stockprop so we can find out the population size 
-$featuremap = tripal_core_expand_chado_vars($featuremap, 'table', 'featuremap_stock');
+$featuremap = chado_expand_var($featuremap, 'table', 'featuremap_stock');
 $stock = $featuremap->featuremap_stock->stock_id;
 $stockprops = $stock->stockprop;
 

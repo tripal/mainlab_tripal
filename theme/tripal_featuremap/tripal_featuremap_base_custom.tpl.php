@@ -3,7 +3,7 @@
 $featuremap  = $variables['node']->featuremap;
 
 // expand featuremap to include the organism
-$featuremap = tripal_core_expand_chado_vars($featuremap,'table','featuremap_organism');
+$featuremap = chado_expand_var($featuremap,'table','featuremap_organism');
 $organisms = $featuremap->featuremap_organism;
 if (is_array($organisms)) {
 	foreach ($organisms AS $org) {
@@ -23,12 +23,12 @@ if (is_array($organisms)) {
 	}
 }
 // expand featuremap to include the properties.
-$featuremap = tripal_core_expand_chado_vars($featuremap,'table','featuremapprop');
+$featuremap = chado_expand_var($featuremap,'table','featuremapprop');
 $featuremapprop = $featuremap->featuremapprop;
 
 // expand featuremap to include stockprop so we can find out the population size 
-$featuremap = tripal_core_expand_chado_vars($featuremap, 'table', 'featuremap_stock');
-$featuremap = tripal_core_expand_chado_vars($featuremap, 'table', 'stockprop');
+$featuremap = chado_expand_var($featuremap, 'table', 'featuremap_stock');
+$featuremap = chado_expand_var($featuremap, 'table', 'stockprop');
 $stockprop =$featuremap->featuremap_stock->stock_id->stockprop;
 $pop_size = NULL;
 if ($stockprop) {
@@ -40,7 +40,7 @@ if ($stockprop) {
 }
 
 // expand featuremap to include stock parents
-$featuremap = tripal_core_expand_chado_vars($featuremap, 'table', 'stock_relationship');
+$featuremap = chado_expand_var($featuremap, 'table', 'stock_relationship');
 $parents = $featuremap->featuremap_stock->stock_id->stock_relationship->object_id;
 $maternal = NULL;
 $paternal = NULL;
@@ -55,11 +55,11 @@ if ($parents) {
 }
 
 // expand featuremap to include pubs 
-$featuremap = tripal_core_expand_chado_vars($featuremap, 'table', 'featuremap_pub');
+$featuremap = chado_expand_var($featuremap, 'table', 'featuremap_pub');
 $pubs = $featuremap->featuremap_pub;
 
 // expand featuremap to include contacts
-$featuremap = tripal_core_expand_chado_vars($featuremap, 'table', 'featuremap_contact');
+$featuremap = chado_expand_var($featuremap, 'table', 'featuremap_contact');
 $contacts = $featuremap->featuremap_contact;
 
 ?>

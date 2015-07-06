@@ -9,7 +9,6 @@
  */
 
 require_once "includes/custom_schema.inc";
-require_once "includes/custom_search.inc";
 require_once "includes/simple_seq_extract.inc";
 require_once "includes/stock_listing.page.inc";
 
@@ -152,7 +151,7 @@ function mainlab_tripal_menu() {
  */
 function mainlab_tripal_views_api() {
   return array(
-    'api' => 2.0,
+    'api' => 3.0,
   );
 }
 
@@ -181,18 +180,42 @@ function mainlab_tripal_admin_validate($form, &$form_state) {
 /**
  * Implementation of hook_nodeapi().
  *
- * @ingroup mainlab_tripal
+ * @ingroup mainlab_qtl
  */
-function mainlab_tripal_nodeapi(&$node, $op, $teaser, $page) {
-  // Remove the leading comma from the title if feature name is empty and is used to create the page title
-  if ($node->type == 'chado_feature' && $node->feature->name == '' && variable_get('chado_feature_title', 'unique_constraint') == 'unique_constraint') {
-    $node->title = trim($node->title, ' ,');  
-  }
-  // Remove the leading comma from the title if stock name is empty and is used to create the page title
-  if ($node->type == 'chado_stock' && $node->stock->name == '' && variable_get('chado_stock_title', 'unique_constraint') == 'unique_constraint') {
-    $node->title = trim($node->title, ' ,');
+function mainlab_tripal_node_view($node, $view_mode, $langcode) {
+  switch ($node->type) {
+    case 'chado_feature' :
+      if ($view_mode == 'full' && $node->feature->type_id->name == "genetic_marker") {
+        $node->content['tripal_feature_genetic_marker'] = array(
+          '#markup' => theme('tripal_feature_genetic_marker',  array('node' => $node)),
+          '#tripal_toc_id'    => 'genetic_marker',
+          '#tripal_toc_title' => 'Marker Overview',
+          '#weight' => -100,
+        );
+        $node->content['tripal_feature_genetic_marker_map_positions'] = array(
+          '#markup' => theme('tripal_feature_genetic_marker_map_positions',  array('node' => $node)),
+          '#tripal_toc_id' => 'genetic_marker_map_position',
+          '#tripal_toc_title' => 'Map Positions',
+        );
+      }
+      break;
   }
 }
+
+/**
+ * Implementation of hook_nodeapi().
+ * 
+ * @ingroup mainlab_qtl
+ */
+function mainlab_tripal_node_view_alter(&$build) {
+  $node = $build['#node'];
+  if (property_exists($node, 'feature') && $node->feature->type_id->name == "QTL") {
+    unset($build['tripal_feature_base']);
+    unset($build['tripal_feature_properties']);
+    unset($build['tripal_feature_terms']);
+  }
+}
+
 
 /**
  *  We need to let drupal know about our theme functions and their arguments.
@@ -201,174 +224,174 @@ function mainlab_tripal_nodeapi(&$node, $op, $teaser, $page) {
  *
  * @ingroup mainlab_tripal
  */
-function mainlab_tripal_theme() {
+function mainlab_tripal_theme($existing, $type, $theme, $path) {
 	$path = drupal_get_path('module', 'mainlab_tripal') . '/theme';
 	
   $themes = array(
     'tripal_organism_relationships' => array(
-      'arguments' => array('node' => NULL),
+      'variables' => array('node' => NULL),
       'template' => 'tripal_organism_relationships',
       'path' => $path . '/tripal_organism',    
     ),
     'tripal_organism_properties' => array(
-      'arguments' => array('node' => NULL),
+      'variables' => array('node' => NULL),
       'template' => 'tripal_organism_properties',
       'path' => $path . '/tripal_organism',    
     ),
     'tripal_organism_maps' => array(
-      'arguments' => array('node' => NULL),
+      'variables' => array('node' => NULL),
       'template' => 'tripal_organism_maps',
       'path' => $path . '/tripal_organism',    
     ),
   	'tripal_feature_publication' => array(
-  			'arguments' => array('node' => NULL),
+  			'variables' => array('node' => NULL),
   			'template' => 'tripal_feature_publication',
   			'path' => $path . '/tripal_feature',
   	),
   	'tripal_feature_contact' => array(
-  			'arguments' => array('node' => NULL),
+  			'variables' => array('node' => NULL),
   			'template' => 'tripal_feature_contact',
   			'path' => $path . '/tripal_feature',
   	),
   	'tripal_feature_genetic_marker' => array(
-  				'arguments' => array('node' => NULL),
+  				'variables' => array('node' => NULL),
   				'template' => 'tripal_feature_genetic_marker',
   				'path' => $path . '/tripal_feature',
   	),
   	'tripal_feature_genetic_marker_map_positions' => array(
-  		'arguments' => array('node' => NULL),
+  		'variables' => array('node' => NULL),
   		'template' => 'tripal_feature_genetic_marker_map_positions',
   		'path' => $path . '/tripal_feature',
   	 ),
      'tripal_feature_genetic_marker_image' => array(
-        'arguments' => array('node' => NULL),
+        'variables' => array('node' => NULL),
         'template' => 'tripal_feature_genetic_marker_image',
         'path' => $path . '/tripal_feature',
      ),
   	 'tripal_feature_sequence_feature' => array(
-  				'arguments' => array('node' => NULL),
+  				'variables' => array('node' => NULL),
   				'template' => 'tripal_feature_sequence_feature',
   				'path' => $path . '/tripal_feature',
   	 ),
   	'tripal_featuremap_base_custom' => array(
-  			'arguments' => array('node' => NULL),
+  			'variables' => array('node' => NULL),
   			'template' => 'tripal_featuremap_base_custom',
   			'path' => $path . '/tripal_featuremap',
   	),
   	'tripal_featuremap_stock' => array(
-  			'arguments' => array('node' => NULL),
+  			'variables' => array('node' => NULL),
   			'template' => 'tripal_featuremap_stock',
   			'path' => $path . '/tripal_featuremap',
   	),
   	'tripal_featuremap_publication' => array(
-  			'arguments' => array('node' => NULL),
+  			'variables' => array('node' => NULL),
   			'template' => 'tripal_featuremap_publication',
   			'path' => $path . '/tripal_featuremap',
   	),
   	'tripal_featuremap_contact' => array(
-  			'arguments' => array('node' => NULL),
+  			'variables' => array('node' => NULL),
   			'template' => 'tripal_featuremap_contact',
   			'path' => $path . '/tripal_featuremap',
   	),
   	'mainlab_polymorphism' => array(
-  			'arguments' => array('node' => NULL),
+  			'variables' => array('node' => NULL),
   			'template' => 'mainlab_polymorphism',
   			'path' => $path . '/mainlab',
   	),
   	'mainlab_allele' => array(
-  			'arguments' => array('node' => NULL),
+  			'variables' => array('node' => NULL),
   			'template' => 'mainlab_allele',
   			'path' => $path . '/mainlab',
   	),
  	'gdr_mainlab_polymorphism' => array(
- 			'arguments' => array('node' => NULL),
+ 			'variables' => array('node' => NULL),
  			'template' => 'gdr_mainlab_polymorphism',
  			'path' => $path . '/mainlab',
  	),
  	'gdr_mainlab_allele' => array(
- 			'arguments' => array('node' => NULL),
+ 			'variables' => array('node' => NULL),
  			'template' => 'gdr_mainlab_allele',
  			'path' => $path . '/mainlab',
  	),
   	'tripal_stock_maternal_parent' => array(
-  			'arguments' => array('node' => NULL),
+  			'variables' => array('node' => NULL),
   			'template' => 'tripal_stock_maternal_parent',
   			'path' => $path . '/tripal_stock',
   	),
   	'tripal_stock_paternal_parent' => array(
-  			'arguments' => array('node' => NULL),
+  			'variables' => array('node' => NULL),
   			'template' => 'tripal_stock_paternal_parent',
   			'path' => $path . '/tripal_stock',
   	),
   	'tripal_stock_phenotypic_data' => array(
-  			'arguments' => array('node' => NULL),
+  			'variables' => array('node' => NULL),
   			'template' => 'tripal_stock_phenotypic_data',
   			'path' => $path . '/tripal_stock',
   	),
   	'tripal_stock_genotypic_data' => array(
-  			'arguments' => array('node' => NULL),
+  			'variables' => array('node' => NULL),
   			'template' => 'tripal_stock_genotypic_data',
   			'path' => $path . '/tripal_stock',
   	),
   	'tripal_stock_in_collection' => array(
-  			'arguments' => array('node' => NULL),
+  			'variables' => array('node' => NULL),
   			'template' => 'tripal_stock_in_collection',
   			'path' => $path . '/tripal_stock',
   	),
   	'tripal_stock_population_map' => array(
-  			'arguments' => array('node' => NULL),
+  			'variables' => array('node' => NULL),
   			'template' => 'tripal_stock_population_map',
   			'path' => $path . '/tripal_stock',
   	),
   	'tripal_stock_image' => array(
-  			'arguments' => array('node' => NULL),
+  			'variables' => array('node' => NULL),
   			'template' => 'tripal_stock_image',
   			'path' => $path . '/tripal_stock',
   	),
     'tripal_pub_image' => array(
-        'arguments' => array('node' => NULL),
+        'variables' => array('node' => NULL),
         'template' => 'tripal_pub_image',
         'path' => $path . '/tripal_pub',
     ),
     // themed forms
     'mainlab_tripal_seq_extract_form' => array(
-       'arguments' => array('form'),
+       'variables' => array('form'),
     ),
     // nd_geolocation
     'tripal_nd_geolocation_base_custom' => array(
-        'arguments' => array('node' => NULL),
+        'variables' => array('node' => NULL),
         'template' => 'tripal_nd_geolocation_base_custom',
         'path' => $path . '/tripal_natural_diversity',
     ),
     'tripal_nd_geolocation_associated_dataset' => array(
-        'arguments' => array('node' => NULL),
+        'variables' => array('node' => NULL),
         'template' => 'tripal_nd_geolocation_associated_dataset',
         'path' => $path . '/tripal_natural_diversity',
     ),
     // eimage
     'cottongen_tripal_eimage_base' => array(
-        'arguments' => array('node' => NULL),
+        'variables' => array('node' => NULL),
         'template' => 'cottongen_tripal_eimage_base',
         'path' => $path . '/tripal_eimage',
     ),
     // eimage
     'tripal_eimage_contact' => array(
-        'arguments' => array('node' => NULL),
+        'variables' => array('node' => NULL),
         'template' => 'tripal_eimage_contact',
         'path' => $path . '/tripal_eimage',
     ),
     'tripal_feature_haplotype_block' => array(
-      'arguments' => array('node' => NULL),
+      'variables' => array('node' => NULL),
       'template' => 'tripal_feature_haplotype_block',
       'path' => $path . '/tripal_feature',
     ),
     'tripal_feature_haplotype_block_stocks' => array(
-      'arguments' => array('node' => NULL),
+      'variables' => array('node' => NULL),
       'template' => 'tripal_feature_haplotype_block_stocks',
       'path' => $path . '/tripal_feature',
     ),
     'tripal_feature_haplotype_block_haplotypes' => array(
-      'arguments' => array('node' => NULL),
+      'variables' => array('node' => NULL),
       'template' => 'tripal_feature_haplotype_block_haplotypes',
       'path' => $path . '/tripal_feature',
     ),
@@ -394,28 +417,28 @@ function tripal_organism_preprocess_tripal_organism_relationships(&$variables) {
   // we want to provide a new variable that contains the matched organisms.
   $organism = $variables['node']->organism;
   
-  // normally we would use tripal_core_expand_chado_vars to expand our
+  // normally we would use chado_expand_vars to expand our
   // organism object and add in the relationships, however whan a large
   // number of relationships are present this significantly slows the
   // query, therefore we will manually perform the query
   $sql = "
     SELECT O.genus, O.species, O.organism_id, CO.nid, CVT.name as rel_type
     FROM {organism_relationship} ORel
-      INNER JOIN organism O on ORel.object_organism_id = O.organism_id
-      INNER JOIN cvterm CVT on ORel.type_id = CVT.cvterm_id
+      INNER JOIN {organism} O on ORel.object_organism_id = O.organism_id
+      INNER JOIN{ cvterm} CVT on ORel.type_id = CVT.cvterm_id
       LEFT JOIN chado_organism CO on O.organism_id = CO.organism_id
-    WHERE ORel.subject_organism_id = %d      
+    WHERE ORel.subject_organism_id = :organism_id     
   ";
-  $as_subject = chado_query($sql,$organism->organism_id);
+  $as_subject = chado_query($sql,array(':organism_id' => $organism->organism_id));
   $sql = "
     SELECT O.genus, O.species, O.organism_id, CO.nid, CVT.name as rel_type
-    FROM organism_relationship ORel
-      INNER JOIN organism O on ORel.subject_organism_id = O.organism_id
-      INNER JOIN cvterm CVT on ORel.type_id = CVT.cvterm_id
+    FROM {organism_relationship} ORel
+      INNER JOIN {organism} O on ORel.subject_organism_id = O.organism_id
+      INNER JOIN {cvterm} CVT on ORel.type_id = CVT.cvterm_id
       LEFT JOIN chado_organism CO on O.organism_id = CO.organism_id
-    WHERE ORel.object_organism_id = %d      
+    WHERE ORel.object_organism_id = :organism_id      
   ";
-  $as_object = chado_query($sql,$organism->organism_id);   
+  $as_object = chado_query($sql,array(':organism_id' => $organism->organism_id));   
   
   // combine both object and subject relationshisp into a single array
   $relationships = array();
@@ -423,7 +446,7 @@ function tripal_organism_preprocess_tripal_organism_relationships(&$variables) {
   $relationships['subject'] = array();
   
    // iterate through the object relationships
-   while ($relationship = db_fetch_object($as_object)) {
+   while ($relationship = $as_object->fetchObject()) {
     
      // get the relationship and child types
      $rel_type = t(preg_replace('/_/'," ",$relationship->rel_type));     
@@ -434,7 +457,7 @@ function tripal_organism_preprocess_tripal_organism_relationships(&$variables) {
      $relationships['object'][$rel_type][] = $relationship;  
   }
   
-   while ($relationship = db_fetch_object($as_subject)) {
+   while ($relationship = $as_subject->fetchObject()) {
     
      // get the relationship and child types
      $rel_type = t(preg_replace('/_/'," ",$relationship->rel_type));     
@@ -468,53 +491,53 @@ function tripal_feature_preprocess_tripal_feature_genetic_marker_map_positions(&
       LGP.value AS chr,
       FPP.value AS locus_start,
       LOCUS.uniquename AS locus_name
-    FROM feature LOCUS
-    INNER JOIN feature_relationship FR ON FR.subject_id = LOCUS.feature_id
-    INNER JOIN featurepos FP ON LOCUS.feature_id = FP.feature_id
-    INNER JOIN featuremap FM ON FP.featuremap_id = FM.featuremap_id
-   	LEFT JOIN featuremap_dbxref FD ON FP.featuremap_id = FD.featuremap_id
-   	LEFT JOIN dbxref X ON FD.dbxref_id = X.dbxref_id
-   	LEFT JOIN db ON db.db_id = X.db_id
-    INNER JOIN feature LG ON FP.map_feature_id = LG.feature_id
+    FROM {feature} LOCUS
+    INNER JOIN {feature_relationship} FR ON FR.subject_id = LOCUS.feature_id
+    INNER JOIN {featurepos} FP ON LOCUS.feature_id = FP.feature_id
+    INNER JOIN {featuremap} FM ON FP.featuremap_id = FM.featuremap_id
+   	LEFT JOIN {featuremap_dbxref} FD ON FP.featuremap_id = FD.featuremap_id
+   	LEFT JOIN {dbxref} X ON FD.dbxref_id = X.dbxref_id
+   	LEFT JOIN {db} ON db.db_id = X.db_id
+    INNER JOIN {feature} LG ON FP.map_feature_id = LG.feature_id
     LEFT JOIN 
-     (SELECT * FROM featureprop WHERE type_id = 
+     (SELECT * FROM {featureprop} WHERE type_id = 
       (SELECT cvterm_id
-       FROM cvterm
+       FROM {cvterm}
        WHERE name = 'chr_number'
-       AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN') 
+       AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN') 
       )
      )LGP ON LG.feature_id = LGP.feature_id
-    INNER JOIN featureposprop FPP ON FP.featurepos_id = FPP.featurepos_id
+    INNER JOIN {featureposprop} FPP ON FP.featurepos_id = FPP.featurepos_id
     LEFT JOIN 
-     (SELECT F2.name, FR2.subject_id FROM feature F2
-      INNER JOIN feature_relationship FR2 ON FR2.object_id = F2.feature_id
+     (SELECT F2.name, FR2.subject_id FROM {feature} F2
+      INNER JOIN {feature_relationship} FR2 ON FR2.object_id = F2.feature_id
    	WHERE FR2.type_id = 
-   	  (SELECT cvterm_id FROM cvterm WHERE name = 'located_in' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'relationship'))   		
+   	  (SELECT cvterm_id FROM {cvterm} WHERE name = 'located_in' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'relationship'))   		
      ) BIN ON LOCUS.feature_id = BIN.subject_id
-    LEFT JOIN public.chado_featuremap CF ON FM.featuremap_id = CF.featuremap_id
+    LEFT JOIN chado_featuremap CF ON FM.featuremap_id = CF.featuremap_id
     WHERE FR.type_id = 
      (SELECT cvterm_id 
-      FROM cvterm
+      FROM {cvterm}
       WHERE name = 'instance_of'
-   	AND cv_id = (SELECT cv_id FROM cv WHERE name = 'relationship') 
+   	AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'relationship') 
      )
     AND LOCUS.type_id = 
      (SELECT cvterm_id
-      FROM cvterm
+      FROM {cvterm}
       WHERE name = 'marker_locus'
-   	AND cv_id = (SELECT cv_id FROM cv WHERE name = 'sequence') 
+   	AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'sequence') 
      )
     AND FPP.type_id =
      (SELECT cvterm_id
-      FROM cvterm
+      FROM {cvterm}
       WHERE name = 'start'
-   	AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN') 
+   	AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN') 
      )
 
-    AND FR.object_id = %d", $feature->feature_id);
+    AND FR.object_id = :object_id", array(':object_id' => $feature->feature_id));
    $positions = array ();
    $counter = 0;
-   while ($pos = db_fetch_object($results)) {
+   while ($pos = $results->fetchObject()) {
    	$positions [$counter] = $pos;
    	$counter ++;
    }
@@ -539,11 +562,11 @@ function tripal_feature_preprocess_tripal_feature_genetic_marker_image(&$variabl
 			                                      WHERE name = 'legend'
 			                                      AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN')
 			                                    )
-			AND feature_id = %d",
-      $feature->feature_id);
+			AND feature_id = :feature_id",
+      array (':feature_id' => $feature->feature_id));
   $images = NULL;
   $counter = 0;
-  while ($img = db_fetch_object($results)) {
+  while ($img = $results->fetctObject()) {
     $images[$counter] = $img;
     $counter ++;
   }
@@ -555,30 +578,30 @@ function tripal_feature_preprocess_tripal_feature_genetic_marker_image(&$variabl
  */
 function tripal_featuremap_preprocess_tripal_featuremap_base_custom(&$variables) {
 	$featuremap = $variables['node']->featuremap;
-	$num_loci = db_result(chado_query(
+	$num_loci = chado_query(
 			"SELECT count (distinct F.uniquename) 
 			  FROM {featurepos} FP 
 			  INNER JOIN {feature} F ON F.feature_id = FP.feature_id 
 			  WHERE F.type_id = (SELECT cvterm_id 
 			                                      FROM {cvterm} 
 			                                      WHERE name = 'marker_locus' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'sequence')) 
-			  AND featuremap_id = %d", $featuremap->featuremap_id));
-	$num_lg = db_result(chado_query(
+			  AND featuremap_id = :featuremap_id", array(':featuremap_id' => $featuremap->featuremap_id))->fetchField();
+	$num_lg = chado_query(
 			"SELECT count (distinct F.uniquename) 
 			  FROM {featurepos} FP 
 			  INNER JOIN {feature} F ON F.feature_id = FP.map_feature_id 
 			  WHERE F.type_id = (SELECT cvterm_id 
 			                                      FROM {cvterm} 
 			                                      WHERE name = 'linkage_group' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'sequence')) 
-			  AND featuremap_id = %d", $featuremap->featuremap_id));
+			  AND featuremap_id = :featuremap_id", array('featuremap_id' => $featuremap->featuremap_id))->fetchField();
 	$cmap_r = chado_query(
 			"SELECT db.urlprefix, X.accession 
 			 FROM {featuremap_dbxref} FD
 			 INNER JOIN {dbxref} X ON FD.dbxref_id = X.dbxref_id
 			 INNER JOIN {db} ON db.db_id = X.db_id
-			 WHERE featuremap_id = %d
-			", $featuremap->featuremap_id);
-	$cmap = db_fetch_object($cmap_r);
+			 WHERE featuremap_id = :featuremap_id
+			", array(':featuremap_id' => $featuremap->featuremap_id));
+	$cmap = $cmap_r->fetchObject();
 	$cmap_url = $cmap->urlprefix . $cmap->accession;
 	
 	$featuremap->num_loci = $num_loci;
@@ -601,12 +624,12 @@ function tripal_stock_preprocess_tripal_stock_maternal_parent(&$variables) {
          (SELECT cvterm_id 
           FROM {cvterm} 
           WHERE name = 'is_a_maternal_parent_of' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
-          AND S1.stock_id = %d",  $stock->stock_id);
+          AND S1.stock_id = :stock_id",  array(':stock_id' => $stock->stock_id));
 	$maternal_parent = NULL;
 	$counter = 0;
-	while ($parent = db_fetch_object($results)) {
+	while ($parent = $results->fetchObject()) {
 		if (db_table_exists("chado_stock")) {
-			$parent->nid = db_result(db_query("SELECT nid FROM chado_stock WHERE stock_id = %d", $parent->stock_id));
+			$parent->nid = db_query("SELECT nid FROM chado_stock WHERE stock_id = :stock_id", array(':stock_id' => $parent->stock_id))->fetchField();
 		}
 		$maternal_parent[$counter] = $parent;
 		$counter ++;
@@ -629,12 +652,12 @@ function tripal_stock_preprocess_tripal_stock_paternal_parent(&$variables) {
          (SELECT cvterm_id
           FROM {cvterm}
           WHERE name = 'is_a_paternal_parent_of' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
-          AND S1.stock_id = %d",  $stock->stock_id);
+          AND S1.stock_id = :stock_id", array(':stock_id' => $stock->stock_id));
 	$paternal_parent = NULL;
 	$counter = 0;
-	while ($parent = db_fetch_object($results)) {
+	while ($parent = $results->fetchObject()) {
 		if (db_table_exists("chado_stock")) {
-			$parent->nid = db_result(db_query("SELECT nid FROM chado_stock WHERE stock_id = %d", $parent->stock_id));
+			$parent->nid = db_query("SELECT nid FROM chado_stock WHERE stock_id = :stock_id", array(':stock_id' => $parent->stock_id))->fetchField();
 		}
 		$paternal_parent[$counter] = $parent;
 		$counter ++;
@@ -665,12 +688,12 @@ function tripal_stock_preprocess_tripal_stock_phenotypic_data(&$variables) {
 			 AND NGP.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'site_code' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
 			) GEO ON GEO.nd_geolocation_id = NE.nd_geolocation_id
 	        LEFT JOIN {stockprop} SP ON NES.stock_id = SP.stock_id AND SP.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'rep' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
-			WHERE NES.stock_id = %d OR NES.stock_id IN (SELECT subject_id FROM {stock_relationship} WHERE object_id = %d
+			WHERE NES.stock_id = :stock_id OR NES.stock_id IN (SELECT subject_id FROM {stock_relationship} WHERE object_id = :object_id
 			AND type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))) 
-	        ORDER BY project, environment, replications, uniquename", $stock->stock_id, $stock->stock_id);
+	        ORDER BY project, environment, replications, uniquename", array(':stock_id' => $stock->stock_id, ':object_id' => $stock->stock_id));
 	$phenotypic_data = NULL;
 	$counter = 0;
-	while ($traits = db_fetch_object($results)) {
+	while ($traits = $results->fetchObject()) {
 		$phenotypic_data[$counter] = $traits;
 		$counter ++;
 	}
@@ -698,10 +721,10 @@ function tripal_stock_preprocess_tripal_stock_genotypic_data(&$variables) {
 			   INNER JOIN {stock_relationship} SR ON S.stock_id = SR.subject_id
 			   WHERE SR.type_id = 
 			      (SELECT cvterm_id FROM {cvterm} WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
-			   AND SR.object_id = %d)",  $stock->stock_id);
+			   AND SR.object_id = :object_id)",  array(':object_id' => $stock->stock_id));
 	$gdata = NULL;
 	$counter = 0;
-	while ($gtype = db_fetch_object($results)) {
+	while ($gtype = $results->fetchObject()) {
 		$gdata[$counter] = $gtype;
 		$counter ++;
 	}
@@ -725,12 +748,12 @@ function tripal_stock_preprocess_tripal_stock_in_collection(&$variables) {
 			INNER JOIN {db} ON db.db_id = SD.db_id
 			INNER JOIN {stock_dbxref} SX ON SX.stock_id = SS.stock_id
 			INNER JOIN {dbxref} X ON SX.dbxref_id = X.dbxref_id AND X.db_id = db.db_id
-			WHERE SS.stock_id = %d
+			WHERE SS.stock_id = :stock_id
 			GROUP BY SC.stockcollection_id
-			",  $stock->stock_id);
+			",  array(':stock_id' => $stock->stock_id));
 	$coll = NULL;
 	$counter = 0;
-	while ($c = db_fetch_object($results)) {
+	while ($c = $results->fetchObject()) {
 		$coll[$counter] = $c;
 		$counter ++;
 	}
@@ -749,7 +772,7 @@ function tripal_stock_preprocess_tripal_stock_population_map(&$variables) {
 			  M.name
            FROM {featuremap} M
            INNER JOIN {featuremap_stock} MS ON M.featuremap_id = MS.featuremap_id
-           WHERE MS.stock_id = %d
+           WHERE MS.stock_id = :stock_id1
            OR MS.stock_id in 
 			     (SELECT SR.object_id FROM {stock} S1
                INNER JOIN {stock_relationship} SR ON S1.stock_id = SR.subject_id
@@ -758,16 +781,16 @@ function tripal_stock_preprocess_tripal_stock_population_map(&$variables) {
                    FROM {cvterm} 
                    WHERE (name = 'is_a_maternal_parent_of' 
                    OR name = 'is_a_paternal_parent_of') AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
-               AND S1.stock_id = %d)",  $stock->stock_id,  $stock->stock_id);
+               AND S1.stock_id = :stock_id2)",  array(':stock_id1' => $stock->stock_id,  ':stock_id2' => $stock->stock_id));
 	$maps = NULL;
 	$counter = 0;
-	while ($map = db_fetch_object($results)) {
+	while ($map = $results->fetchObject()) {
 		if (db_table_exists("chado_featuremap")) {
-			$map->nid = db_result(db_query("SELECT nid FROM chado_featuremap WHERE featuremap_id = %d", $map->featuremap_id));
+			$map->nid = db_query("SELECT nid FROM chado_featuremap WHERE featuremap_id = :featuremap_id", array(':featuremap_id' => $map->featuremap_id))->fetchField();
 		}
-		$map->ptype = db_result(db_query("SELECT value FROM featuremapprop WHERE type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'population_type' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN')) AND featuremap_id = %d", $map->featuremap_id));
-		$map->ggroup = db_result(db_query("SELECT value FROM featuremapprop WHERE type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'genome_group' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN')) AND featuremap_id = %d", $map->featuremap_id));
-		$map->mtype = db_result(db_query("SELECT value FROM featuremapprop WHERE type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'map_type' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN')) AND featuremap_id = %d", $map->featuremap_id));
+		$map->ptype = chado_query("SELECT value FROM {featuremapprop} WHERE type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'population_type' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN')) AND featuremap_id = :featuremap_id", array(':featuremap_id' => $map->featuremap_id))->fetchField();
+		$map->ggroup = chado_query("SELECT value FROM {featuremapprop} WHERE type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'genome_group' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN')) AND featuremap_id =  :featuremap_id", array(':featuremap_id' => $map->featuremap_id))->fetchField();
+		$map->mtype = chado_query("SELECT value FROM {featuremapprop} WHERE type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'map_type' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN')) AND featuremap_id =  :featuremap_id", array(':featuremap_id' => $map->featuremap_id))->fetchField();
 		
 		$maps[$counter] = $map;
 		$counter ++;
@@ -792,19 +815,19 @@ function tripal_stock_preprocess_tripal_stock_image(&$variables) {
 			                                      WHERE name = 'legend' 
 			                                      AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN')
 			                                    )
-			AND stock_id = %d", 
-			$stock->stock_id);
+			AND stock_id = :stock_id", 
+			array(':stock_id' => $stock->stock_id));
 	} else { // Do not pull legends by default (e.g. for GDR)
 		$results = chado_query(
 			"SELECT eimage_type, image_uri
 			 FROM {stock_image} SI
 			 INNER JOIN {eimage} I ON SI.eimage_id = I.eimage_id
-			 WHERE stock_id = %d",
-				$stock->stock_id);
+			 WHERE stock_id = :stock_id",
+				array(':stock_id' => $stock->stock_id));
 	}
 	$images = NULL;
 	$counter = 0;
-	while ($img = db_fetch_object($results)) {
+	while ($img = $results->fetchObject()) {
 		$images[$counter] = $img;
 		$counter ++;
 	}
@@ -827,11 +850,11 @@ function tripal_pub_preprocess_tripal_pub_image(&$variables) {
 			                                      WHERE name = 'legend'
 			                                      AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN')
 			                                    )
-			AND pub_id = %d",
-      $pub->pub_id);
+			AND pub_id = :pub_id",
+      array(':pub_id' => $pub->pub_id));
   $images = NULL;
   $counter = 0;
-  while ($img = db_fetch_object($results)) {
+  while ($img = $results->fetchObject()) {
     $images[$counter] = $img;
     $counter ++;
   }
@@ -845,17 +868,17 @@ function tripal_pub_preprocess_tripal_nd_geolocation_base_custom(&$variables) {
   $nd_geolocation = $variables['node']->nd_geolocation;
   $sql = 
       "SELECT nid, name FROM {project} P
-       LEFT JOIN public.chado_project CP ON CP.project_id = P.project_id
+       LEFT JOIN chado_project CP ON CP.project_id = P.project_id
        WHERE P.project_id IN 
        (SELECT project_id 
         FROM {nd_geolocation} NG 
         INNER JOIN {nd_experiment} NE on NE.nd_geolocation_id = NG.nd_geolocation_id
         INNER JOIN {nd_experiment_project} NP ON NE.nd_experiment_id = NP.nd_experiment_id
-        WHERE NG.nd_geolocation_id = %d
+        WHERE NG.nd_geolocation_id = :nd_geolocation_id
         GROUP BY project_id)";
-  $results = chado_query($sql, $nd_geolocation->nd_geolocation_id);
+  $results = chado_query($sql, array(':nd_geolocation_id' => $nd_geolocation->nd_geolocation_id));
   $projects = array();
-  while ($d = db_fetch_object($results)) {
+  while ($d = $results->fetchObject()) {
     array_push($projects, $d);
   }
   $nd_geolocation->projects = $projects;
@@ -868,7 +891,7 @@ function tripal_pub_preprocess_tripal_nd_geolocation_associated_dataset(&$variab
   $nd_geolocation = $variables['node']->nd_geolocation;
   $sql =
   "SELECT nid, name, PP.value AS description FROM {project} P
-       LEFT JOIN public.chado_project CP ON CP.project_id = P.project_id
+       LEFT JOIN chado_project CP ON CP.project_id = P.project_id
        LEFT JOIN {projectprop} PP ON P.project_id = PP.project_id 
          AND PP.type_id = (SELECT cvterm_id FROM {cvterm} 
          WHERE name = 'description' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
@@ -877,11 +900,11 @@ function tripal_pub_preprocess_tripal_nd_geolocation_associated_dataset(&$variab
         FROM {nd_geolocation} NG
         INNER JOIN {nd_experiment} NE on NE.nd_geolocation_id = NG.nd_geolocation_id
         INNER JOIN {nd_experiment_project} NP ON NE.nd_experiment_id = NP.nd_experiment_id
-        WHERE NG.nd_geolocation_id = %d
+        WHERE NG.nd_geolocation_id = :nd_geolocation_id
         GROUP BY project_id)";
-  $results = chado_query($sql, $nd_geolocation->nd_geolocation_id);
+  $results = chado_query($sql, array(':nd_geolocation_id' => $nd_geolocation->nd_geolocation_id));
   $projects = array();
-  while ($d = db_fetch_object($results)) {
+  while ($d = $results->fetchObject()) {
     array_push($projects, $d);
   }
   $nd_geolocation->projects = $projects;
@@ -901,10 +924,10 @@ function tripal_pub_preprocess_cottongen_tripal_eimage_base(&$variables) {
         (SELECT cvterm_id FROM {cvterm} WHERE name = 'legend'
          AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN')
         ) 
-      WHERE E.eimage_id = %d";
-  $results = chado_query($sql, $eimage->eimage_id);
+      WHERE E.eimage_id = :eimage_id";
+  $results = chado_query($sql, array(':eimage_id' => $eimage->eimage_id));
   $legends = array();
-  while ($result = db_fetch_object($results)) {
+  while ($result = $results->fetchObject()) {
     array_push($legends, $result->value);
   }
   $eimage->legends = $legends;
@@ -913,14 +936,14 @@ function tripal_pub_preprocess_cottongen_tripal_eimage_base(&$variables) {
   "SELECT C.contact_id, name, description
       FROM {contact} C
       INNER JOIN {contact_image} CI ON CI.contact_id = C.contact_id
-      WHERE CI.eimage_id = %d";
-  $results = chado_query($sql, $eimage->eimage_id);
+      WHERE CI.eimage_id = :eimage_id";
+  $results = chado_query($sql, array(':eimage_id' => $eimage->eimage_id));
   $contacts = array();
-  while ($result = db_fetch_object($results)) {
+  while ($result = $results->fetchObject()) {
     $detail_contact = new stdClass();
-    $detail_sql = "SELECT (SELECT name FROM {cvterm} WHERE cvterm_id = type_id) AS type, value FROM {contactprop} WHERE contact_id = %d";
-    $detail_results = chado_query($detail_sql, $result->contact_id);
-    while ($details = db_fetch_object($detail_results)) {
+    $detail_sql = "SELECT (SELECT name FROM {cvterm} WHERE cvterm_id = type_id) AS type, value FROM {contactprop} WHERE contact_id = :contact_Id";
+    $detail_results = chado_query($detail_sql, array(':contact_id' => $result->contact_id));
+    while ($details = $detail_results->fetchObject()) {
       $type = $details->type;
       $value = $details->value;
       if (property_exists($detail_contact, $type)) {
@@ -941,10 +964,10 @@ function tripal_pub_preprocess_cottongen_tripal_eimage_base(&$variables) {
       FROM {pub} P
       INNER JOIN {pub_image} PI ON PI.pub_id = P.pub_id
       LEFT JOIN chado_pub CP ON CP.pub_id = P.pub_id
-      WHERE PI.eimage_id = %d";
-  $results = chado_query($sql, $eimage->eimage_id);
+      WHERE PI.eimage_id = :eimage_id";
+  $results = chado_query($sql, array(':eimage_id' => $eimage->eimage_id));
   $pubs = array();
-  while ($result = db_fetch_object($results)) {
+  while ($result = $results->fetchObject()) {
     array_push($pubs, $result);
   }
   $eimage->pubs = $pubs;
@@ -954,11 +977,11 @@ function tripal_pub_preprocess_cottongen_tripal_eimage_base(&$variables) {
       FROM {feature} F
       INNER JOIN {feature_image} FI ON FI.feature_id = F.feature_id
       LEFT JOIN chado_feature CF ON F.feature_id = CF.feature_id
-      WHERE FI.eimage_id = %d
+      WHERE FI.eimage_id = :eimage_id
       AND F.type_id = 
         (SELECT cvterm_id FROM {cvterm} WHERE name = 'genetic_marker'
          AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'sequence'))";
-  $marker = db_fetch_object(chado_query($sql, $eimage->eimage_id));
+  $marker = chado_query($sql, array(':eimage_id' => $eimage->eimage_id))->fetchObject();
   $eimage->marker = $marker;
   // See if this image belong to a stock
   $sql =
@@ -966,8 +989,8 @@ function tripal_pub_preprocess_cottongen_tripal_eimage_base(&$variables) {
       FROM {stock} S
       INNER JOIN {stock_image} SI ON SI.stock_id = S.stock_id
       LEFT JOIN chado_stock CS ON CS.stock_id = S.stock_id
-      WHERE SI.eimage_id = %d";
-  $stock = db_fetch_object(chado_query($sql, $eimage->eimage_id));
+      WHERE SI.eimage_id = :eimage_id";
+  $stock = chado_query($sql, array(':eimage_id' => $eimage->eimage_id))->fetchObject();
   $eimage->stock = $stock;
   
   // Get associated projects
@@ -975,11 +998,11 @@ function tripal_pub_preprocess_cottongen_tripal_eimage_base(&$variables) {
   $sql = 
     "SELECT value FROM {eimageprop} 
      WHERE type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'project_id' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN')) 
-     AND eimage_id = %d";
-  $result_pj = chado_query($sql, $eimage->eimage_id);
-  $sql_pj = "SELECT distinct name, nid FROM {project} P LEFT JOIN chado_project CP ON CP.project_id = P.project_id WHERE P.project_id = %d";
-  while ($pj = db_fetch_object($result_pj)) {
-  	$result = db_fetch_object(chado_query($sql_pj, $pj->value));
+     AND eimage_id = :eimage_id";
+  $result_pj = chado_query($sql, array(':eimage_id' => $eimage->eimage_id));
+  $sql_pj = "SELECT distinct name, nid FROM {project} P LEFT JOIN chado_project CP ON CP.project_id = P.project_id WHERE P.project_id = :project_id";
+  while ($pj = $result_pj->fetchObject()) {
+  	$result = chado_query($sql_pj, array(':project_id' => $pj->value))->fetchObject();
   	array_push($project, $result);
   }
   $eimage->project = $project;
@@ -992,15 +1015,15 @@ function tripal_feature_preprocess_tripal_feature_haplotype_block(&$variables) {
 	$feature = $variables['node']->feature;
 	
 	// Get stocks
-	$sql = "SELECT S.*, CS.nid FROM feature_genotype FG 
-			INNER JOIN nd_experiment_genotype NEG ON NEG.genotype_id = FG.genotype_id
-			INNER JOIN nd_experiment_stock NES ON NEG.nd_experiment_id = NES.nd_experiment_id 
-			INNER JOIN stock S ON S.stock_id = NES.stock_id
+	$sql = "SELECT S.*, CS.nid FROM {feature_genotype} FG 
+			INNER JOIN {nd_experiment_genotype} NEG ON NEG.genotype_id = FG.genotype_id
+			INNER JOIN {nd_experiment_stock} NES ON NEG.nd_experiment_id = NES.nd_experiment_id 
+			INNER JOIN {stock} S ON S.stock_id = NES.stock_id
 			LEFT JOIN chado_stock CS ON CS.stock_id = S.stock_id
-			WHERE feature_id = %d";
-	$result = chado_query($sql, $feature->feature_id);
+			WHERE feature_id =:feature_id";
+	$result = chado_query($sql, array(':feature_id' => $feature->feature_id));
 	$stocks = array();
-	while ($stock = db_fetch_object($result)) {
+	while ($stock = $result->fetchObject()) {
 		array_push($stocks, $stock);
 	}
 	$feature->stocks = $stocks;
@@ -1008,19 +1031,19 @@ function tripal_feature_preprocess_tripal_feature_haplotype_block(&$variables) {
 	// Get haplotypes
 	$sql = 
 	"SELECT 
-		(SELECT replace (uniquename, HB.uniquename || '_', '') FROM feature WHERE feature_id = FR.subject_id) AS haplotype,
+		(SELECT replace (uniquename, HB.uniquename || '_', '') FROM {feature} WHERE feature_id = FR.subject_id) AS haplotype,
 		FR2P.value,
-		(SELECT feature_id FROM feature WHERE feature_id = FR2.object_id) AS marker_feature_id,
+		(SELECT feature_id FROM {feature} WHERE feature_id = FR2.object_id) AS marker_feature_id,
 		(SELECT nid FROM chado_feature WHERE feature_id = FR2.object_id) AS marker_nid,
-		(SELECT uniquename FROM feature WHERE feature_id = FR2.object_id) AS marker
-	FROM feature HB 
-	LEFT JOIN feature_relationship FR ON HB.feature_id = FR.object_id AND FR.type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'variant_of' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'sequence'))
-	LEFT JOIN feature_relationship FR2 ON FR2.subject_id = FR.subject_id AND FR2.type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'contains' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'sequence'))
-	LEFT JOIN feature_relationshipprop FR2P ON FR2.feature_relationship_id = FR2P.feature_relationship_id
-	WHERE feature_id = %d ORDER BY marker";
-	$result = chado_query($sql, $feature->feature_id);
+		(SELECT uniquename FROM {feature} WHERE feature_id = FR2.object_id) AS marker
+	FROM {feature} HB 
+	LEFT JOIN {feature_relationship} FR ON HB.feature_id = FR.object_id AND FR.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'variant_of' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'sequence'))
+	LEFT JOIN {feature_relationship} FR2 ON FR2.subject_id = FR.subject_id AND FR2.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'contains' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'sequence'))
+	LEFT JOIN {feature_relationshipprop} FR2P ON FR2.feature_relationship_id = FR2P.feature_relationship_id
+	WHERE feature_id = :feature_id ORDER BY marker";
+	$result = chado_query($sql, array(':feature_id' => $feature->feature_id));
 	$markers = array();
-	while ($record = db_fetch_object($result)) {
+	while ($record = $result->fetchObject()) {
 		$marker_feature_id = $record->marker_feature_id;
 		$marker = $record->marker;
 		$marker_nid = $record->marker_nid;
@@ -1059,9 +1082,9 @@ function tripal_feature_preprocess_tripal_feature_haplotype_block(&$variables) {
  */
 function mainlab_tripal_get_site () {
 	global $base_url;
-	if (preg_match('/rosaceae\.org/', $base_url) || preg_match('/rosaceae\.org/', $_SERVER['PWD'])) {
+	if (preg_match('/rosaceae\.org/', $base_url) || preg_match('/rosaceae\.org/', $_SERVER['SERVER_NAME'])) {
 		return 'gdr';
-	} else if (preg_match('/cottongen\.org/', $base_url) || preg_match('/cottongen\.org/', $_SERVER['PWD'])) {
+	} else if (preg_match('/cottongen\.org/', $base_url) || preg_match('/cottongen\.org/', $_SERVER['SERVER_NAME'])) {
 		return 'cottongen';
 	} else {
 		return 'unknown';
