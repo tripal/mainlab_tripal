@@ -5,29 +5,20 @@
  * in value = '_' (i.e. underscore). P.S. This function requires tripal_feature module
 */
 function mainlab_feature_listing ($organism, $type, $stock) {
-  $organism = check_plain($organism);
-  $type = check_plain($type);
-  $stock = check_plain($stock);
 	$sql = "";
 	$conditions = array();
 	if ($organism != '_') {
 		$fullname = explode("-", $organism);
 		$genus = $fullname [0];
-		$cond_q = " feature.organism_id IN (SELECT organism_id FROM {organism} WHERE genus = '$genus' ";
-		if (count($fullname) > 1) {
-		  $species = $fullname [1];
-		  $cond_q .= "AND species = '$species'";
-		}
-		$cond_q .= ")";
-		
-		array_push($conditions, $cond_q);
+		$species = $fullname [1];
+		array_push($conditions, " feature.organism_id = (SELECT organism_id FROM organism WHERE genus = '$genus' AND species = '$species')");
 	}
 	if ($type != '_') {
-		array_push($conditions, " feature.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = '$type' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'sequence'))");
+		array_push($conditions, " type_id = (SELECT cvterm_id FROM cvterm WHERE name = '$type' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'sequence'))");
 	}
 	if ($stock != '_') {
-		$sql .= " INNER JOIN {feature_stock} ON feature.feature_id = feature_stock.feature_id";
-		array_push($conditions, " stock_id = (SELECT stock_id FROM {stock} WHERE uniquename = '$stock')");
+		$sql .= " INNER JOIN feature_stock ON feature.feature_id = feature_stock.feature_id";
+		array_push($conditions, " stock_id = (SELECT stock_id FROM stock WHERE uniquename = '$stock')");
 	}
 	
 	if (count($conditions) > 0) {
@@ -41,32 +32,26 @@ function mainlab_feature_listing ($organism, $type, $stock) {
 		}
 		$counter ++;
 	}
-	$qcount = "SELECT count(*) FROM {feature}" . $sql;
-	$total = chado_query($qcount)->fetchField();
-	$num_per_page = 20;
+	$qcount = "SELECT count(*) FROM feature" . $sql;
+	$total = db_result(chado_query($qcount));
 	$output = "<p>Total <strong>" . $total . "</strong> features.</p>";
 	$q = "SELECT nid, uniquename, cvterm.name AS type, genus, species 
-			 FROM {feature} 
-			 INNER JOIN {cvterm} ON cvterm_id = type_id
-			 INNER JOIN {organism} O ON feature.organism_id = O.organism_id
+			 FROM feature 
+			 INNER JOIN cvterm ON cvterm_id = type_id
+			 INNER JOIN organism O ON feature.organism_id = O.organism_id
 			 LEFT JOIN chado_feature ON chado_feature.feature_id = feature.feature_id" . $sql;
-
-	$result = chado_pager_query($q, array(), 20, 0, $qcount);
+	$result = pager_query($q, 20, 0, $qcount);
 	$rows = array();
 	$row_count = 0;
-	$page = pager_default_initialize($total, $num_per_page);
-
-  // Next, retrieve and display the items for the current page.
-  $offset = $num_per_page * $page;
-	while ($row = $result->fetchObject()) {
+	while ($row = db_fetch_object($result)) {
 		$class = '';
 		if ($row_count % 2 == 0) {
-			$class = array('tripal-table-even-row');
+			$class = 'tripal-table-even-row';
 		} else {
-			$class = array('tripal-table-odd-row');
+			$class = 'tripal-table-odd-row';
 		}
 		if ($row->nid) {
-		   $rows[] = array('data' => array($offset + $row_count + 1,"<a href=\"/node/$row->nid\">" . $row->uniquename . "</a>", $row->type, $row->genus . " " . $row->species)
+		   $rows[] = array('data' => array("<a href=\"/node/$row->nid\">" . $row->uniquename . "</a>", $row->type, $row->genus . " " . $row->species)
 		   		                      , 'class' =>$class);
 		} else {
 			$rows[] = array('data' => array($row->uniquename, $row->type, $row->genus . " " . $row->species)
@@ -74,22 +59,10 @@ function mainlab_feature_listing ($organism, $type, $stock) {
 		}
 		$row_count ++;
 	}
-	$header = array('No', 'Uniquename', 'Type', 'Species');
+	$header = array('Uniquename', 'Type', 'Species');
 	$attribute = array('class' => 'tripal-table tripal-table-horz');
-	// https://api.drupal.org/api/drupal/includes%21theme.inc/function/theme_table/7
-	$table = array(
-	  'header' => $header,
-	  'rows' => $rows,
-	  'attributes' => $attribute,
-	  'sticky' => FALSE,
-	  'caption' => '',
-	  'colgroups' => array(),
-	  'empty' => '',
-	);
-	if ($total > 0) {
-      $output .= theme_table($table);
-      $output .= theme('pager');
-	}
+	$output .= theme_table($header, $rows, $attribute);
+	$output .= theme('pager', NULL, 20, 0);
 	return $output;
 	
 }

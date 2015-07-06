@@ -4,7 +4,7 @@ $organism = $variables['node']->organism;
 
 // expand the organism object to include the feature maps and their properties
 $options = array('return_array' => 1);
-$organism = chado_expand_var($organism, 'table', 'featuremap_organism', $options);
+$organism = tripal_core_expand_chado_vars($organism, 'table', 'featuremap_organism', $options);
 $featuremap_organisms = $organism->featuremap_organism;
 
 if (count($featuremap_organisms) > 0) {?>

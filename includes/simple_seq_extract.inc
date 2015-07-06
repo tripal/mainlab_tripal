@@ -124,7 +124,7 @@ function mainlab_tripal_seq_extract_form(&$form_state = NULL) {
   $args = array();
   $sql .=" ORDER BY A.name ";
   $results = chado_query($sql, $args);  
-  while ($analysis = $results->fetchObject()) {
+  while ($analysis = db_fetch_object($results)) {
     $analyses[$analysis->name] = $analysis->name;  
   }
   $form['analysis'] = array(

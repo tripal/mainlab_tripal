@@ -4,7 +4,7 @@ $stock = $variables['node']->stock;
 
 // expand the stock object to include the feature maps and their properties
 $options = array('return_array' => 1);
-$stock = chado_expand_vars($stock, 'table', 'library_stock', $options);
+$stock = tripal_core_expand_chado_vars($stock, 'table', 'library_stock', $options);
 $library_stocks = $stock->library_stock;
 
 if (count($library_stocks) > 0) {?>

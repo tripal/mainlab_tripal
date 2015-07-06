@@ -2,7 +2,7 @@
 $node = $variables['node'];
 $nd_geolocation = $variables['node']->nd_geolocation;
 // expand the nd_geolocation to include the properties.
-$nd_geolocation = chado_expand_var($nd_geolocation,'table', 'nd_geolocationprop', array('return_array' => 1));
+$nd_geolocation = tripal_core_expand_chado_vars($nd_geolocation,'table', 'nd_geolocationprop', array('return_array' => 1));
 
 $name = $nd_geolocation->description;
 $latitude = $nd_geolocation->latitude? $nd_geolocation->latitude : "N/A";
@@ -36,7 +36,7 @@ $properties['comments'] ="N/A";
 $nd_geolocationprops = $nd_geolocation->nd_geolocationprop;
 
 foreach ($nd_geolocationprops as $property) {
-    $property = chado_expand_var($property,'field','nd_geolocationprop.value');
+    $property = tripal_core_expand_chado_vars($property,'field','nd_geolocationprop.value');
     $ptype = $property->type_id->name;
     $pvalue = $property->value;
     $properties[$ptype] = $pvalue;

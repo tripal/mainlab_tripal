@@ -2,7 +2,7 @@
 $feature  = $variables['node']->feature;
 
 // expand feature to include pubs 
-$feature = chado_expand_var($feature, 'table', 'feature_pub');
+$feature = tripal_core_expand_chado_vars($feature, 'table', 'feature_pub');
 $feature_pubs = $feature->feature_pub; 
 if ($feature_pubs && !is_array($feature_pubs)) {
   $tmp_fp = $feature_pubs;
@@ -32,9 +32,9 @@ if ($feature_pubs && !is_array($feature_pubs)) {
     $class = "";
     foreach ($feature_pubs AS $feature_pub) {
       $pub = $feature_pub->pub_id;
-      $pub = chado_expand_var($pub, 'field', 'pub.title');
-      $pub = chado_expand_var($pub, 'field', 'pub.uniquename');
-      $pub = chado_expand_var($pub, 'table', 'pubprop'); 
+      $pub = tripal_core_expand_chado_vars($pub, 'field', 'pub.title');
+      $pub = tripal_core_expand_chado_vars($pub, 'field', 'pub.uniquename');
+      $pub = tripal_core_expand_chado_vars($pub, 'table', 'pubprop'); 
       $props = $pub->pubprop;
       if ($counter % 2 == 1) {
         $class = "tripal_featuremap-table-even-row tripal-table-even-row";
@@ -51,7 +51,7 @@ if ($feature_pubs && !is_array($feature_pubs)) {
       }
       foreach($props AS $prop) {
         if ($prop->type_id->name == 'Citation') {
-          $p = chado_expand_var($prop, 'field', 'pubprop.value'); 
+          $p = tripal_core_expand_chado_vars($prop, 'field', 'pubprop.value'); 
           $citation = $p->value;
         }
       }

@@ -5,11 +5,11 @@
 function mainlab_show_polymorphism ($feature_id) {
 	
 	// Get  the marker name and nid if there is one
-	$mname = chado_query("SELECT uniquename FROM {feature} WHERE feature_id = :feature_id", array(':feature_id' => $feature_id))->fetchField();
-	$moid = chado_query("SELECT organism_id FROM {feature} WHERE feature_id = :feature_id", array(':feature_id' => $feature_id))->fetchField();
+	$mname = db_result(chado_query("SELECT uniquename FROM {feature} WHERE feature_id = %d", $feature_id));
+	$moid = db_result(chado_query("SELECT organism_id FROM {feature} WHERE feature_id = %d", $feature_id));
 	$mnid = NULL;
 	if (db_table_exists('chado_feature')) {
-		$mnid = db_query("SELECT nid FROM chado_feature WHERE feature_id = :feature_id", array(':feature_id' => $feature_id))->fetchField();
+		$mnid = db_result(db_query("SELECT nid FROM {chado_feature} WHERE feature_id = %d", $feature_id));
 	}
 
 	// Select all genotypes for the marker
@@ -25,14 +25,14 @@ function mainlab_show_polymorphism ($feature_id) {
                 INNER JOIN {nd_experiment_project} NEP ON NEP.nd_experiment_id = NEG.nd_experiment_id
                 INNER JOIN {project} P ON P.project_id = NEP.project_id
 			    LEFT JOIN (SELECT * FROM projectprop WHERE type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'project_type' AND cv_id = (SELECT cv_id FROM cv WHERE name ='MAIN'))) PP ON P.project_id = PP.project_id
-                WHERE feature_id = :feature_id
+                WHERE feature_id = %d
 			    AND (PP.value = 'diversity' OR P.name LIKE '%_CRS%' OR (P.name LIKE 'Apple_KE%' AND P.name NOT LIKE 'Apple_KE_PRV_%'))
                 GROUP BY G.genotype_id
                 ORDER BY G.genotype_id";
-	$result = chado_query($sql, array(':feature_id' => $feature_id));
+	$result = chado_query($sql, $feature_id);
  
 	$counter = 0;
-	while ($poly = $result->fetchObject()) {
+	while ($poly = db_fetch_object($result)) {
 		$poly->marker_name = $mname;
 		$poly->marker_nid = $mnid;
 		$poly->marker_oid = $moid;
@@ -43,17 +43,17 @@ function mainlab_show_polymorphism ($feature_id) {
                      INNER JOIN {stock} EXP ON EXP.stock_id = NDS.stock_id
                      INNER JOIN {stock_relationship} SR ON SR.subject_id = EXP.stock_id
                      INNER JOIN {stock} S ON S.stock_id = SR.object_id
-				     LEFT JOIN (SELECT * FROM {stockprop} WHERE type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'permission' AND cv_id = (SELECT cv_id FROM {cv} WHERE name ='MAIN'))) SP ON S.stock_id = SP.stock_id
+				     LEFT JOIN (SELECT * FROM stockprop WHERE type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'permission' AND cv_id = (SELECT cv_id FROM cv WHERE name ='MAIN'))) SP ON S.stock_id = SP.stock_id
                      WHERE 
                        SR.type_id = 
-                         (SELECT cvterm_id FROM {cvterm} WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
+                         (SELECT cvterm_id FROM cvterm WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))
 					 AND (SP.value <> 'PRIVATE' OR SP.value IS NULL)
-                     AND genotype_id = :genotype_id GROUP BY genotype_id";
-		$stock = chado_query($ssql, array(':genotype_id' => $poly->genotype_id))->fetchObject();
+                     AND genotype_id = %d GROUP BY genotype_id";
+		$stock = db_fetch_object(chado_query($ssql, $poly->genotype_id));
    	// Find out the stock nid if there is one
 		if (db_table_exists('chado_stock')) {
-		   $nsql = "SELECT nid FROM chado_stock WHERE stock_id = :stock_id";
-		   $nid = db_query($nsql, array(':stock_id' => $stock->first_stock_id))->fetchField();
+		   $nsql = "SELECT nid FROM chado_stock WHERE stock_id = %d";
+		   $nid = db_result(db_query($nsql, $stock->first_stock_id));
 		   $poly->first_stock_nid = $nid;
 		}
 		$poly->first_stock_id = $stock->first_stock_id;

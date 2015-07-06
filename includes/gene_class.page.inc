@@ -22,7 +22,7 @@ function mainlab_gene_class_page ($symbol = '') {
 			INNER JOIN {feature} GENE ON GENE.feature_id = object_id 
 			LEFT JOIN {feature_contact} FC ON F.feature_id = FC.feature_id
 			LEFT JOIN {contact} C ON C.contact_id = FC.contact_id 
-				WHERE F.uniquename = :symbol 
+				WHERE F.uniquename = '%s' 
 				AND F.type_id = 
 				(SELECT cvterm_id FROM {cvterm} 
 				WHERE name = 'gene_class' 
@@ -32,31 +32,22 @@ function mainlab_gene_class_page ($symbol = '') {
 	       GROUP BY nid,GENE.uniquename, organism
 	       ORDER BY organism, GENE.uniquename";
 	
-	$result = chado_query($sql, array(':symbol' => $symbol));
+	$result = chado_query($sql, $symbol);
 	$rows = array();
 	$row_count = 0;
-	while ($row = $result->fetchObject()) {
+	while ($row = db_fetch_object($result)) {
 		$class = '';
 		if ($row_count % 2 == 0) {
-			$class = array('tripal-table-even-row');
+			$class = 'tripal-table-even-row';
 		} else {
-			$class = array('tripal-table-odd-row');
+			$class = 'tripal-table-odd-row';
 		}
 		$rows[] = $row->nid ? array('data' => array("<a href=\"/node/$row->nid\">" . $row->uniquename . "</a>", $row->organism, $row->contact, ), 'class' =>$class) : array('data' => array($row->uniquename, $row->organism, $row->contact, ), 'class' =>$class);
 		$row_count ++;
 	}
 	$header = array('Name', 'Organism', 'Contact');
 	$attribute = array('class' => 'tripal-table tripal-table-horz');
-	$table = array(
-	  'header' => $header,
-	  'rows' => $rows,
-	  'attributes' => $attribute,
-	  'sticky' => FALSE,
-	  'caption' => '',
-	  'colgroups' => array(),
-	  'empty' => '',
-	);
-  $output .= theme_table($table);
+	$output .= theme_table($header, $rows, $attribute);
 	$output .= "<br>";
 	
 	return $output;

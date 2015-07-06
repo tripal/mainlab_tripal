@@ -13,9 +13,9 @@ function mainlab_stock_listing ($organism, $page) {
 	"SELECT 
 		uniquename, 
 		(SELECT name FROM {cvterm} WHERE cvterm_id = type_id) AS type,
-		(SELECT nid FROM chado_stock WHERE stock_id = stock.stock_id) AS nid
+		(SELECT nid FROM public.chado_stock WHERE stock_id = stock.stock_id) AS nid
 	FROM {stock}
-	WHERE organism_id = (SELECT organism_id FROM {organism} WHERE genus = :genus AND species = :species)
+	WHERE organism_id = (SELECT organism_id FROM {organism} WHERE genus = '%s' AND species = '%s')
 	AND 
 	(type_id NOT IN 
 		(SELECT cvterm_id FROM {cvterm} WHERE name IN ('sample', 'clone') AND cv_id = 
@@ -23,23 +23,23 @@ function mainlab_stock_listing ($organism, $page) {
 		)
 	)";
 	$count_sql = "SELECT count(*) FROM (" . $sql . ") A";
-	$total = chado_query($count_sql, array(':genus' => $genus, ':species' => $species))->fetchField();
+	$total = db_result(db_query($count_sql, $genus, $species));
 	$pages = (int) ($total / $num_per_page);
 	if ($total % $num_per_page != 0) {
 		$pages ++;
 	}
 	$sql .= " ORDER BY uniquename LIMIT $num_per_page OFFSET $offset";
-	$result = chado_query($sql, array(':genus' => $genus, ':species' => $species));
+	$result = chado_query($sql, $genus, $species);
 	
 	// Make the table
 	$rows = array();
 	$row_count = 0;
-	while ($row = $result->fetchObject()) {
+	while ($row = db_fetch_object($result)) {
 		$class = '';
 		if ($row_count % 2 == 0) {
-			$class = array('tripal-table-even-row');
+			$class = 'tripal-table-even-row';
 		} else {
-			$class = array('tripal-table-odd-row');
+			$class = 'tripal-table-odd-row';
 		}
 		if ($row->nid) {
 			$rows[] = array('data' => array("<a href=\"/node/$row->nid\">" . $row->uniquename . "</a>", $row->type)
@@ -52,18 +52,7 @@ function mainlab_stock_listing ($organism, $page) {
 	}
 	$header = array('Name', 'Type');
 	$attribute = array('class' => 'tripal-table tripal-table-horz');
-	$table = array(
-	  'header' => $header,
-	  'rows' => $rows,
-	  'attributes' => $attribute,
-	  'sticky' => FALSE,
-	  'caption' => '',
-	  'colgroups' => array(),
-	  'empty' => '',
-	);
-	if ($total > 0) {
-      $output = theme_table($table);
-	}
+	$table = theme_table($header, $rows, $attribute);
 	$pager = "</br><div style=\"float:right;\">Page <select onChange=\"mainlab_tripal_stock_listing_change_page(this.selectedIndex + 1)\">";
 	for ($i = 1; $i <= $pages; $i ++) {
 		if ($i == $page) {
@@ -74,7 +63,7 @@ function mainlab_stock_listing ($organism, $page) {
 	}
 	$pager .= "</select> of $pages</div>";
 	$stock->total_number = $total;
-	$stock->table = "<div id=\"mainlab_tripal-stock_listing-table\">" . $output . $pager . "</div>";
+	$stock->table = "<div id=\"mainlab_tripal-stock_listing-table\">" . $table . $pager . "</div>";
 	$ajax_link = "/stock_listing_page/$organism/";
 	$stock->js = 
 	"<script type=\"text/javascript\">
@@ -96,5 +85,5 @@ function mainlab_stock_listing ($organism, $page) {
 
 function mainlab_stock_listing_switch_page ($organism, $page) {
 	$stock = mainlab_stock_listing  ($organism, $page);
-	drupal_json_output($stock->table);
+	drupal_json($stock->table);
 }

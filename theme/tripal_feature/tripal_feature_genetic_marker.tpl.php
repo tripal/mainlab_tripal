@@ -4,7 +4,7 @@ $feature  = $variables['node']->feature;
 if (!$feature->name) {
   $feature->name = $feature->uniquename; // show uniquname if there is no name
 }
-$feature = chado_expand_var($feature, 'table', 'featureprop', array('return_array' => TRUE));
+$feature = tripal_core_expand_chado_vars($feature, 'table', 'featureprop', array('return_array' => TRUE));
 
 // get marker properties
 $properties = $feature->featureprop;
@@ -18,7 +18,7 @@ foreach($properties as $property) {
   if ($property->type_id->name == "SNP") {
     $snp = $property->value;
   }
-  if (key_exists($property->type_id->name, $kv_properties)) {
+  if ($kv_properties[$property->type_id->name]) {
     $kv_properties[$property->type_id->name] = $kv_properties[$property->type_id->name] . "<br>" . $property->value;
   } 
   else {
@@ -27,8 +27,8 @@ foreach($properties as $property) {
 }
 
 // get genbank accession
-$feature = chado_expand_var($feature,'table','feature_dbxref');
-if (is_object($feature->feature_dbxref) && $feature->feature_dbxref->dbxref_id->db_id->name == 'DB:genbank') {
+$feature = tripal_core_expand_chado_vars($feature,'table','feature_dbxref');
+if ($feature->feature_dbxref->dbxref_id->db_id->name == 'DB:genbank') {
   $accession = $feature->feature_dbxref->dbxref_id->accession;
 }
 
@@ -41,7 +41,7 @@ $options = array(
     ),
   ),
 );
-$feature = chado_expand_var($feature, 'table', 'feature_dbxref', $options);
+$feature = tripal_core_expand_chado_vars($feature, 'table', 'feature_dbxref', $options);
 $feature_dbxrefs = $feature->feature_dbxref;
 if ($feature_dbxrefs) {
   foreach ($feature_dbxrefs as $feature_dbxref) {
@@ -55,12 +55,12 @@ if ($feature_dbxrefs) {
 }
 
 // get germplasm
-$fstock = chado_expand_var($feature,'table','feature_stock');
-$stock = is_object($fstock->feature_stock) ? $fstock->feature_stock->stock_id->uniquename : NULL;
-$stock_nid = is_object($fstock->feature_stock) ? $fstock->feature_stock->stock_id->nid : NULL;
+$fstock = tripal_core_expand_chado_vars($feature,'table','feature_stock');
+$stock = $fstock->feature_stock->stock_id->uniquename;
+$stock_nid = $fstock->feature_stock->stock_id->nid;
 
 // get source sequence & probes
-$f_rel = chado_expand_var($feature,'table','feature_relationship');
+$f_rel = tripal_core_expand_chado_vars($feature,'table','feature_relationship');
 $objs = $f_rel->feature_relationship->object_id;
 $seqs = array();
 $probes = array();
@@ -117,18 +117,19 @@ if ($subjs) {
 ksort($primers);
 
 // expand feature to include polymorphism
-$feature = chado_expand_var($feature, 'table', 'feature_genotype');
+$feature = tripal_core_expand_chado_vars($feature, 'table', 'feature_genotype');
 $polymorphism = $feature->feature_genotype->feature_id;
 
 // expand the feature to include polymorphic sesquence
 $poly_seq = tripal_feature_get_property($feature->feature_id, 'polymorhpic_sequence', 'MAIN');
 
 // expand feature to include pubs
-$feature = chado_expand_var($feature, 'table', 'feature_pub');
+$feature = tripal_core_expand_chado_vars($feature, 'table', 'feature_pub');
+$feature = tripal_core_expand_chado_vars($feature, 'table', 'feature_pub');
 $pubs = $feature->feature_pub;
 
 // get contact
-$feature = chado_expand_var($feature, 'field', 'pub.title');
+$feature = tripal_core_expand_chado_vars($feature, 'field', 'pub.title');
 $contacts = $feature->feature_contact;
 
 // Define function to get table row class

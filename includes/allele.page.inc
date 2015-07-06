@@ -12,18 +12,18 @@ function mainlab_show_allele ($marker, $alleleid, $oid) {
                 WHERE feature_id = 
 			          (SELECT feature_id 
 			           FROM {feature} 
-			           WHERE lower(uniquename) = lower(:uniquename) AND type_id =
+			           WHERE lower(uniquename) = lower('%s') AND type_id =
 			              (SELECT cvterm_id FROM cvterm WHERE name = 'genetic_marker')
-					   AND organism_id = :organism_id
+					   AND organism_id = %d
 			          )
-			       AND string_to_array(description, '|') @> ARRAY[:allele_id]
+			       AND string_to_array(description, '|') @> ARRAY['%s']
                 GROUP BY G.genotype_id
                 ORDER BY G.genotype_id";
-	$results = chado_query($sql, array(':uniquename' => $marker, ':organism_id' => $oid, ':allele_id' => $alleleid));
+	$results = chado_query($sql, $marker, $oid, $alleleid);
 	
 	$genotypes  = array();
 	$counter = 0;
-	while ($g = $results->fetchObject()) {
+	while ($g = db_fetch_object($results)) {
 		$genotypes[$counter] = $g->genotype_id;
 		$counter ++;
 	}
@@ -57,15 +57,15 @@ function mainlab_get_allele_associated_stocks ($genotype_id) {
                     WHERE
                       SR.type_id =
                         (SELECT cvterm_id FROM cvterm WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))
-                    AND genotype_id = :genotype_id";
-	$sresult = chado_query($ssql, array(':genotype_id' => $genotype_id));
+                    AND genotype_id = %d";
+	$sresult = chado_query($ssql, $genotype_id);
 	$stocks = array();
 	$scounter = 0;
-	while ($stock = $sresult->fetchObject()) {
+	while ($stock = db_fetch_object($sresult)) {
 		// Find out the stock nid if there is one
 		if (db_table_exists('chado_stock')) {
-			$nsql = "SELECT nid FROM chado_stock WHERE stock_id = :stock_id";
-			$nid = db_query($nsql, array(':stock_id' => $stock->stock_id))->fetchField();
+			$nsql = "SELECT nid FROM {chado_stock} WHERE stock_id = %d";
+			$nid = db_result(db_query($nsql, $stock->stock_id));
 			$stock->nid = $nid;
 		}
 		$stocks [$scounter] = $stock;

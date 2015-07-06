@@ -1,7 +1,7 @@
 <?php
 
 $options = array('return_array' => 1);
-$node = chado_expand_var($node, 'table', 'organismprop', $options);
+$node = tripal_core_expand_chado_vars($node, 'table', 'organismprop', $options);
 $properties = $node->organism->organismprop;
 
 if(count($properties) > 0){ ?>

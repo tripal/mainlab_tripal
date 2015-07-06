@@ -2,7 +2,7 @@
 
 $feature  = $variables['node']->feature;
 
-$feature = chado_expand_var($feature,'field','feature.residues');
+$feature = tripal_core_expand_chado_vars($feature,'field','feature.residues');
 ?>
 <div id="tripal_feature-base-box" class="tripal_feature-info-box tripal-info-box">
   <div class="tripal_feature-info-box-title tripal-info-box-title">Sequence Details</div>
