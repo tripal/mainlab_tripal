@@ -4,7 +4,7 @@ $stock = $variables['node']->stock;
 
 // expand the stock object to include the feature maps and their properties
 $options = array('return_array' => 1);
-$stock = chado_expand_vars($stock, 'table', 'featuremap_stock', $options);
+$stock = chado_expand_var($stock, 'table', 'featuremap_stock', $options);
 $featuremap_stocks = $stock->featuremap_stock;
 
 if (count($featuremap_stocks) > 0) {?>
