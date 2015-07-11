@@ -28,6 +28,7 @@ foreach($properties as $property) {
 
 // get genbank accession
 $feature = chado_expand_var($feature,'table','feature_dbxref');
+$accession = '';
 if (is_object($feature->feature_dbxref) && $feature->feature_dbxref->dbxref_id->db_id->name == 'DB:genbank') {
   $accession = $feature->feature_dbxref->dbxref_id->accession;
 }
@@ -60,7 +61,7 @@ $stock = is_object($fstock->feature_stock) ? $fstock->feature_stock->stock_id->u
 $stock_nid = is_object($fstock->feature_stock) ? $fstock->feature_stock->stock_id->nid : NULL;
 
 // get source sequence & probes
-$f_rel = chado_expand_var($feature,'table','feature_relationship');
+$f_rel = chado_expand_var($feature,'table','feature_relationship', array('return_array' => 1));
 $objs = $f_rel->feature_relationship->object_id;
 $seqs = array();
 $probes = array();
@@ -124,352 +125,160 @@ $polymorphism = $feature->feature_genotype->feature_id;
 $poly_seq = tripal_feature_get_property($feature->feature_id, 'polymorhpic_sequence', 'MAIN');
 
 // expand feature to include pubs
-$feature = chado_expand_var($feature, 'table', 'feature_pub');
+$feature = chado_expand_var($feature, 'table', 'feature_pub', array('return_array' => 1));
 $pubs = $feature->feature_pub;
 
 // get contact
-$feature = chado_expand_var($feature, 'field', 'pub.title');
+$feature = chado_expand_var($feature, 'table', 'feature_contact', array('return_array' => 1));
 $contacts = $feature->feature_contact;
 
-// Define function to get table row class
-function genetic_markerGetTableRowClass($c) {
-  if ($c % 2 == 1) {
-    $class = "tripal_feature-table-even-row tripal-table-even-row";
-  } else {
-    $class = "tripal_feature-table-odd-row tripal-table-odd-row";
-  }
-  return $class;
+
+$headers = array();
+$rows = array();
+// Name
+$rows [] = array(array('data' => 'Name', 'header' => TRUE, 'width' => '20%'), $feature->name);
+// Alias
+$rows [] = array(array('data' => 'Alias', 'header' => TRUE, 'width' => '20%'), key_exists('alias', $kv_properties) ? $kv_properties['alias'] : "N/A");
+//Genbank ID
+if ($marker_type != "SNP") {
+  $gbid = "N/A";
+  if ($accession && $accession != 'GDR_markers') {
+    if ($feature->feature_dbxref->db_id->url) {
+      $gbid = "<a href=\"" . $feature->feature_dbxref->db_id->url . '/' . $accession . "\">$accession</a>";
+    }
+    else {
+      $gbid = $accession;
+    } 
+  } 
+  $rows [] = array(array('data' => 'Genbank ID', 'header' => TRUE, 'width' => '20%'), $gbid);
 }
-$counter = 0; ?>
-
-<script type="text/javascript">
-  function showPolymorphism () {
-    $(".tripal-info-box").hide();
-    $("#tripal_feature-genetic_marker_polymorphism-box").fadeIn('slow');
-    $("#tripal_feature_toc").height($("#tripal_feature-genetic_marker_polymorphism-box").parent().height());
-    return false;  
+//dbSNP ID
+else {
+  $dbsnp_id = "N/A";
+  if ($dbSNP_accession) {
+    $dbsnp_id = "<a href=\"" . $dbSNP_accession->db_id->url . $dbSNP_accession->accession . "\" target=\"_blank\">" . $dbSNP_accession->accession . "</a>";
+  } 
+  if ($dbSNPrs_accession) {
+    $dbsnp_id = "<a href=\"" . $dbSNPrs_accession->db_id->url . $dbSNPrs_accession->accession. "\" target=\"_blank\">" .  $dbSNPrs_accession->accession . "</a>";
   }
-</script>
+  $rows [] = array(array('data' => 'dbSNP ID', 'header' => TRUE, 'width' => '20%'), $dbsnp_id);
+}
+$rows [] = array(array('data' => 'Type', 'header' => TRUE, 'width' => '20%'), key_exists('marker_type', $kv_properties) ? $kv_properties['marker_type'] : "N/A");
+if ($marker_type == "SNP") {
+  $rows [] = array(array('data' => 'SNP Alleles', 'header' => TRUE, 'width' => '20%'), $snp ? $snp : "N/A");  
+}
+// Probes
+$probename = "N/A";
+if (count($probes) > 0) {
+  $no_probes = 1;
+  foreach($probes AS $probe) {
+    if ($probe->type_id->name == 'probe') {
+      $probename = mainlab_tripal_get_site() == 'cottongen' ? $probe->name : $probe->uniquename;
+      $rows [] = array(array('data' => "Probe $no_probes", 'header' => TRUE, 'width' => '20%'), $probename . ": " . $probe->residues);
+      $no_probes ++;
+    }
+  }
+} else {
+  $rows [] = array(array('data' => 'Probe', 'header' => TRUE, 'width' => '20%'), "N/A");
+}
+// Species
+$rows [] = array(array('data' => 'Species', 'header' => TRUE, 'width' => '20%'), $feature->organism_id->nid ? "<a href=\"".url("node/".$feature->organism_id->nid)."\">".$feature->organism_id->genus ." " . $feature->organism_id->species . "</a>" : $feature->organism_id->genus ." " . $feature->organism_id->species);
+// Germplasm
+$rows [] = array(array('data' => 'Germplasm', 'header' => TRUE, 'width' => '20%'), $stock ? "<a href=\"/node/$stock_nid\">". $stock ."</a>" : "N/A");
+// Source Sequence
+$srcseq = "";
+foreach ($seqs AS $seq) {
+  if (property_exists($seq, 'nid')) {
+    $srcseq .= "<a href=\"/node/$seq->nid\">". $seq->name ."</a><br>";
+  }
+  else {
+    $srcseq .= $seq->name . "<br>";
+  }
+}
+if (count($seqs) == 0) {
+  $srcseq = "N/A";
+}
+$rows [] = array(array('data' => 'Source Sequence', 'header' => TRUE, 'width' => '20%'), $srcseq);
+// Source Type
+$rows [] = array(array('data' => 'Source Type', 'header' => TRUE, 'width' => '20%'), key_exists('source', $kv_properties) ? $kv_properties['source'] : "N/A");
+// Repeat Motif
+$rows [] = array(array('data' => 'Repeat Motif', 'header' => TRUE, 'width' => '20%'), key_exists('repeat_motif', $kv_properties) ? $kv_properties['repeat_motif'] : "N/A");
+// PCR Condition
+$rows [] = array(array('data' => 'PCR Condition', 'header' => TRUE, 'width' => '20%'), key_exists('pcr_condition', $kv_properties) ? $kv_properties['pcr_condition'] : "N/A");
+// Primers
+if (count($primers) > 0) {
+  $no_primers = 1;
+  foreach($primers AS $primer) {
+    $primer = chado_expand_var($primer, 'field', 'feature.residues');
+    if ($primer->type_id->name == 'primer') {
+      $primername = mainlab_tripal_get_site() == 'cottongen' ? $primer->name : $primer->uniquename;
+      $rows [] = array(array('data' => "Primer $no_primers", 'header' => TRUE, 'width' => '20%'), $primername . ": " . $primer->residues);
+      $no_primers ++;
+    }
+  }
+}
+// Product Length
+$rows [] = array(array('data' => 'Product Length', 'header' => TRUE, 'width' => '20%'), key_exists('product_length', $kv_properties) ? $kv_properties['product_length'] : "N/A");
+// Max Length
+$rows [] = array(array('data' => 'Max Length', 'header' => TRUE, 'width' => '20%'), key_exists('max_length', $kv_properties) ? $kv_properties['max_length'] : "N/A");
+// Restriction Enzyme
+$rows [] = array(array('data' => 'Restriction Enzyme', 'header' => TRUE, 'width' => '20%'), key_exists('restriction_enzyme', $kv_properties) ? $kv_properties['restriction_enzyme'] : "N/A");
+// Polymorphism
+$rows [] = array(array('data' => 'Polymorphism', 'header' => TRUE, 'width' => '20%'), $polymorphism ? "<a href=\"/polymorphism/$feature->feature_id\">P_ " . $feature->name . "</a>" : "N/A");
+// Publication
+$rows [] = array(array('data' => 'Publication', 'header' => TRUE, 'width' => '20%'), $pubs ? "[<a href=\"?pane=publications\">view all</a>]" : "N/A");
+// Contact
+$data_contact = "";
+if (is_array($contacts)) {
+  foreach ($contacts AS $contact) {
+    $data_contact .= "<a href=\"?pane=genetic_marker_contacts\">" . $contact->contact_id->name . "</a><br>";
+  }
+}
+else {
+  if ($contacts) {
+    $data_contact = "<a href=\"?pane=genetic_marker_contacts\">" . $contacts->contact_id->name . "</a><br>";
+  }
+  else {
+    $data_contact = "N/A";
+  }
+}
+$rows [] = array(array('data' => 'Contact', 'header' => TRUE, 'width' => '20%'), $data_contact);
+// Associated With
+$data_assoc_with = "";
+if (count($assoc_with) == 0) {
+  $data_assoc_with = "N/A";
+}
+else {
+  $no_assoc = 1;
+  foreach($assoc_with AS $assoc) {
+    if ($assoc->nid) {
+      $data_assoc_with = l($assoc->name, 'node/' . $assoc->nid);
+    }
+    else {
+      $data_assoc_with .= $assoc->name . "<br>";
+    }
+    $no_assoc ++;
+  }
+}
+$rows [] = array(array('data' => 'Associated With', 'header' => TRUE, 'width' => '20%'), $data_assoc_with);
+// Comment
+$rows [] = array(array('data' => 'Comment', 'header' => TRUE, 'width' => '20%'), key_exists('comments', $kv_properties) ? $kv_properties['comments'] : "N/A");
+// allow site admins to see the feature ID
+if (user_access('view ids')) {
+  $rows[] = array(array('data' => 'Feature ID', 'header' => TRUE, 'class' => 'tripal-site-admin-only-table-row'), array('data' => $feature->feature_id, 'class' => 'tripal-site-admin-only-table-row'));
+}
+$table = array(
+  'header' => $headers,
+  'rows' => $rows,
+  'attributes' => array(
+    'id' => 'tripal_feature_genetic_marker-table-base',
+  ),
+  'sticky' => FALSE,
+  'caption' => '',
+  'colgroups' => array(),
+  'empty' => '',
+);
+print theme_table($table);
+?>
 
-<div id="tripal_feature-base-box" class="tripal_feature-info-box tripal-info-box">
-  <div class="tripal_feature-info-box-title tripal-info-box-title">Marker Details</div>
-  <div class="tripal_feature-info-box-desc tripal-info-box-desc"></div> <?php 
-  if(strcmp($feature->is_obsolete,'t')==0){ ?>
-    <div class="tripal_feature-obsolete">This feature is obsolete</div> <?php 
-  }?>
-  <table id="tripal_feature-base-table" class="tripal_feature-table tripal-table tripal-table-vert">
 
-    <!-- Name -->
-    <tr class="tripal_feature-table-even-row tripal-table-even-row">
-      <th style="width:40%;">Name</th>
-      <td><?php print $feature->name; ?></td>
-    </tr>
-
-    <!-- Alias -->
-    <tr class="<?php print genetic_markerGetTableRowClass($counter++) ?>">
-      <th>Alias</th>
-      <td> <?php
-        if (key_exists('alias', $kv_properties)) { 
-          print $kv_properties['alias'];
-        } 
-        else { 
-          print "N/A";
-        } ?>
-      </td>
-    </tr>
-
-    <!-- Genbank ID --> <?php
-    if ($marker_type != "SNP") { ?>
-      <tr class="<?php print genetic_markerGetTableRowClass($counter++)?>">
-        <th>Genbank ID</th>
-        <td> <?php
-          if ($accession && $accession != 'GDR_markers') {
-            if ($feature->feature_dbxref->db_id->url) { ?>
-              <a href="<?php print $feature->feature_dbxref->db_id->url . '/' . $accession ?>"><?php print $accession ?></a> <?php
-            }
-            else {
-              print "$accession";
-            } 
-          } 
-          else { 
-            print "N/A";
-          } ?>
-        </td>
-      </tr> <?
-    } ?>
-
-    <!-- dbSNP ID --> <?php 
-    if ($marker_type == "SNP") { ?>
-      <tr class="<?php print genetic_markerGetTableRowClass($counter++)?>">
-        <th>dbSNP ID</th>
-        <td> <?php
-          if ($dbSNP_accession) { ?>
-             <a href="<?print $dbSNP_accession->db_id->url . $dbSNP_accession->accession?>" target="_blank"><?php print $dbSNP_accession->accession ?></a> <?php
-          } 
-          if ($dbSNPrs_accession) { ?>
-             <a href="<?print $dbSNPrs_accession->db_id->url . $dbSNPrs_accession->accession?>" target="_blank"><?php print $dbSNPrs_accession->accession ?></a> <?php
-          }
-          if (!$dbSNP_accession and !$dbSNPrs_accession ) { 
-             print "N/A";
-          } ?>
-        </td>
-      </tr> <?php
-    }?>
-
-    <!-- Type -->
-    <tr class="<?php print genetic_markerGetTableRowClass($counter++) ?>">
-      <th>Type</th>
-      <td> <?php
-        if (key_exists('marker_type', $kv_properties)) {
-          print $kv_properties['marker_type'];
-        }
-        else {
-          print "N/A";
-        } ?>
-      </td>
-    </tr> 
- 
-    <!-- SNP --><?php
-    if ($marker_type == "SNP") {  ?>
-      <tr class="<?php print genetic_markerGetTableRowClass($counter++) ?>"> 
-        <th>SNP Alleles</th>
-        <td> <?php
-          if ($snp) {
-            print $snp;
-          }
-          else {
-            print "N/A";
-          } ?>
-        </td>
-      </tr>  <?php
-    } ?>
-    
-    <!-- Probes --><?php
-      if (count($probes) == 0) {
-        $class = genetic_markerGetTableRowClass($counter); print "<tr class=\"" . $class ."\"><th>Probe</th><td>N/A</td></tr>"; $counter ++;
-      }
-      else {
-        $no_probes = 1;
-        foreach($probes AS $probe) {
-          if ($probe->type_id->name == 'probe') {
-            $class = genetic_markerGetTableRowClass($counter);
-            $probename = mainlab_tripal_get_site() == 'cottongen' ? $probe->name : $probe->uniquename;
-            print "<tr class=\"" . $class ."\"><th>Probe $no_probes</th><td>" . $probename . ": " . $probe->residues ."</td></tr>"; $counter ++;
-            $no_probes ++;
-          }
-        }
-      }?>
-
-    <!-- Species --><?php
-    $class = genetic_markerGetTableRowClass($counter); $counter ++?>
-    <tr class="<?php print $class?>">
-      <th>Species</th>
-        <td><?php
-          if ($feature->organism_id->nid) { 
-            print "<a href=\"".url("node/".$feature->organism_id->nid)."\">".$feature->organism_id->genus ." " . $feature->organism_id->species . "</a>";
-          }
-          else { 
-            print $feature->organism_id->genus ." " . $feature->organism_id->species;
-          } ?>
-        </td>
-      </tr> 
-       
-      <!-- Stock (or Germplasm) --><?php
-      $class = genetic_markerGetTableRowClass($counter);
-      print "<tr class=\"" . $class ."\"><th>Germplasm</th><td>";
-      if ($stock) {
-        print "<a href=\"/node/$stock_nid\">". $stock ."</a>";
-      }
-      else {
-        print "N/A";
-      }
-      print "</td></tr>";
-      $counter ++;?>
-      
-      <!-- Source Sequence --><?php
-      $class = genetic_markerGetTableRowClass($counter);
-      print "<tr class=\"" . $class ."\"><th>Source Sequence</th><td>";
-      foreach ($seqs AS $seq) {
-        print "<a href=\"/node/$seq->nid\">". $seq->name ."</a> ";
-      };
-      if(count($seqs) == 0) {
-        print "N/A";
-      }
-      print "</td></tr>";
-      $counter ++;?>
-      
-      <!-- Source Type --><?php
-      $class = genetic_markerGetTableRowClass($counter);
-      print "<tr class=\"" . $class ."\"><th>Source Type</th><td>";
-      if (key_exists('source', $kv_properties)) {
-        print $kv_properties['source'];
-      }
-      else {
-        print "N/A";
-      }
-      print "</td></tr>";
-      $counter ++;?>
-      
-      <!-- Repeat Motif --><?php
-      $class = genetic_markerGetTableRowClass($counter);
-      print "<tr class=\"" . $class ."\"><th>Repeat Motif</th><td>";
-      if (key_exists('repeat_motif', $kv_properties)) {
-        print $kv_properties['repeat_motif'];
-      }
-      else {
-        print "N/A";
-      }
-      print "</td></tr>";
-      $counter ++;?>
-
-      <!-- PCR Condition --><?php
-      $class = genetic_markerGetTableRowClass($counter);
-      print "<tr class=\"" . $class ."\"><th>PCR Condition</th><td>";
-      if (key_exists('pcr_condition', $kv_properties)) {
-        print $kv_properties['pcr_condition'];
-      } 
-      else {
-        print "N/A";
-      }
-      print "</td></tr>";
-      $counter ++;?>
-
-      <!-- Primers --><?php
-      if (count($primers) == 0) {
-        $class = genetic_markerGetTableRowClass($counter); print "<tr class=\"" . $class ."\"><th>Primer</th><td>N/A</td></tr>"; $counter ++;
-      }
-      else {
-        $no_primers = 1;
-        foreach($primers AS $primer) {
-          if ($primer->type_id->name == 'primer') {
-            $class = genetic_markerGetTableRowClass($counter);
-            $primername = mainlab_tripal_get_site() == 'cottongen' ? $primer->name : $primer->uniquename;
-            print "<tr class=\"" . $class ."\"><th>Primer $no_primers</th><td>" . $primername . ": " . $primer->residues ."</td></tr>"; $counter ++;
-            $no_primers ++;
-          }
-        }
-      }?>
-
-      <!-- Product Length --><?php
-       $class = genetic_markerGetTableRowClass($counter);
-       print "<tr class=\"" . $class ."\"><th>Product Length</th><td>";
-       if (key_exists('product_length', $kv_properties)) {
-         print $kv_properties['product_length'];
-       }
-       else {
-         print "N/A";
-       }
-       print"</td></tr>";
-       $counter ++;?>
-
-      <!-- Max Length --><?php
-      $class = genetic_markerGetTableRowClass($counter);
-      print "<tr class=\"" . $class ."\"><th>Max Length</th><td>";
-      if (key_exists('max_length', $kv_properties)) {
-        print $kv_properties['max_length'];
-      } 
-      else {
-        print "N/A";
-      }
-      print "</td></tr>"; $counter ++;?>
-
-      <!-- Restriction Enzyme --><?php
-      $class = genetic_markerGetTableRowClass($counter);
-      print "<tr class=\"" . $class ."\"><th>Restriction Enzyme</th><td>";
-      if (key_exists('restriction_enzyme', $kv_properties)) {
-        print $kv_properties['restriction_enzyme'];
-      } else {
-        print "N/A";
-      }
-      print"</td></tr>";
-      $counter ++;?>
-
-      <!-- Polymorphism --><?php
-      $class = genetic_markerGetTableRowClass($counter);
-      print "<tr class=\"" . $class ."\"><th>Polymorphism</th><td>";
-      if ($polymorphism) {
-        print "<a href=\"/polymorphism/$feature->feature_id\">P_ " . $feature->name . "</a>";
-      }
-      else {
-        print "N/A";
-      }
-      print "</td></tr>";
-      $counter ++;?>
-
-      <!-- Map position (content dynamically inserted using javascript) --><?php
-      $class = genetic_markerGetTableRowClass($counter);
-      print "<tr class=\"" . $class ."\"><th>Map position</th><td id=\"tripal-feature-genetic_marker-map_position\">N/A</td></tr>";
-      $counter ++;?>
-      
-      <!-- Publication --><?php 
-      $class = genetic_markerGetTableRowClass($counter);
-      $counter ++;
-      print "<tr class=\"" . $class ."\">";
-      print "<th nowrap>Publication</th><td>";
-      if (is_array($pubs)) {
-        print "[<a class=\"tripal_feature_toc_item\" href=\"#tripal_feature-pub-box\">view all " . count($pubs) . "</a>]";
-      }
-      else {
-        if ($pubs) {
-          print "[<a class=\"tripal_feature_toc_item\" href=\"#tripal_feature-pub-box\">view</a>]<br>";
-        }
-        else {
-          print "N/A";
-        }
-      }?>
-
-      <!-- Contact --><?php
-      $class = genetic_markerGetTableRowClass($counter);
-      $counter ++;
-      print "<tr class=\"" . $class ."\">";
-      print "<th nowrap>Contact</th><td>";
-      if (is_array($contacts)) {
-        foreach ($contacts AS $contact) {
-          print "<a class=\"tripal_feature_toc_item\" href=\"#tripal_feature-contact-box\">" . $contact->contact_id->name . "</a><br>";
-        }
-      }
-      else {
-        if ($contacts) {
-          print "<a class=\"tripal_feature_toc_item\" href=\"#tripal_feature-contact-box\">" . $contacts->contact_id->name . "</a><br>";
-        }
-        else {
-          print "N/A";
-        }
-      }?>
-
-      <!-- Associated With --><?php
-      if (count($assoc_with) == 0) {
-        $class = genetic_markerGetTableRowClass($counter); 
-        print "<tr class=\"" . $class ."\"><th>Associated With</th><td>N/A</td></tr>"; 
-        $counter ++;
-      } 
-      else {
-        $no_assoc = 1;
-        $class = genetic_markerGetTableRowClass($counter); 
-        print "<tr class=\"" . $class ."\"><th>Associated With</th><td>";
-        foreach($assoc_with AS $assoc) {
-          if ($assoc->nid) {
-            print l($assoc->name, 'node/' . $assoc->nid);
-          } 
-          else {
-            print $assoc->name . "<br>";
-          }
-          $no_assoc ++;
-        }
-        print "</td></tr>";
-      }?>
-
-      <!-- Comment --><?php
-      $class = genetic_markerGetTableRowClass($counter);
-      print "<tr class=\"" . $class ."\"><th>Comments</th><td>";
-      if (key_exists('comments', $kv_properties)) {
-        print $kv_properties['comments'];
-      }
-      else {
-        print "N/A";
-      }
-      print "</td></tr>";
-      $counter ++;?>
-
-   </table>
-</div>

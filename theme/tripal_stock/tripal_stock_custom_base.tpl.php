@@ -1,0 +1,129 @@
+<?php
+$stock = $node->stock;
+$organism = $node->stock->organism_id; 
+$main_db_reference = $stock->dbxref_id;
+
+// synonyms are stored in the stockprop table with a type of 'synonym'  or 'alias'
+$stock->stock_synonyms = chado_generate_var(
+		'stockprop',
+		array(
+				'stock_id'=> $stock->stock_id,
+				'type_id' => array(
+						'cv_id' => variable_get('chado_stock_prop_types_cv', 'null'),
+						'name'  => 'synonym'
+				),
+		)
+);
+
+// Prepare synomyns data with type 'alias'
+$synonyms = $stock->stock_synonyms;
+if (!$synonyms) {
+	$stock->stock_synonyms = chado_generate_var(
+			'stockprop',
+			array(
+					'stock_id'=> $stock->stock_id,
+					'type_id' => array(
+							'cv_id' => variable_get('chado_stock_prop_types_cv', 'null'),
+							'name'  => 'alias'
+					),
+			)
+	);
+	$synonyms = $stock->stock_synonyms;
+}
+$num_synonyms = count($synonyms);
+$syn = "";
+if ($num_synonyms == 0) {
+	$syn = "N/A";
+} else {
+	if (is_array($synonyms)) {
+	   $syn = $synonyms[0]->value . " [<a href=\"#\" onclick=\"$('.tripal-info-box').hide();$('#tripal_stock-synonyms-box').fadeIn('slow');$('#tripal_stock_toc').height($('#tripal_stock-synonyms-box').parent().height());\">view all $num_synonyms</a>]";
+	} else {
+		$syn = $synonyms->value;
+	}
+}
+
+// Prepare properties data
+$node = chado_expand_var($node, 'table', 'stockprop', array('return_array' => 1));
+$properties = $node->stock->stockprop;
+$properties = chado_expand_var($properties, 'field', 'stockprop.value');
+$desc = "N/A";
+$orig = "N/A";
+$pedigree = "N/A";
+foreach($properties AS $prop) {
+	if ($prop->type_id->name == 'description') {
+	   if ($desc == "N/A") {
+             $desc = $prop->value;
+          } else {
+             $desc .= ". " . $prop->value;
+       }
+	} elseif ($prop->type_id->name == 'origin') {
+		$orig = $prop->value;
+	} elseif ($prop->type_id->name == 'pedigree') {
+		$pedigree = $prop->value;
+	}
+}
+$stock =  chado_expand_var($stock, 'table', 'feature_stock', array('return_array' => 1));
+$num_seq = count($stock->feature_stock);
+
+$stock_type = ucwords(preg_replace('/_/', ' ', $stock->type_id->name));
+if($stock_type == 'TBD'){
+  $stock_type = 'undefined';
+}
+
+// Maternal parents
+$maternal_parent = $stock->maternal_parent;
+$num_mparent = count($maternal_parent);
+if ($num_mparent > 0) {
+  $first_mparent = $maternal_parent[0]->uniquename;
+  if ($num_mparent > 1) {
+    $first_mparent .= " [<a href=\"?pane=maternal_parent\">view all " . $num_mparent . "</a>]";
+  }
+}
+
+//Paternal parents
+$paternal_parent = $stock->paternal_parent;
+$num_pparent = count($paternal_parent);
+if ($num_pparent > 0) {
+  $first_pparent = $paternal_parent[0]->uniquename;
+  if ($num_pparent > 1) {
+    $first_pparent .= " [<a href=\"?pane=paternal_parent\">view all " . $num_pparent . "</a>]";
+  }
+}
+
+// Population Maps
+$population_map = $stock->population_map;
+$num_population_map = count($population_map);
+
+$headers = array();
+$rows = array();
+$rows [] = array(array('data' => 'Name', 'header' => TRUE, 'width' => '20%'), $stock->uniquename);
+$rows [] = array(array('data' => 'Alias', 'header' => TRUE, 'width' => '20%'), $syn);
+$rows [] = array(array('data' => 'Type', 'header' => TRUE, 'width' => '20%'), $stock_type);
+$rows [] = array(array('data' => 'Species', 'header' => TRUE, 'width' => '20%'), property_exists($organism, 'nid') ? "<a href=\"".url("node/". $organism->nid)."\">".$organism->genus ." " . $organism->species . "</a>" : $organism->genus ." " . $organism->species);
+$rows [] = array(array('data' => 'Description', 'header' => TRUE, 'width' => '20%'), $desc);
+$rows [] = array(array('data' => 'Origin', 'header' => TRUE, 'width' => '20%'), $orig);
+$rows [] = array(array('data' => 'Pedigree', 'header' => TRUE, 'width' => '20%'), $pedigree);
+$rows [] = array(array('data' => 'Maternal Parent of', 'header' => TRUE, 'width' => '20%'), $first_mparent);
+$rows [] = array(array('data' => 'Paternal Parent of', 'header' => TRUE, 'width' => '20%'), $first_pparent);
+$rows [] = array(array('data' => 'Genotypic Data', 'header' => TRUE, 'width' => '20%'), 'Sequence');
+$rows [] = array(array('data' => 'Map', 'header' => TRUE, 'width' => '20%'), $num_population_map > 0 ? "[<a href='?pane=population_map'>view all $num_population_map</a>]" : 'N/A');
+$rows [] = array(array('data' => 'DNA Library', 'header' => TRUE, 'width' => '20%'), $feature->uniquename);
+$rows [] = array(array('data' => 'Sequence', 'header' => TRUE, 'width' => '20%'), $num_seq > 0 ? "[<a href=\"/feature_listing/_/_/$stock->uniquename\">view all $num_seq </a>]" : 'N/A');
+// allow site admins to see the feature ID
+if (user_access('view ids')) {
+  $rows[] = array(array('data' => 'Stock ID', 'header' => TRUE, 'class' => 'tripal-site-admin-only-table-row'), array('data' => $stock->stock_id, 'class' => 'tripal-site-admin-only-table-row'));
+}
+$table = array(
+  'header' => $headers,
+  'rows' => $rows,
+  'attributes' => array(
+    'id' => 'tripal_stock-table-custom_base',
+  ),
+  'sticky' => FALSE,
+  'caption' => '',
+  'colgroups' => array(),
+  'empty' => '',
+);
+print theme_table($table);
+?>
+

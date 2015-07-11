@@ -10,6 +10,12 @@ $options = array(
 );
 $feature = chado_expand_var($feature, 'table', 'feature_contact', $options);
 $feature_contacts = $feature->feature_contact;
+
+// return if no data
+if (!$feature_contacts) {
+  return; 
+}
+
 $mycontacts = array();
 if(!is_array($feature_contacts)) {
   $feature_contacts = array($feature_contacts);
@@ -27,47 +33,41 @@ foreach($feature_contacts AS $feature_contact) {
    }  
    $mycontacts[$index] = $contact_info;
    $index ++;
-} ?>
+} 
 
-<div id="tripal_feature-contact-box" class="tripal_feature-info-box tripal-info-box">
-  <div class="tripal_feature-info-box-title tripal-info-box-title">Contact</div>
-  <div class="tripal_feature-info-box-desc tripal-info-box-desc"></div>
-
-   <table id="tripal_feature-contact-table" class="tripal_feature-table tripal-table tripal-table-vert" style="border-bottom:solid 2px #999999">
-     <tr style="background-color:#EEEEFF;border-top:solid 2px #999999">
-       <th style="padding:5px 10px 5px 10px;width:120px">Name</th>
-       <th>Details</th>
-     </tr>
-<?php
-$class = "";
-$counter = 0;
-foreach($mycontacts AS $con) {
-   if ($counter % 2 == 1) {
-     $class = "tripal_featuremap-table-even-row tripal-table-even-row";
-   } else {
-     $class = "tripal_featuremap-table-odd-row tripal-table-odd-row";
-   }
-  print "<tr class=\"" . $class ."\">";
-  print "<td style=\"padding:5px 10px 5px 10px;\">" . $con['contact_name'] . "</td><td>";
-  print "<table class=\"tripal-subtable\">";
-   if ($con['contact_desc']) {
-      print "<tr><td style=\"padding:2px 0px 2px 0px;width:80px;\">Description</td><td>:</td><td style=\"padding:2px 0px 2px 0px;\">" . $con['contact_desc'] . "</td></tr>";
-   }
-   if (key_exists("first_name", $con)) { print "<tr><td style=\"padding:2px 0px 2px 0px;width:80px;\">First name</td><td>:</td><td style=\"padding:2px 0px 2px 0px;\">". $con['first_name'] . "</td></tr>";}
-   if (key_exists("last_name", $con)) { print "<tr><td style=\"padding:2px 0px 2px 0px;width:80px;\">Last name</td><td>:</td><td style=\"padding:2px 0px 2px 0px;\">". $con['last_name'] . "</td></tr>";}
-   if (key_exists("title", $con)) { print "<tr><td style=\"padding:2px 0px 2px 0px;width:80px;\">Title</td><td>:</td><td style=\"padding:2px 0px 2px 0px;\">". $con['title'] . "</td></tr>";}
-   if (key_exists("institution", $con)) { print "<tr><td style=\"padding:2px 0px 2px 0px;width:80px;\">Institution</td><td>:</td><td style=\"padding:2px 0px 2px 0px;\">". $con['institution'] . "</td></tr>";}
-   if (key_exists("address", $con)) { print "<tr><td style=\"padding:2px 0px 2px 0px;width:80px;\">Address</td><td>:</td><td style=\"padding:2px 0px 2px 0px;\">". $con['address'] . "</td></tr>";}
-   if (key_exists("country",$con)) { print "<tr><td style=\"padding:2px 0px 2px 0px;width:80px;\">Country</td><td>:</td><td style=\"padding:2px 0px 2px 0px;\">". $con['country'] . "</td></tr>";}
-   if (key_exists("email", $con)) { print "<tr><td style=\"padding:2px 0px 2px 0px;width:80px;\">Email</td><td>:</td><td style=\"padding:2px 0px 2px 0px;\"><a href=\"mailto:". $con['email'] . "\">" . $con['email'] ."</td></tr>";}
-   if (key_exists("phone", $con)) { print "<tr><td style=\"padding:2px 0px 2px 0px;width:80px;\">Phone</td><td>:</td><td style=\"padding:2px 0px 2px 0px;\">". $con['phone'] . "</td></tr>";}
-   if (key_exists("fax", $con)) { print "<tr><td style=\"padding:2px 0px 2px 0px;width:80px;\">Fax</td><td>:</td><td style=\"padding:2px 0px 2px 0px;\">". $con['fax'] . "</td></tr>";}
-   if (key_exists("keywords", $con)) { print "<tr><td style=\"padding:2px 0px 2px 0px;width:80px;\">Keywords</td><td>:</td><td style=\"padding:2px 0px 2px 0px;\">". $con['keywords'] . "</td></tr>";}
-   if (key_exists("last_update", $con)) { print "<tr><td style=\"padding:2px 0px 2px 0px;width:80px;\">Last update</td><td>:</td><td style=\"padding:2px 0px 2px 0px;\">". $con['last_update'] . "</td></tr>";}
-   print "</table>";
-   print "</td></tr>";
-  $counter ++;
+$rows = array();
+foreach ($mycontacts AS $con) {
+  $details = '<table class=\"tripal-subtable\" style=\"margin:0px !important;\">';
+  if ($con['contact_desc']) {
+    $details .= "<tr><td style=\"padding:2px 0px 2px 0px;width:80px;border:0px;\">Description:</td><td style=\"padding:2px 0px 2px 0px;\">" . $con['contact_desc'] . "</td></tr>";
+  }
+  $style_hd = "padding:2px 0px !important;width:80px;border:0px;";
+  $style_td = "padding:2px 0px 2px 0px;border:0px;";
+  if (key_exists("first_name", $con)) { $details .= "<tr><td style=\"$style_hd\">First name:</td><td style=\"$style_td\">". $con['first_name'] . "</td></tr>";}
+  if (key_exists("last_name", $con)) { $details .= "<tr><td style=\"$style_hd\">Last name:</td><td style=\"$style_td\">". $con['last_name'] . "</td></tr>";}
+  if (key_exists("title", $con)) { $details .= "<tr><td style=\"$style_hd\">Title:</td><td style=\"$style_td\">". $con['title'] . "</td></tr>";}
+  if (key_exists("institution", $con)) { $details .= "<tr><td style=\"$style_hd\">Institution:</td><td style=\"$style_td\">". $con['institution'] . "</td></tr>";}
+  if (key_exists("address", $con)) { $details .= "<tr><td style=\"$style_hd\">Address:</td><td style=\"$style_td\">". $con['address'] . "</td></tr>";}
+  if (key_exists("country",$con)) { $details .= "<tr><td style=\"$style_hd\">Country:</td><td style=\"$style_td\">". $con['country'] . "</td></tr>";}
+  if (key_exists("email", $con)) { $details .= "<tr><td style=\"$style_hd\">Email:</td><td style=\"$style_td\"><a href=\"mailto:". $con['email'] . "\">" . $con['email'] ."</td></tr>";}
+  if (key_exists("phone", $con)) { $details .= "<tr><td style=\"$style_hd\">Phone:</td><td style=\"$style_td\">". $con['phone'] . "</td></tr>";}
+  if (key_exists("fax", $con)) { $details .= "<tr><td style=\"$style_hd\">Fax:</td><td style=\"$style_td\">". $con['fax'] . "</td></tr>";}
+  if (key_exists("keywords", $con)) { $details .= "<tr><td style=\"$style_hd\">Keywords:</td><td style=\"$style_td\">". $con['keywords'] . "</td></tr>";}
+  if (key_exists("last_update", $con)) { $details .= "<tr><td style=\"$style_hd\">Last update:</td><td style=\"$style_td\">". $con['last_update'] . "</td></tr>";}
+  $details .= "</table>";
+  $rows [] = array ($con['contact_name'], $details);
 }
+$header = array ('Name', 'Details');
+$table = array(
+  'header' => $header,
+  'rows' => $rows,
+  'attributes' => array(
+    'id' => 'tripal_feature-table-contact',
+  ),
+  'sticky' => FALSE,
+  'caption' => '',
+  'colgroups' => array(),
+  'empty' => '',
+);
+print theme_table($table);
 ?>
-   </table>
-</div>
