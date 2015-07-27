@@ -31,7 +31,7 @@ function tripal_feature_preprocess_tripal_feature_genetic_marker_image(&$variabl
 /**
  * @ingroup tripal_featuremap
  */
-function tripal_featuremap_preprocess_tripal_featuremap_base_custom(&$variables) {
+function tripal_featuremap_preprocess_tripal_featuremap_custom_base(&$variables) {
 	$featuremap = $variables['node']->featuremap;
 	$num_loci = chado_query(
 			"SELECT count (distinct F.uniquename) 
@@ -57,7 +57,7 @@ function tripal_featuremap_preprocess_tripal_featuremap_base_custom(&$variables)
 			 WHERE featuremap_id = :featuremap_id
 			", array(':featuremap_id' => $featuremap->featuremap_id));
 	$cmap = $cmap_r->fetchObject();
-	$cmap_url = $cmap->urlprefix . $cmap->accession;
+	$cmap_url = is_object($cmap) ? $cmap->urlprefix . $cmap->accession : NULL;
 	
 	$featuremap->num_loci = $num_loci;
 	$featuremap->num_lg = $num_lg;

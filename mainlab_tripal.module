@@ -186,13 +186,14 @@ function mainlab_tripal_admin_validate($form, &$form_state) {
  */
 function mainlab_tripal_node_view($node, $view_mode, $langcode) {
   switch ($node->type) {
+    
     // Feature
     case 'chado_feature' :
       if ($view_mode == 'full') {
         switch ( $node->feature->type_id->name) {
           case 'genetic_marker':
-            $node->content['tripal_feature_genetic_marker'] = array(
-              '#markup' => theme('tripal_feature_genetic_marker',  array('node' => $node)),
+            $node->content['tripal_feature_genetic_marker_base'] = array(
+              '#markup' => theme('tripal_feature_genetic_marker_base',  array('node' => $node)),
               '#tripal_toc_id'    => 'genetic_marker',
               '#tripal_toc_title' => 'Marker Overview',
               '#weight' => -100,
@@ -201,16 +202,18 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
               '#markup' => theme('tripal_feature_genetic_marker_map_positions',  array('node' => $node)),
               '#tripal_toc_id' => 'genetic_marker_map_position',
               '#tripal_toc_title' => 'Map Positions',
+              '#weight' => -90,
             );
             $node->content['tripal_feature_genetic_marker_contacts'] = array(
               '#markup' => theme('tripal_feature_contact',  array('node' => $node)),
               '#tripal_toc_id' => 'genetic_marker_contacts',
               '#tripal_toc_title' => 'Contacts',
+              '#weight' => 1,
             );
             break;
           case 'sequence_feature':
-            $node->content['tripal_feature_sequence_feature'] = array(
-              '#markup' => theme('tripal_feature_sequence_feature',  array('node' => $node)),
+            $node->content['tripal_feature_sequence_feature_base'] = array(
+              '#markup' => theme('tripal_feature_sequence_feature_base',  array('node' => $node)),
               '#tripal_toc_id'    => 'sequence_feature',
               '#tripal_toc_title' => 'Sequence Overview',
               '#weight' => -100,
@@ -219,6 +222,7 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
         }
       }
       break;
+      
       // Stock
       case 'chado_stock' :
         if ($view_mode == 'full') {
@@ -232,20 +236,44 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
               '#markup' => theme('tripal_stock_maternal_parent',  array('node' => $node)),
               '#tripal_toc_id'    => 'maternal_parent',
               '#tripal_toc_title' => 'Maternal Parent',
-              '#weight' => -100,
+              '#weight' => -90,
             );
             $node->content['tripal_stock_paternal_parent'] = array(
               '#markup' => theme('tripal_stock_paternal_parent',  array('node' => $node)),
               '#tripal_toc_id'    => 'paternal_parent',
               '#tripal_toc_title' => 'Paternal Parent',
-              '#weight' => -100,
+              '#weight' => -90,
             );
             $node->content['tripal_stock_population_map'] = array(
               '#markup' => theme('tripal_stock_population_map',  array('node' => $node)),
               '#tripal_toc_id'    => 'population_map',
               '#tripal_toc_title' => 'Map',
-              '#weight' => -90,
+              '#weight' => -80,
             );
+        }
+      break;
+      
+      // Map
+      case 'chado_featuremap' :
+        if ($view_mode == 'full') {
+          $node->content['tripal_featuremap_custom_base'] = array(
+            '#markup' => theme('tripal_featuremap_custom_base',  array('node' => $node)),
+            '#tripal_toc_id'    => 'featuremap',
+            '#tripal_toc_title' => 'Map Overview',
+            '#weight' => -100,
+          );
+          $node->content['tripal_featuremap_stock'] = array(
+            '#markup' => theme('tripal_featuremap_stock',  array('node' => $node)),
+            '#tripal_toc_id'    => 'stock',
+            '#tripal_toc_title' => 'Germplasm',
+            '#weight' => -90,
+          );
+          $node->content['tripal_featuremap_contact'] = array(
+            '#markup' => theme('tripal_featuremap_contact',  array('node' => $node)),
+            '#tripal_toc_id'    => 'contact',
+            '#tripal_toc_title' => 'Contact',
+            '#weight' => 10,
+          );
         }
   }
 }
@@ -271,6 +299,7 @@ function mainlab_tripal_node_view_alter(&$build) {
         break;
     }
   }
+  
   // Stock
   if (property_exists($node, 'stock')) {
     unset($build['tripal_stock_base']);
@@ -278,6 +307,11 @@ function mainlab_tripal_node_view_alter(&$build) {
     unset($build['tripal_stock_relationships']);
   }
   
+  // Map
+  if (property_exists($node, 'featuremap')) {
+    unset($build['tripal_featuremap_base']);
+    unset($build['tripal_featuremap_properties']);
+  }
 }
 
 
@@ -312,9 +346,9 @@ function mainlab_tripal_theme($existing, $type, $theme, $path) {
   			'template' => 'tripal_feature_contact',
   			'path' => $path . '/tripal_feature',
   	),
-  	'tripal_feature_genetic_marker' => array(
+  	'tripal_feature_genetic_marker_base' => array(
   				'variables' => array('node' => NULL),
-  				'template' => 'tripal_feature_genetic_marker',
+  				'template' => 'tripal_feature_genetic_marker_base',
   				'path' => $path . '/tripal_feature',
   	),
   	'tripal_feature_genetic_marker_map_positions' => array(
@@ -327,14 +361,14 @@ function mainlab_tripal_theme($existing, $type, $theme, $path) {
         'template' => 'tripal_feature_genetic_marker_image',
         'path' => $path . '/tripal_feature',
      ),
-  	 'tripal_feature_sequence_feature' => array(
+  	 'tripal_feature_sequence_feature_base' => array(
   				'variables' => array('node' => NULL),
-  				'template' => 'tripal_feature_sequence_feature',
+  				'template' => 'tripal_feature_sequence_feature_base',
   				'path' => $path . '/tripal_feature',
   	 ),
-  	'tripal_featuremap_base_custom' => array(
+  	'tripal_featuremap_custom_base' => array(
   			'variables' => array('node' => NULL),
-  			'template' => 'tripal_featuremap_base_custom',
+  			'template' => 'tripal_featuremap_custom_base',
   			'path' => $path . '/tripal_featuremap',
   	),
   	'tripal_featuremap_stock' => array(

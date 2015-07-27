@@ -43,8 +43,8 @@ if ($num_synonyms == 0) {
 }
 
 // Prepare properties data
-$node = chado_expand_var($node, 'table', 'stockprop', array('return_array' => 1));
-$properties = $node->stock->stockprop;
+$stock = chado_expand_var($stock, 'table', 'stockprop', array('return_array' => 1));
+$properties = $stock->stockprop;
 $properties = chado_expand_var($properties, 'field', 'stockprop.value');
 $desc = "N/A";
 $orig = "N/A";
@@ -73,6 +73,7 @@ if($stock_type == 'TBD'){
 // Maternal parents
 $maternal_parent = $stock->maternal_parent;
 $num_mparent = count($maternal_parent);
+$first_mparent = "N/A";
 if ($num_mparent > 0) {
   $first_mparent = $maternal_parent[0]->uniquename;
   if ($num_mparent > 1) {
@@ -83,6 +84,7 @@ if ($num_mparent > 0) {
 //Paternal parents
 $paternal_parent = $stock->paternal_parent;
 $num_pparent = count($paternal_parent);
+$first_pparent = "N/A";
 if ($num_pparent > 0) {
   $first_pparent = $paternal_parent[0]->uniquename;
   if ($num_pparent > 1) {
@@ -91,8 +93,14 @@ if ($num_pparent > 0) {
 }
 
 // Population Maps
-$population_map = $stock->population_map;
-$num_population_map = count($population_map);
+$num_population_map =  property_exists($stock, 'population_map') ? count($stock->population_map) : 0;
+
+// Genotypic Data
+$num_genotypic_data =  property_exists($stock, 'genotypic_dat') ? count($stock->genotypic_data) : 0;
+
+// Library
+$stock = db_table_exists('library_stock') ? chado_expand_var($stock, 'table', 'library_stock', array('return_array' => 1)) : $stock;
+$num_libraries =  property_exists($stock, 'library_stock') ? count($stock->library_stock) : 0;
 
 $headers = array();
 $rows = array();
@@ -105,9 +113,9 @@ $rows [] = array(array('data' => 'Origin', 'header' => TRUE, 'width' => '20%'), 
 $rows [] = array(array('data' => 'Pedigree', 'header' => TRUE, 'width' => '20%'), $pedigree);
 $rows [] = array(array('data' => 'Maternal Parent of', 'header' => TRUE, 'width' => '20%'), $first_mparent);
 $rows [] = array(array('data' => 'Paternal Parent of', 'header' => TRUE, 'width' => '20%'), $first_pparent);
-$rows [] = array(array('data' => 'Genotypic Data', 'header' => TRUE, 'width' => '20%'), 'Sequence');
+$rows [] = array(array('data' => 'Genotypic Data', 'header' => TRUE, 'width' => '20%'), $num_genotypic_data > 0 ? "[<a href='?pane=genotypic_data'>view all $num_population_map</a>]" : 'N/A');
 $rows [] = array(array('data' => 'Map', 'header' => TRUE, 'width' => '20%'), $num_population_map > 0 ? "[<a href='?pane=population_map'>view all $num_population_map</a>]" : 'N/A');
-$rows [] = array(array('data' => 'DNA Library', 'header' => TRUE, 'width' => '20%'), $feature->uniquename);
+$rows [] = array(array('data' => 'DNA Library', 'header' => TRUE, 'width' => '20%'), $num_libraries > 0 ? "[<a href='?pane=dna_library'>view all $num_libraries </a>]" : 'N/A');
 $rows [] = array(array('data' => 'Sequence', 'header' => TRUE, 'width' => '20%'), $num_seq > 0 ? "[<a href=\"/feature_listing/_/_/$stock->uniquename\">view all $num_seq </a>]" : 'N/A');
 // allow site admins to see the feature ID
 if (user_access('view ids')) {

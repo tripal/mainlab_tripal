@@ -5,7 +5,6 @@ $num_population_map = count($population_map);
 if ($num_population_map > 0) {
   foreach ($population_map as $map){
     $rows[] =  array("<a href=\"/node/$map->nid\">$map->name</a>", "$map->mtype", "$map->ptype", "$map->ggroup");
-    $counter ++;
   }
   $header = array ('Name', 'Type', 'PopulationType', 'Genome Group');
   $table = array(
