@@ -7,12 +7,17 @@ $stockprops = $stock->stockprop;
 
 if ($stock) {
   $rows = array();
-  $details = '<table class=\"tripal-subtable\" style=\"margin:0px !important;>';
+  $details = '<table class="tripal-subtable" style="margin:0px !important;">';
   foreach ($stockprops AS $prop) {
       $details .= "<tr><td style=\"padding:2px 0px !important;width:100px;border:0px;\">" . str_replace("_", " ", ucfirst($prop->type_id->name)) . ":</td><td style=\"padding:2px 0px 2px 0px;border:0px;\">$prop->value </td></tr>";
   }
   $details .= "</table>";
-  $rows [] = array ("<a href=\"/node/$stock->nid\">$stock->uniquename</a>", $stock->type_id->name, $details);
+  if (property_exists($stock, 'nid')) {
+    $rows [] = array ("<a href=\"/node/$stock->nid\">$stock->uniquename</a>", $stock->type_id->name, $details);
+  }
+  else {
+    $rows [] = array ($stock->uniquename, $stock->type_id->name, $details);
+  }
   $header = array ('Name', 'Type', 'Details');
   $table = array(
     'header' => $header,

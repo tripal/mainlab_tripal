@@ -37,7 +37,7 @@ foreach($feature_contacts AS $feature_contact) {
 
 $rows = array();
 foreach ($mycontacts AS $con) {
-  $details = '<table class=\"tripal-subtable\" style=\"margin:0px !important;\">';
+  $details = '<table class="tripal-subtable" style="margin:0px !important;">';
   if ($con['contact_desc']) {
     $details .= "<tr><td style=\"padding:2px 0px 2px 0px;width:80px;border:0px;\">Description:</td><td style=\"padding:2px 0px 2px 0px;\">" . $con['contact_desc'] . "</td></tr>";
   }
