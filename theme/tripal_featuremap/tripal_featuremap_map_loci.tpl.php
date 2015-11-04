@@ -83,7 +83,7 @@ if(count($feature_positions) > 0){ ?>
       $qtl_posprop = $position->featureposprop;
       foreach ($qtl_posprop AS $qtl_pp) {
         if ($qtl_pp->type_id->name == 'qtl_peak') {
-          $mappos = $qtl_pp->value;
+          $mappos = number_format($qtl_pp->value, 1);
         }
       }
     }
