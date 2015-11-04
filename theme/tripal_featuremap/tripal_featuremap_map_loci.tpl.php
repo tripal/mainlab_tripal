@@ -62,10 +62,10 @@ if(count($feature_positions) > 0){ ?>
     if (is_array($featureposprop)) {
       foreach ($featureposprop as $index => $property) {
          if ($property->type_id->name == 'start') {
-           $start = $property->value;
+           $start = number_format($property->value, 1);
          }
          if ($property->type_id->name == 'stop') {
-           $stop = $property->value;
+           $stop = number_format($property->value, 1);
          }
       }      
     }  
@@ -109,7 +109,7 @@ if(count($feature_positions) > 0){ ?>
     if (property_exists($feature, 'nid')) {
       $fname = l($fname, 'node/' . $feature->nid, array('attributes' => array('target' => '_blank')));
     }
-    $mappos = is_numeric($mappos) ? number_format($mappos, 1) : $mappos;
+
     $rows[] = array(
       $mfname,
       $fname,
