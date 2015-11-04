@@ -109,12 +109,12 @@ if(count($feature_positions) > 0){ ?>
     if (property_exists($feature, 'nid')) {
       $fname = l($fname, 'node/' . $feature->nid, array('attributes' => array('target' => '_blank')));
     }
-      
+    $mappos = is_numeric($mappos) ? number_format($mappos, 1) : $mappos;
     $rows[] = array(
       $mfname,
       $fname,
       $feature->type_id->name,
-      number_format($mappos, 1) . ' ' . $position->featuremap_id->unittype_id->name
+      $mappos. ' ' . $position->featuremap_id->unittype_id->name
     );
   } 
   // the $table array contains the headers and rows array as well as other
