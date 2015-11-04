@@ -186,11 +186,22 @@ function mainlab_tripal_admin_validate($form, &$form_state) {
  */
 function mainlab_tripal_node_view($node, $view_mode, $langcode) {
   switch ($node->type) {
+  	
+  	case 'chado_organism' :
+  	  if ($view_mode == 'full') {
+  	    $node->content['tripal_organism_custom_base'] = array(
+            '#markup' => theme('tripal_organism_custom_base',  array('node' => $node)),
+            '#tripal_toc_id'    => 'overview',
+            '#tripal_toc_title' => 'Overview',
+            '#weight' => -100,
+          );
+  	  }
+  	break;
     
     // Feature
     case 'chado_feature' :
       if ($view_mode == 'full') {
-        switch ( $node->feature->type_id->name) {
+        switch ($node->feature->type_id->name) {
           case 'genetic_marker':
             $node->content['tripal_feature_genetic_marker_base'] = array(
               '#markup' => theme('tripal_feature_genetic_marker_base',  array('node' => $node)),
@@ -268,6 +279,12 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
             '#tripal_toc_title' => 'Germplasm',
             '#weight' => -90,
           );
+          $node->content['tripal_featuremap_stock'] = array(
+            '#markup' => theme('tripal_featuremap_map_loci',  array('node' => $node)),
+            '#tripal_toc_id'    => 'map_loci',
+            '#tripal_toc_title' => 'Map Loci',
+            '#weight' => -90,
+          );
           $node->content['tripal_featuremap_contact'] = array(
             '#markup' => theme('tripal_featuremap_contact',  array('node' => $node)),
             '#tripal_toc_id'    => 'contact',
@@ -286,6 +303,12 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
 function mainlab_tripal_node_view_alter(&$build) {
   $node = $build['#node'];
   // Hide default templates
+  
+  // Organism
+  if (property_exists($node, 'organism')) {
+    unset($build['tripal_organism_base']);
+  }
+  
   //Feature
   if (property_exists($node, 'feature')) {
     switch ($node->feature->type_id->name) {
@@ -311,6 +334,7 @@ function mainlab_tripal_node_view_alter(&$build) {
   if (property_exists($node, 'featuremap')) {
     unset($build['tripal_featuremap_base']);
     unset($build['tripal_featuremap_properties']);
+    unset($build['tripal_featuremap_featurepos']);
   }
 }
 
@@ -326,6 +350,11 @@ function mainlab_tripal_theme($existing, $type, $theme, $path) {
 	$path = drupal_get_path('module', 'mainlab_tripal') . '/theme';
 	
   $themes = array(
+    'tripal_organism_custom_base' => array(
+      'variables' => array('node' => NULL),
+      'template' => 'tripal_organism_custom_base',
+      'path' => $path . '/tripal_organism',
+    ),
     'tripal_organism_relationships' => array(
       'variables' => array('node' => NULL),
       'template' => 'tripal_organism_relationships',
@@ -376,6 +405,11 @@ function mainlab_tripal_theme($existing, $type, $theme, $path) {
   			'template' => 'tripal_featuremap_stock',
   			'path' => $path . '/tripal_featuremap',
   	),
+    'tripal_featuremap_map_loci' => array(
+      'variables' => array('node' => NULL),
+      'template' => 'tripal_featuremap_map_loci',
+      'path' => $path . '/tripal_featuremap',
+    ),
   	'tripal_featuremap_publication' => array(
   			'variables' => array('node' => NULL),
   			'template' => 'tripal_featuremap_publication',

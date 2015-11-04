@@ -60,7 +60,7 @@ if ($feature_dbxrefs) {
 // get germplasm
 $fstock = chado_expand_var($feature,'table','feature_stock');
 $stock = is_object($fstock->feature_stock) ? $fstock->feature_stock->stock_id->uniquename : NULL;
-$stock_nid = is_object($fstock->feature_stock) ? $fstock->feature_stock->stock_id->nid : NULL;
+$stock_nid = is_object($fstock->feature_stock) && property_exists($fstock->feature_stock->stock_id, 'nid') ? $fstock->feature_stock->stock_id->nid : NULL;
 
 // get source sequence & probes
 $f_rel = chado_expand_var($feature,'table','feature_relationship', array('return_array' => 1));

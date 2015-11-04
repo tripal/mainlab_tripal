@@ -9,7 +9,9 @@ if ($stock) {
   $rows = array();
   $details = '<table class="tripal-subtable" style="margin:0px !important;">';
   foreach ($stockprops AS $prop) {
+    if (property_exists($prop, 'type_id') && property_exists($prop, 'value')) {
       $details .= "<tr><td style=\"padding:2px 0px !important;width:100px;border:0px;\">" . str_replace("_", " ", ucfirst($prop->type_id->name)) . ":</td><td style=\"padding:2px 0px 2px 0px;border:0px;\">$prop->value </td></tr>";
+    }
   }
   $details .= "</table>";
   if (property_exists($stock, 'nid')) {

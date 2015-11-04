@@ -29,7 +29,7 @@ $stockprop =$featuremap->featuremap_stock->stock_id->stockprop;
 $pop_size = NULL;
 if ($stockprop) {
 	foreach ($stockprop AS $prop) {
-		if ($prop->type_id->name == 'population_size') {
+		if (property_exists($prop, 'type_id') && $prop->type_id->name == 'population_size') {
 			$pop_size = $prop->value;
 		}
 	}

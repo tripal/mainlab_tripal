@@ -49,18 +49,23 @@ $properties = chado_expand_var($properties, 'field', 'stockprop.value');
 $desc = "N/A";
 $orig = "N/A";
 $pedigree = "N/A";
-foreach($properties AS $prop) {
-	if ($prop->type_id->name == 'description') {
-	   if ($desc == "N/A") {
-             $desc = $prop->value;
-          } else {
-             $desc .= ". " . $prop->value;
-       }
-	} elseif ($prop->type_id->name == 'origin') {
-		$orig = $prop->value;
-	} elseif ($prop->type_id->name == 'pedigree') {
-		$pedigree = $prop->value;
-	}
+if ($properties) {
+  foreach ( $properties as $prop ) {
+    if ($prop->type_id->name == 'description') {
+      if ($desc == "N/A") {
+        $desc = $prop->value;
+      }
+      else {
+        $desc .= ". " . $prop->value;
+      }
+    }
+    elseif ($prop->type_id->name == 'origin') {
+      $orig = $prop->value;
+    }
+    elseif ($prop->type_id->name == 'pedigree') {
+      $pedigree = $prop->value;
+    }
+  }
 }
 $stock =  chado_expand_var($stock, 'table', 'feature_stock', array('return_array' => 1));
 $num_seq = count($stock->feature_stock);
