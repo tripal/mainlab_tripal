@@ -79,6 +79,15 @@ if(count($feature_positions) > 0){ ?>
       $mappos = $start;
     }
     
+    if ($feature->type_id->name == 'QTL' || $feature->type_id->name == 'MTL') {
+      $qtl_posprop = $position->featureposprop;
+      foreach ($qtl_posprop AS $qtl_pp) {
+        if ($qtl_pp->type_id->name == 'qtl_peak') {
+          $mappos = $qtl_pp->value;
+        }
+      }
+    }
+    
     $mfname = $map_feature->name;
     if (property_exists($map_feature, 'nid')) {
       $mfname =  l($mfname, 'node/' . $map_feature->nid, array('attributes' => array('target' => '_blank')));
