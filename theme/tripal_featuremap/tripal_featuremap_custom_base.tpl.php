@@ -25,30 +25,46 @@ $featuremapprop = $featuremap->featuremapprop;
 // expand featuremap to include stockprop so we can find out the population size 
 $featuremap = chado_expand_var($featuremap, 'table', 'featuremap_stock');
 $featuremap = chado_expand_var($featuremap, 'table', 'stockprop', array('return_array' => TRUE));
-$stockprop =$featuremap->featuremap_stock->stock_id->stockprop;
-$pop_size = NULL;
-if ($stockprop) {
-	foreach ($stockprop AS $prop) {
-		if (property_exists($prop, 'type_id') && $prop->type_id->name == 'population_size') {
-			$pop_size = $prop->value;
-		}
-	}
-}
-
-// expand featuremap to include stock parents
-$featuremap = chado_expand_var($featuremap, 'table', 'stock_relationship', array('return_array' => TRUE));
-$parents = $featuremap->featuremap_stock->stock_id->stock_relationship->object_id;
+$stockprop = NULL;
 $maternal = NULL;
 $paternal = NULL;
-if ($parents) {
-	foreach($parents AS $parent) {
-		if ($parent->type_id->name == 'is_a_maternal_parent_of') {
-			$maternal = $parent->subject_id;
-		} else if ($parent->type_id->name == 'is_a_paternal_parent_of') {
-			$paternal = $parent->subject_id;
-		}
-	}
+$pop_size = NULL;
+
+// Display only the first paternts and population size IF the map has multiple
+if (is_array($featuremap->featuremap_stock)) {
+  $featuremap->featuremap_stock = $featuremap->featuremap_stock [0];
 }
+$stockprop = property_exists($featuremap->featuremap_stock, 'stock_id') &&
+property_exists($featuremap->featuremap_stock->stock_id, 'stockprop') ?
+$featuremap->featuremap_stock->stock_id->stockprop :
+NULL;
+  
+if ($stockprop) {
+  foreach ($stockprop AS $prop) {
+    if (property_exists($prop, 'type_id') && $prop->type_id->name == 'population_size') {
+      $pop_size = $prop->value;
+    }
+  }
+}
+  
+// expand featuremap to include stock parents
+$featuremap = chado_expand_var($featuremap, 'table', 'stock_relationship', array('return_array' => TRUE));
+$parents = property_exists($featuremap, 'featuremap_stock') &&
+property_exists($featuremap->featuremap_stock, 'stock_id') &&
+property_exists($featuremap->featuremap_stock->stock_id, 'stock_relationship') ?
+$featuremap->featuremap_stock->stock_id->stock_relationship->object_id :
+NULL;
+  
+if ($parents) {
+  foreach($parents AS $parent) {
+    if ($parent->type_id->name == 'is_a_maternal_parent_of') {
+      $maternal = $parent->subject_id;
+    } else if ($parent->type_id->name == 'is_a_paternal_parent_of') {
+      $paternal = $parent->subject_id;
+    }
+  }
+}
+
 
 // expand featuremap to include contacts
 $featuremap = chado_expand_var($featuremap, 'table', 'featuremap_contact', array('return_array' => TRUE));
