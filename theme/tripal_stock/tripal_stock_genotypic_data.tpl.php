@@ -24,7 +24,7 @@ $('#tripal_stock-table-genotypic_data_value-link').click(function() {
     <div class="tripal_stock-info-box-title tripal-info-box-title">Genotypic Data</div>
        <div style="float:left; margin-bottom: 15px;">Total <?php print $num_genotypic_data;?> genotypic data</div>
        <?php
-        $dir = file_directory_path() . '/tripal/mainlab_tripal/download';
+        $dir = 'sites/default/files/tripal/mainlab_tripal/download';
         if (!file_exists($dir)) {
           mkdir ($dir, 0777);
         }
@@ -47,9 +47,9 @@ $('#tripal_stock-table-genotypic_data_value-link').click(function() {
       $class = "";
       foreach ($genotypic_data as $data){
          if ($counter % 2 == 0) {
-            $class = "tripal_stock-table-even-row tripal-table-even-row";
+            $class = "tripal_stock-table-even-row even";
          } else {
-            $class = "tripal_stock-table-odd-row tripal-table-odd-row";
+            $class = "tripal_stock-table-odd-row odd";
          }
          $descriptor = explode("_", $data->uniquename);
          $marker = $descriptor[0];

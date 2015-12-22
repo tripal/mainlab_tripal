@@ -24,14 +24,13 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/m
      	    foreach($polymorphism AS $poly) {
               $class = NULL;
              if ($counter % 2 == 1) {
-	              $class = "tripal_feature-table-even-row tripal-table-even-row";
+	              $class = "tripal_feature-table-even-row even";
              } else {
-	              $class = "tripal_feature-table-odd-row tripal-table-odd-row";
+	              $class = "tripal_feature-table-odd-row odd";
              }
              $name = explode("_", $poly->uniquename);;
              $allele = $name [count($name) - 1];
              $allelepage = "/allele/$poly->marker_name/$allele/$poly->marker_oid";
-             if (!$dye_color) { $dye_color = "N/A";}
              print "<tr class=\"$class\">
                            <td>$counter</td>
                            <td><a href=\"$allelepage\">" . $poly->uniquename . "</a></td>

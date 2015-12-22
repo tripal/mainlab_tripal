@@ -28,9 +28,9 @@ $('#tripal_stock-table-in_collection_value-link').click(function() {
       $class = "";
       foreach ($in_collection as $coll){
          if ($counter % 2 == 0) {
-            $class = "tripal_stock-table-even-row tripal-table-even-row";
+            $class = "tripal_stock-table-even-row even";
          } else {
-            $class = "tripal_stock-table-odd-row tripal-table-odd-row";
+            $class = "tripal_stock-table-odd-row odd";
          }         
          $link = "";
          if ($coll->urlprefix) {

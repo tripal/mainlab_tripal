@@ -10,21 +10,11 @@ if ($num_phenotypic_data > 0) {
 drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/mainlab_table_pager.js");
 ?>
 
-<script type="text/javascript">
-// Insert Trait Score value to the base template
-$('#tripal_stock-table-phenotypic_data_value').html("[<a href='#' id='tripal_stock-table-phenotypic_data_value-link'>view all <?php print $num_phenotypic_data;?></a>]");
-$('#tripal_stock-table-phenotypic_data_value-link').click(function() {
-	$('.tripal-info-box').hide();
-	$('#tripal_stock-phenotypic_data-box').fadeIn('slow');
-	$('#tripal_stock_toc').height($('#tripal_stock-phenotypic_data-box').parent().height());
-})
-</script>
-
   <div id="tripal_stock-phenotypic_data-box" class="tripal_stock-info-box tripal-info-box">
     <div class="tripal_stock-info-box-title tripal-info-box-title">Phenotypic Data</div>
     <div style="float:left; margin-bottom: 15px;">Total <?php print $num_phenotypic_data;?> trait scores</div>
-    <?php
-      $dir = file_directory_path() . '/tripal/mainlab_tripal/download';
+    <?php 
+      $dir = 'sites/default/files/tripal/mainlab_tripal/download';
       if (!file_exists($dir)) {
         mkdir ($dir, 0777);
       }
@@ -48,9 +38,9 @@ $('#tripal_stock-table-phenotypic_data_value-link').click(function() {
       $class = "";
       foreach ($phenotypic_data as $score){
          if ($counter % 2 == 0) {
-            $class = "tripal_stock-table-even-row tripal-table-even-row";
+            $class = "tripal_stock-table-even-row even";
          } else {
-            $class = "tripal_stock-table-odd-row tripal-table-odd-row";
+            $class = "tripal_stock-table-odd-row odd";
          }
          $descriptors = explode("_", $score->uniquename);
          $descriptor = $descriptors[count($descriptors) - 2];

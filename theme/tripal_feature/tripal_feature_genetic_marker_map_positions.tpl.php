@@ -12,7 +12,6 @@ $counter_pos = count($map_positions);
   $header = $hasChr ? array ('#', 'Map Name', 'Linkage Group', 'Bin', 'Chromosome', 'Position', 'Locus', 'CMap') : array ('#', 'Map Name', 'Linkage Group', 'Bin', 'Position', 'Locus', 'CMap');
   $rows = array ();
   $counter = 1; 
-  $hasChr = false;
 
   foreach($map_positions AS $pos) {
     $map = $pos->nid ? "<a href=\"/node/$pos->nid\">$pos->name</a>" : $pos->name;

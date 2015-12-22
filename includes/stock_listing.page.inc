@@ -81,12 +81,12 @@ function mainlab_stock_listing ($organism, $page) {
    // Switch pages for stock listing
    function mainlab_tripal_stock_listing_change_page (page) {
 	   var link = '$ajax_link' + page; 
-	   $.ajax({
+	   jQuery.ajax({
 		   url: link,
 		   dataType: 'json',
 		   type: 'POST',
 		   success: function(data){
-				$('#mainlab_tripal-stock_listing-table').html(data);
+				jQuery('#mainlab_tripal-stock_listing-table').html(data);
 		   }
 		   });
    }

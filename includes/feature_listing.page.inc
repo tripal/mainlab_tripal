@@ -27,7 +27,7 @@ function mainlab_feature_listing ($organism, $type, $stock) {
 	}
 	if ($stock != '_') {
 		$sql .= " INNER JOIN {feature_stock} ON feature.feature_id = feature_stock.feature_id";
-		array_push($conditions, " stock_id = (SELECT stock_id FROM {stock} WHERE uniquename = '$stock')");
+		array_push($conditions, " stock_id = (SELECT stock_id FROM {stock} WHERE uniquename = '$stock' AND name IS NOT NULL)");
 	}
 	
 	if (count($conditions) > 0) {

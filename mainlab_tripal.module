@@ -8,6 +8,7 @@
  * @ingroup tripal_modules
  */
 
+require_once "includes/mainlab_tripal_generate_var.inc";
 require_once "includes/custom_schema.inc";
 require_once "includes/simple_seq_extract.inc";
 require_once "includes/stock_listing.page.inc";
@@ -187,14 +188,45 @@ function mainlab_tripal_admin_validate($form, &$form_state) {
 function mainlab_tripal_node_view($node, $view_mode, $langcode) {
   switch ($node->type) {
   	
+    // Organism
   	case 'chado_organism' :
   	  if ($view_mode == 'full') {
-  	    $node->content['tripal_organism_custom_base'] = array(
+  	    $site = mainlab_tripal_get_site();
+  	    if ($site == 'cottongen') {
+  	      $node = mainlab_tripal_generate_organism_relationships_var($node);
+  	      $node->content['cottongen_tripal_organism_base'] = array(
+  	        '#markup' => theme('cottongen_tripal_organism_base',  array('node' => $node)),
+  	        '#tripal_toc_id'    => 'overview',
+  	        '#tripal_toc_title' => 'Overview',
+  	        '#weight' => -100,
+  	      );
+  	      $node->content['cottongen_tripal_organism_alias'] = array(
+  	        '#markup' => theme('cottongen_tripal_organism_alias',  array('node' => $node)),
+  	        '#tripal_toc_id'    => 'alias',
+  	        '#tripal_toc_title' => 'Alias',
+  	        '#weight' => -90,
+  	      );
+  	      $node->content['tripal_organism_relationships'] = array(
+  	        '#markup' => theme('tripal_organism_relationships',  array('node' => $node)),
+  	        '#tripal_toc_id'    => 'relationships',
+  	        '#tripal_toc_title' => 'Fertile/Sterile/Incompatible Species',
+  	        '#weight' => -80,
+  	      );
+  	      $node->content['cottongen_tripal_organism_stocks'] = array(
+  	        '#markup' => theme('cottongen_tripal_organism_stocks',  array('node' => $node)),
+  	        '#tripal_toc_id'    => 'stocks',
+  	        '#tripal_toc_title' => 'Germplasm',
+  	        '#weight' => -70,
+  	      );
+  	    }
+  	    else {
+  	      $node->content['tripal_organism_custom_base'] = array(
             '#markup' => theme('tripal_organism_custom_base',  array('node' => $node)),
             '#tripal_toc_id'    => 'overview',
-            '#tripal_toc_title' => 'Overview',
+            '#tripal_toc_title' => 'Species Overview',
             '#weight' => -100,
           );
+  	    }
   	  }
   	break;
     
@@ -208,6 +240,7 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
           '#weight' => 2,
         );
         switch ($node->feature->type_id->name) {
+          // Genetic Marker
           case 'genetic_marker':
             $node->content['tripal_feature_genetic_marker_base'] = array(
               '#markup' => theme('tripal_feature_genetic_marker_base',  array('node' => $node)),
@@ -221,13 +254,26 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
               '#tripal_toc_title' => 'Map Positions',
               '#weight' => -90,
             );
+            $node->content['tripal_feature_genetic_marker_genotypes'] = array(
+              '#markup' => theme('tripal_feature_genetic_marker_genotypes',  array('node' => $node)),
+              '#tripal_toc_id' => 'genetic_marker_genotypes',
+              '#tripal_toc_title' => 'Genotypes',
+              '#weight' => -80,
+            );
             $node->content['tripal_feature_genetic_marker_contacts'] = array(
               '#markup' => theme('tripal_feature_contact',  array('node' => $node)),
               '#tripal_toc_id' => 'genetic_marker_contacts',
               '#tripal_toc_title' => 'Contacts',
               '#weight' => 1,
             );
+            $node->content['tripal_feature_genetic_marker_image'] = array(
+              '#markup' => theme('tripal_feature_genetic_marker_image',  array('node' => $node)),
+              '#tripal_toc_id' => 'genetic_marker_image',
+              '#tripal_toc_title' => 'Images',
+              '#weight' => 10,
+            );
             break;
+          // Sequence Feature
           case 'sequence_feature':
             $node->content['tripal_feature_sequence_feature_base'] = array(
               '#markup' => theme('tripal_feature_sequence_feature_base',  array('node' => $node)),
@@ -243,11 +289,30 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
       // Stock
       case 'chado_stock' :
         if ($view_mode == 'full') {
-            $node->content['tripal_stock_custom_base'] = array(
+          $stock = chado_expand_var($node->stock, 'table', 'library_stock', array('return_array' => 1));
+          $node->stock = $stock;
+          $node = mainlab_tripal_generate_stock_in_collection_var ($node);
+          $node = mainlab_tripal_generate_stock_parents_var ($node);
+          $node = mainlab_tripal_generate_tripal_stock_phenotypic_data_var ($node);
+          $node = mainlab_tripal_generate_tripal_stock_genotypic_data_var ($node);
+          $node = mainlab_tripal_generate_stock_image_var ($node);
+             $node->content['tripal_stock_custom_base'] = array(
             '#markup' => theme('tripal_stock_custom_base',  array('node' => $node)),
             '#tripal_toc_id'    => 'germplasm',
             '#tripal_toc_title' => 'Germplasm Overview',
             '#weight' => -100,
+            );
+            $node->content['tripal_stock_alias'] = array(
+               '#markup' => theme('tripal_stock_alias',  array('node' => $node)),
+               '#tripal_toc_id'    => 'alias',
+               '#tripal_toc_title' => 'Alias',
+               '#weight' => -97,
+            );
+            $node->content['tripal_stock_in_collection'] = array(
+              '#markup' => theme('tripal_stock_in_collection',  array('node' => $node)),
+              '#tripal_toc_id'    => 'in_collection',
+              '#tripal_toc_title' => 'In Collection',
+              '#weight' => -95,
             );
             $node->content['tripal_stock_maternal_parent'] = array(
               '#markup' => theme('tripal_stock_maternal_parent',  array('node' => $node)),
@@ -259,13 +324,37 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
               '#markup' => theme('tripal_stock_paternal_parent',  array('node' => $node)),
               '#tripal_toc_id'    => 'paternal_parent',
               '#tripal_toc_title' => 'Paternal Parent',
-              '#weight' => -90,
+              '#weight' => -85,
+            );
+            $node->content['tripal_stock_phenotypic_data'] = array(
+              '#markup' => theme('tripal_stock_phenotypic_data',  array('node' => $node)),
+              '#tripal_toc_id'    => 'phenotypic_data',
+              '#tripal_toc_title' => 'Phenotypic Data',
+              '#weight' => -83,
+            );
+            $node->content['tripal_stock_genotypic_data'] = array(
+              '#markup' => theme('tripal_stock_genotypic_data',  array('node' => $node)),
+              '#tripal_toc_id'    => 'genotypic_data',
+              '#tripal_toc_title' => 'Genotypic Data',
+              '#weight' => -80,
             );
             $node->content['tripal_stock_population_map'] = array(
               '#markup' => theme('tripal_stock_population_map',  array('node' => $node)),
               '#tripal_toc_id'    => 'population_map',
               '#tripal_toc_title' => 'Map',
-              '#weight' => -80,
+              '#weight' => -70,
+            );
+            $node->content['tripal_stock_library'] = array(
+              '#markup' => theme('tripal_stock_library',  array('node' => $node)),
+              '#tripal_toc_id'    => 'library',
+              '#tripal_toc_title' => 'Library',
+              '#weight' => -65,
+            );
+            $node->content['tripal_stock_image'] = array(
+              '#markup' => theme('tripal_stock_image',  array('node' => $node)),
+              '#tripal_toc_id'    => 'image',
+              '#tripal_toc_title' => 'Images',
+              '#weight' => -60,
             );
         }
       break;
@@ -298,6 +387,53 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
             '#weight' => 10,
           );
         }
+        break;
+      //Environment
+        case 'chado_nd_geolocation' :
+          if ($view_mode == 'full') {
+            $node = mainlab_tripal_generate_nd_geolocation_var ($node);
+            $node->content['tripal_nd_geolocation_custom_base'] = array(
+              '#markup' => theme('tripal_nd_geolocation_custom_base',  array('node' => $node)),
+              '#tripal_toc_id'    => 'overview',
+              '#tripal_toc_title' => 'Environment Overview',
+              '#weight' => -100,
+            );
+            $node->content['tripal_nd_geolocation_associated_dataset'] = array(
+              '#markup' => theme('tripal_nd_geolocation_associated_dataset',  array('node' => $node)),
+              '#tripal_toc_id'    => 'associated_dataset',
+              '#tripal_toc_title' => 'Associated Dataset',
+              '#weight' => -50,
+            );
+          }
+          break;
+        // Pub
+        case 'chado_pub' :
+          if ($view_mode == 'full') {
+            $node->content['tripal_pub_image'] = array(
+              '#markup' => theme('tripal_pub_image',  array('node' => $node)),
+              '#tripal_toc_id'    => 'image',
+              '#tripal_toc_title' => 'Images',
+              '#weight' => 100,
+            );
+          }
+          break;
+        // Eimage
+        case 'chado_eimage' :
+          if ($view_mode == 'full') {
+            $node->content['cottongen_tripal_eimage_base'] = array(
+              '#markup' => theme('cottongen_tripal_eimage_base',  array('node' => $node)),
+              '#tripal_toc_id'    => 'overview',
+              '#tripal_toc_title' => 'Overview',
+              '#weight' => -100,
+            );
+            $node->content['tripal_eimage_contact'] = array(
+              '#markup' => theme('tripal_eimage_contact',  array('node' => $node)),
+              '#tripal_toc_id'    => 'contact',
+              '#tripal_toc_title' => 'Contact',
+              '#weight' => -90,
+            );
+          }
+          break;
   }
 }
 
@@ -313,6 +449,11 @@ function mainlab_tripal_node_view_alter(&$build) {
   // Organism
   if (property_exists($node, 'organism')) {
     unset($build['tripal_organism_base']);
+    $site = mainlab_tripal_get_site();
+    if ($site == 'cottongen') {
+      unset($build['tripal_organism_stocks']);
+      unset($build['tripal_organism_properties']);
+    }
   }
   
   //Feature
@@ -322,6 +463,7 @@ function mainlab_tripal_node_view_alter(&$build) {
       case 'genetic_marker':
         unset($build['tripal_feature_base']);
         unset($build['tripal_feature_properties']);
+        unset($build['tripal_feature_genotypes']);
         break;
       case 'sequence_feature':
         unset($build['tripal_feature_base']);
@@ -335,6 +477,9 @@ function mainlab_tripal_node_view_alter(&$build) {
     unset($build['tripal_stock_base']);
     unset($build['tripal_stock_properties']);
     unset($build['tripal_stock_relationships']);
+    unset($build['tripal_stock_references']);
+    unset($build['tripal_stock_synonyms']);
+    unset($build['tripal_stock_collections']);
   }
   
   // Map
@@ -342,6 +487,15 @@ function mainlab_tripal_node_view_alter(&$build) {
     unset($build['tripal_featuremap_base']);
     unset($build['tripal_featuremap_properties']);
     unset($build['tripal_featuremap_featurepos']);
+  }
+  
+  // Environment
+  if (property_exists($node, 'nd_geolocation')) {
+    unset($build['tripal_nd_geolocation_base']);
+  }
+  //Eimage
+  if (property_exists($node, 'eimage')) {
+    unset($build['tripal_eimage_base']);
   }
 }
 
@@ -354,8 +508,8 @@ function mainlab_tripal_node_view_alter(&$build) {
  * @ingroup mainlab_tripal
  */
 function mainlab_tripal_theme($existing, $type, $theme, $path) {
-	$path = drupal_get_path('module', 'mainlab_tripal') . '/theme';
-	
+  $path = drupal_get_path('module', 'mainlab_tripal') . '/theme';
+  $core_path = drupal_get_path('module', 'tripal_core');
   $themes = array(
     'tripal_organism_custom_base' => array(
       'variables' => array('node' => NULL),
@@ -397,6 +551,16 @@ function mainlab_tripal_theme($existing, $type, $theme, $path) {
   		'template' => 'tripal_feature_genetic_marker_map_positions',
   		'path' => $path . '/tripal_feature',
   	 ),
+    'tripal_feature_genetic_marker_genotypes' => array(
+      'variables' => array('node' => NULL),
+      'template' => 'tripal_feature_genetic_marker_genotypes',
+      'path' => $path . '/tripal_feature',
+    ),
+    'tripal_feature_genetic_marker_sequence' => array(
+      'variables' => array('node' => NULL),
+      'template' => 'tripal_feature_genetic_marker_sequence',
+      'path' => $path . '/tripal_feature',
+    ),
      'tripal_feature_genetic_marker_image' => array(
         'variables' => array('node' => NULL),
         'template' => 'tripal_feature_genetic_marker_image',
@@ -457,6 +621,11 @@ function mainlab_tripal_theme($existing, $type, $theme, $path) {
       'template' => 'tripal_stock_custom_base',
       'path' => $path . '/tripal_stock',
     ),
+    'tripal_stock_alias' => array(
+      'variables' => array('node' => NULL),
+      'template' => 'tripal_stock_alias',
+      'path' => $path . '/tripal_stock',
+    ),
   	'tripal_stock_maternal_parent' => array(
   			'variables' => array('node' => NULL),
   			'template' => 'tripal_stock_maternal_parent',
@@ -487,6 +656,11 @@ function mainlab_tripal_theme($existing, $type, $theme, $path) {
   			'template' => 'tripal_stock_population_map',
   			'path' => $path . '/tripal_stock',
   	),
+    'tripal_stock_library' => array(
+      'variables' => array('node' => NULL),
+      'template' => 'tripal_stock_library',
+      'path' => $path . '/tripal_stock',
+    ),
   	'tripal_stock_image' => array(
   			'variables' => array('node' => NULL),
   			'template' => 'tripal_stock_image',
@@ -502,9 +676,15 @@ function mainlab_tripal_theme($existing, $type, $theme, $path) {
        'variables' => array('form'),
     ),
     // nd_geolocation
-    'tripal_nd_geolocation_base_custom' => array(
+    'node__chado_nd_geolocation' => array(
+      'template' => 'node--chado-generic',
+      'render element' => 'node',
+      'base hook' => 'node',
+      'path' => "$core_path/theme/templates",
+    ),
+    'tripal_nd_geolocation_custom_base' => array(
         'variables' => array('node' => NULL),
-        'template' => 'tripal_nd_geolocation_base_custom',
+        'template' => 'tripal_nd_geolocation_custom_base',
         'path' => $path . '/tripal_natural_diversity',
     ),
     'tripal_nd_geolocation_associated_dataset' => array(
@@ -538,6 +718,21 @@ function mainlab_tripal_theme($existing, $type, $theme, $path) {
       'variables' => array('node' => NULL),
       'template' => 'tripal_feature_haplotype_block_haplotypes',
       'path' => $path . '/tripal_feature',
+    ),
+    'cottongen_tripal_organism_base' => array(
+      'variables' => array('node' => NULL),
+      'template' => 'cottongen_tripal_organism_base',
+      'path' => $path . '/tripal_organism',
+    ),
+    'cottongen_tripal_organism_alias' => array(
+      'variables' => array('node' => NULL),
+      'template' => 'cottongen_tripal_organism_alias',
+      'path' => $path . '/tripal_organism',
+    ),
+    'cottongen_tripal_organism_stocks' => array(
+      'variables' => array('node' => NULL),
+      'template' => 'cottongen_tripal_organism_stocks',
+      'path' => $path . '/tripal_organism',
     ),
   );
   return $themes;

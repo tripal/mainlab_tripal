@@ -38,7 +38,7 @@ function mainlab_show_allele ($marker, $alleleid, $oid, $project = 0, $stock_uni
 	// Get  the genotype name
 	$allele->name = $marker;
 	$allele->id = $alleleid;
-	return theme('gdr_mainlab_allele', $allele);
+	return theme('gdr_mainlab_allele', array('node' => $allele));
 }
  
 function mainlab_get_allele_associated_stocks ($genotype_id, $project = 0, $stock_uniquename = 0, $species = 0) {

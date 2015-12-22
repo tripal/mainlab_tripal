@@ -13,7 +13,7 @@ function mainlab_show_allele ($marker, $alleleid, $oid) {
 			          (SELECT feature_id 
 			           FROM {feature} 
 			           WHERE lower(uniquename) = lower(:uniquename) AND type_id =
-			              (SELECT cvterm_id FROM cvterm WHERE name = 'genetic_marker')
+			              (SELECT cvterm_id FROM {cvterm} WHERE name = 'genetic_marker')
 					   AND organism_id = :organism_id
 			          )
 			       AND string_to_array(description, '|') @> ARRAY[:allele_id]
@@ -37,7 +37,7 @@ function mainlab_show_allele ($marker, $alleleid, $oid) {
 	// Get  the genotype name
 	$allele->name = $marker;
 	$allele->id = $alleleid;
-	return theme('mainlab_allele', $allele);
+	return theme('mainlab_allele', array('node' => $allele));
 }
  
 function mainlab_get_allele_associated_stocks ($genotype_id) {
@@ -52,11 +52,11 @@ function mainlab_get_allele_associated_stocks ($genotype_id) {
                     INNER JOIN {project} P ON P.project_id = NEP.project_id
 			           LEFT JOIN 
                       (SELECT nd_experiment_id, value FROM {nd_experimentprop} NEP 
-                       WHERE type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'dye_color')
+                       WHERE type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'dye_color')
                       )DYE ON DYE.nd_experiment_id = NDG.nd_experiment_id
                     WHERE
                       SR.type_id =
-                        (SELECT cvterm_id FROM cvterm WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'MAIN'))
+                        (SELECT cvterm_id FROM {cvterm} WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
                     AND genotype_id = :genotype_id";
 	$sresult = chado_query($ssql, array(':genotype_id' => $genotype_id));
 	$stocks = array();

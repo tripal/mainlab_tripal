@@ -24,16 +24,16 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/m
      	    foreach($stocks AS $stock) {
               $class = NULL;
              if ($counter % 2 == 1) {
-	              $class = "tripal_feature-table-even-row tripal-table-even-row";
+	              $class = "tripal_feature-table-even-row even";
              } else {
-	              $class = "tripal_feature-table-odd-row tripal-table-odd-row";
+	              $class = "tripal_feature-table-odd-row odd";
              }
             $diversity_data = "<a href=\"/node/$stock->nid/?block=genotypic_data&\">$stock->uniquename</a>";
              print "<tr class=\"$class\">
-                           <td>$counter</td>
-                           <td><a href=\"/node/$stock->nid\">" . $stock->uniquename . "</a></td>
-						         <td>$diversity_data</td>
-						         <td>$stock->project</td>
+                           <td style=\"padding-left:10px;\">$counter</td>
+                           <td style=\"padding-left:10px;\"><a href=\"/node/$stock->nid\">" . $stock->uniquename . "</a></td>
+						         <td style=\"padding-left:10px;\">$diversity_data</td>
+						         <td style=\"padding-left:10px;\">$stock->project</td>
 							   </tr>";
              $counter ++;
           }

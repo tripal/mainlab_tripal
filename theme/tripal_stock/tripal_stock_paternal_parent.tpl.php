@@ -31,9 +31,9 @@ $('#tripal_stock-table-paternal_parent_value-link').click(function() {
       $class = "";
       foreach ($paternal_parent as $parent){
          if ($counter % 2 == 0) {
-            $class = "tripal_stock-table-even-row tripal-table-even-row";
+            $class = "tripal_stock-table-even-row even";
          } else {
-            $class = "tripal_stock-table-odd-row tripal-table-odd-row";
+            $class = "tripal_stock-table-odd-row odd";
          }
          print "<tr class=\"$class\"><td><a href=\"/node/$parent->nid\">$parent->uniquename</a></td><td>$parent->description</td><td>$parent->type</td></tr>";
          $counter ++;

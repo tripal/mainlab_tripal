@@ -9,26 +9,25 @@ $library_stocks = $stock->library_stock;
 
 if (count($library_stocks) > 0) {?>
   <div id="tripal_stock-maps-box" class="tripal_stock-info-box tripal-info-box">
-    <div class="tripal_stock-info-box-title tripal-info-box-title">Libraries</div>
-    <!--<div class="tripal_stock-info-box-desc tripal-info-box-desc">This stock has been used with the following maps.</div> -->
     <table id="tripal_stock-table-collection" class="tripal_stock-table tripal-table tripal-table-horz">     
       <tr class="tripal_stock-table-odd-row tripal-table-even-row">
-        <th>Library Name</th>
-        <th>Library Details</th>
+        <th>Name</th>
+        <th colspan=3>Details</th>
       </tr> <?php
+      $i = 0;
       foreach ($library_stocks as $library_stock){ 
         // get the ma properties
         $library = $library_stock->library_id;
         $values = array('library_id' => $library->library_id);
-        $properties = tripal_core_generate_chado_var('libraryprop', $values, $options);
-        
-        $class = 'tripal_stock-table-odd-row tripal-table-odd-row';
+        $properties = tripal_core_generate_chado_var('libraryprop', $values, array('return_array' => 1));
+
+        $class = 'tripal_stock-table-odd-row odd';
         if($i % 2 == 0 ){
-          $class = 'tripal_stock-table-odd-row tripal-table-even-row';
+          $class = 'tripal_stock-table-odd-row even';
         } ?>
         <tr class="<?php print $class ?>">
           <td><?php 
-            if($library->nid){    
+            if(property_exists($library, 'nid')){    
               $link =  url("node/$library->nid");        
               print "<a href=\"$link\">$library->name</a>";
             } 
@@ -40,9 +39,9 @@ if (count($library_stocks) > 0) {?>
             <table class="tripal-subtable"> <?php
               foreach ($properties as $property){ ?>
                 <tr>
-                  <td><?php print ucwords(preg_replace('/_/', ' ', $property->type_id->name))?></td>
-                  <td>:</td>
-                  <td><?php print $property->value ?></td>
+                  <td width=160px><?php print ucwords(preg_replace('/_/', ' ', $property->type_id->name))?></td>
+                  <td width=15px>:</td>
+                  <td><?php if (property_exists($property, 'value')) {print $property->value;} ?></td>
                 </tr> <?php
               } ?>
             </table>

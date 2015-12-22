@@ -1,14 +1,17 @@
 <?php
 $eimage  = $variables['node']->eimage;
 $contacts = $eimage->contacts;
+if (count($contacts) < 1) {
+  return;
+}
 ?>
 
 <div id="tripal_eimage-contact-box" class="tripal_eimage-info-box tripal-info-box">
   <div class="tripal_eimage-info-box-title tripal-info-box-title">Contact</div>
   <div class="tripal_eimage-info-box-desc tripal-info-box-desc"></div>
 
-   <table id="tripal_eimage-contact-table" class="tripal_eimage-table tripal-table tripal-table-vert" style="border-bottom:solid 2px #999999">
-   <tr style="background-color:#EEEEFF;border-top:solid 2px #999999"><th style="padding:5px 10px 5px 10px;width:120px">Name</th><th>Details</th></tr>
+   <table id="tripal_eimage-contact-table" class="tripal_eimage-table tripal-table tripal-table-vert" style="border-bottom:solid 1px #999999">
+   <tr style="background-color:#EEEEFF;border-top:solid 1px #999999"><th style="padding:5px 10px 5px 10px;width:120px">Name</th><th>Details</th></tr>
 <?php
 $class = "";
 $counter = 0;

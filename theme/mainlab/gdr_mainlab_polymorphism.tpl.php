@@ -31,7 +31,6 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/m
              $name = explode("_", $poly->uniquename);;
              $allele = $name [count($name) - 1];
              $allelepage = "/allele/$poly->marker_name/$allele/$poly->marker_oid";
-             if (!$dye_color) { $dye_color = "N/A";}
              print "<tr class=\"$class\">
                            <td>$counter</td>
                            <td><a href=\"$allelepage\">" . $poly->uniquename . "</a></td>

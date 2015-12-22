@@ -103,5 +103,5 @@ function mainlab_show_polymorphism ($feature_id) {
     }
   }
   ksort($hashed_poly);
-  return theme('mainlab_polymorphism', $hashed_poly);
+  return theme('mainlab_polymorphism', array('node' => $hashed_poly));
 }

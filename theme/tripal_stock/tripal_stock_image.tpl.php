@@ -12,8 +12,8 @@ if ($site == 'gdr') {
 	$imgs = '/bulk_data/www.cottongen.org/cotton_photo/germplasm/image/';
 }
 
-$icon_path = file_directory_path() . $icons;
-$img_path = file_directory_path() . $imgs;
+$icon_path = 'sites/default/files' . $icons;
+$img_path = 'sites/default/files' . $imgs;
 
 if (count($images) > 0) { ?>
   <div id="tripal_stock-images-box" class="tripal_stock-info-box tripal-info-box">
