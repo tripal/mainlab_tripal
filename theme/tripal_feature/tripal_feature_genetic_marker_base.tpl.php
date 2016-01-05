@@ -141,7 +141,7 @@ $rows = array();
 // Name
 $rows [] = array(array('data' => 'Name', 'header' => TRUE, 'width' => '20%'), $feature->name);
 // Alias
-$rows [] = array(array('data' => 'Alias', 'header' => TRUE, 'width' => '20%'), key_exists('alias', $kv_properties) ? $kv_properties['alias'] : "N/A");
+if (key_exists('alias', $kv_properties)) {$rows [] = array(array('data' => 'Alias', 'header' => TRUE, 'width' => '20%'), key_exists('alias', $kv_properties) ? $kv_properties['alias'] : "N/A");}
 //Genbank ID
 if ($marker_type != "SNP") {
   $gbid = "N/A";
@@ -182,12 +182,12 @@ if (count($probes) > 0) {
     }
   }
 } else {
-  $rows [] = array(array('data' => 'Probe', 'header' => TRUE, 'width' => '20%'), "N/A");
+  //$rows [] = array(array('data' => 'Probe', 'header' => TRUE, 'width' => '20%'), "N/A");
 }
 // Species
 $rows [] = array(array('data' => 'Species', 'header' => TRUE, 'width' => '20%'), $feature->organism_id->nid ? "<a href=\"".url("node/".$feature->organism_id->nid)."\">".$feature->organism_id->genus ." " . $feature->organism_id->species . "</a>" : $feature->organism_id->genus ." " . $feature->organism_id->species);
 // Germplasm
-$rows [] = array(array('data' => 'Germplasm', 'header' => TRUE, 'width' => '20%'), $stock ? "<a href=\"/node/$stock_nid\">". $stock ."</a>" : "N/A");
+if ($stock) {$rows [] = array(array('data' => 'Germplasm', 'header' => TRUE, 'width' => '20%'), $stock ? "<a href=\"/node/$stock_nid\">". $stock ."</a>" : "N/A");}
 // Source Sequence
 $srcseq = "";
 foreach ($seqs AS $seq) {
@@ -201,13 +201,13 @@ foreach ($seqs AS $seq) {
 if (count($seqs) == 0) {
   $srcseq = "N/A";
 }
-$rows [] = array(array('data' => 'Source Sequence', 'header' => TRUE, 'width' => '20%'), $srcseq);
+if ($srcseq != 'N/A') {$rows [] = array(array('data' => 'Source Sequence', 'header' => TRUE, 'width' => '20%'), $srcseq);}
 // Source Type
-$rows [] = array(array('data' => 'Source Type', 'header' => TRUE, 'width' => '20%'), key_exists('source', $kv_properties) ? $kv_properties['source'] : "N/A");
+if (key_exists('source', $kv_properties)) {$rows [] = array(array('data' => 'Source Type', 'header' => TRUE, 'width' => '20%'), key_exists('source', $kv_properties) ? $kv_properties['source'] : "N/A");}
 // Repeat Motif
-$rows [] = array(array('data' => 'Repeat Motif', 'header' => TRUE, 'width' => '20%'), key_exists('repeat_motif', $kv_properties) ? $kv_properties['repeat_motif'] : "N/A");
+if (key_exists('repeat_motif', $kv_properties)) {$rows [] = array(array('data' => 'Repeat Motif', 'header' => TRUE, 'width' => '20%'), key_exists('repeat_motif', $kv_properties) ? $kv_properties['repeat_motif'] : "N/A");}
 // PCR Condition
-$rows [] = array(array('data' => 'PCR Condition', 'header' => TRUE, 'width' => '20%'), key_exists('pcr_condition', $kv_properties) ? $kv_properties['pcr_condition'] : "N/A");
+if (key_exists('pcr_condition', $kv_properties)) {$rows [] = array(array('data' => 'PCR Condition', 'header' => TRUE, 'width' => '20%'), key_exists('pcr_condition', $kv_properties) ? $kv_properties['pcr_condition'] : "N/A");}
 // Primers
 if (count($primers) > 0) {
   $no_primers = 1;
@@ -221,15 +221,15 @@ if (count($primers) > 0) {
   }
 }
 // Product Length
-$rows [] = array(array('data' => 'Product Length', 'header' => TRUE, 'width' => '20%'), key_exists('product_length', $kv_properties) ? $kv_properties['product_length'] : "N/A");
+if (key_exists('product_length', $kv_properties)) {$rows [] = array(array('data' => 'Product Length', 'header' => TRUE, 'width' => '20%'), key_exists('product_length', $kv_properties) ? $kv_properties['product_length'] : "N/A");}
 // Max Length
-$rows [] = array(array('data' => 'Max Length', 'header' => TRUE, 'width' => '20%'), key_exists('max_length', $kv_properties) ? $kv_properties['max_length'] : "N/A");
+if (key_exists('max_length', $kv_properties)) {$rows [] = array(array('data' => 'Max Length', 'header' => TRUE, 'width' => '20%'), key_exists('max_length', $kv_properties) ? $kv_properties['max_length'] : "N/A");}
 // Restriction Enzyme
-$rows [] = array(array('data' => 'Restriction Enzyme', 'header' => TRUE, 'width' => '20%'), key_exists('restriction_enzyme', $kv_properties) ? $kv_properties['restriction_enzyme'] : "N/A");
+if (key_exists('restriction_enzyme', $kv_properties)) {$rows [] = array(array('data' => 'Restriction Enzyme', 'header' => TRUE, 'width' => '20%'), key_exists('restriction_enzyme', $kv_properties) ? $kv_properties['restriction_enzyme'] : "N/A");}
 // Polymorphism
-$rows [] = array(array('data' => 'Polymorphism', 'header' => TRUE, 'width' => '20%'), $polymorphism ? "<a href=\"/polymorphism/$feature->feature_id\">P_ " . $feature->name . "</a>" : "N/A");
+if ($polymorphism) {$rows [] = array(array('data' => 'Polymorphism', 'header' => TRUE, 'width' => '20%'), $polymorphism ? "<a href=\"/polymorphism/$feature->feature_id\">P_ " . $feature->name . "</a>" : "N/A");}
 // Publication
-$rows [] = array(array('data' => 'Publication', 'header' => TRUE, 'width' => '20%'), $pubs ? "[<a href=\"?pane=publications\">view all</a>]" : "N/A");
+if ($pubs) {$rows [] = array(array('data' => 'Publication', 'header' => TRUE, 'width' => '20%'), $pubs ? "[<a href=\"?pane=publications\">view all</a>]" : "N/A");}
 // Contact
 $data_contact = "";
 if (is_array($contacts)) {
@@ -245,7 +245,7 @@ else {
     $data_contact = "N/A";
   }
 }
-$rows [] = array(array('data' => 'Contact', 'header' => TRUE, 'width' => '20%'), $data_contact);
+if ($data_contact != 'N/A') {$rows [] = array(array('data' => 'Contact', 'header' => TRUE, 'width' => '20%'), $data_contact);}
 // Associated With
 $data_assoc_with = "";
 if (count($assoc_with) == 0) {
@@ -263,9 +263,9 @@ else {
     $no_assoc ++;
   }
 }
-$rows [] = array(array('data' => 'Associated With', 'header' => TRUE, 'width' => '20%'), $data_assoc_with);
+if ($data_assoc_with != 'N/A') {$rows [] = array(array('data' => 'Associated With', 'header' => TRUE, 'width' => '20%'), $data_assoc_with);}
 // Comment
-$rows [] = array(array('data' => 'Comment', 'header' => TRUE, 'width' => '20%'), key_exists('comments', $kv_properties) ? $kv_properties['comments'] : "N/A");
+if (key_exists('comments', $kv_properties)) {$rows [] = array(array('data' => 'Comment', 'header' => TRUE, 'width' => '20%'), key_exists('comments', $kv_properties) ? $kv_properties['comments'] : "N/A");}
 // allow site admins to see the feature ID
 if (user_access('view ids')) {
   $rows[] = array(array('data' => 'Feature ID', 'header' => TRUE, 'class' => 'tripal-site-admin-only-table-row'), array('data' => $feature->feature_id, 'class' => 'tripal-site-admin-only-table-row'));
