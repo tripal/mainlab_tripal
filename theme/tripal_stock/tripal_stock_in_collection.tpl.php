@@ -38,7 +38,10 @@ $('#tripal_stock-table-in_collection_value-link').click(function() {
             $acc = $coll->accession;
             if ($coll->db == 'GRIN_COT' || $coll->db == 'GRIN_PVP') {
                $array = explode(" ", $coll->accession);
-               $acc = $array[0] . "+" . $array[1];
+               $acc = $array[0];
+               if (key_exists(1, $array)) {
+	             $acc .= "+" . $array[1];
+               }
             } else if ($coll->db == 'GRIN_Regist') {
                $array = explode("-", $coll->accession);
                $acc = $array[0] . " COTTON";
