@@ -3,8 +3,8 @@
  * 
  */
 function mainlab_tripal_seq_extract_page() {
-  
-  if ($_SESSION['mainlab_tripal_seq_extract']['download']){   
+  $_SESSION = $_SESSION ? $_SESSION : array();
+  if (key_exists('mainlab_tripal_seq_extract', $_SESSION) && key_exists('download', $_SESSION['mainlab_tripal_seq_extract'])){   
     $analysis   = $_SESSION['mainlab_tripal_seq_extract']['analysis'];
     $ftype      = $_SESSION['mainlab_tripal_seq_extract']['ftype'];
     $fnames     = $_SESSION['mainlab_tripal_seq_extract']['fnames'];
@@ -13,8 +13,8 @@ function mainlab_tripal_seq_extract_page() {
 
     unset($_SESSION['mainlab_tripal_seq_extract']['download']);
      
-    drupal_set_header('Content-Type: text');
-    drupal_set_header('Content-Disposition: attachment; filename="sequences.fasta.txt"');
+    drupal_add_http_header('Content-Type', 'text');
+    drupal_add_http_header('Content-Disposition', 'attachment; filename="sequences.fasta.txt"');
     ini_set('max_execution_time', 0); // we don't want the download to time out
     
     mainlab_tripal_seq_extract_get_features($analysis, 
@@ -25,9 +25,9 @@ function mainlab_tripal_seq_extract_page() {
  
   
   // generate the search form 
-  $output .= '';
+  $output = '';
   $output .= "<div id=\"tripal-feature-seq-extract-form-block\">";
-  $output .= drupal_get_form('mainlab_tripal_seq_extract_form');  
+  $output .= drupal_render(drupal_get_form('mainlab_tripal_seq_extract_form'));  
   $output .= "</div>";
   return $output;
 }
@@ -56,7 +56,7 @@ function theme_mainlab_tripal_seq_extract_form($form) {
   $headers = array();
   $table = theme('table', $headers, $rows, array('id' => 'mainlab-feature-seq-extract-form-table', 'border' => '0'));   
     
-  $markup .= $table;
+  $markup = $table;
   $form['criteria'] = array(
     '#type' => 'markup',
     '#value' =>  $markup,
@@ -67,36 +67,43 @@ function theme_mainlab_tripal_seq_extract_form($form) {
 /**
 *
  */
-function mainlab_tripal_seq_extract_form(&$form_state = NULL) {   
-  tripal_core_ahah_init_form();
+function mainlab_tripal_seq_extract_form($form, &$form_state) {   
+  //tripal_core_ahah_init_form();
   
   // we want to allow the query string to provide values for the form
-  if ($_GET['fnames']) {
+  if (key_exists('fnames', $_GET)) {
     $form_state['values']['fnames']['items'] = $_GET['fnames'];  
   }
-  if ($_GET['ftype']) {
+  if (key_exists('ftype', $_GET)) {
     $form_state['values']['ftype'] = $_GET['ftype'];  
   }
-  if ($_GET['analysis']) {
+  if (key_exists('analysis', $_GET)) {
     $form_state['values']['analysis'] = $_GET['analysis'];  
   }
-  if ($_GET['upstream']) {
+  if (key_exists('upstream', $_GET)) {
     $form_state['values']['upstream'] = $_GET['upstream'];  
   }
-  if ($_GET['downstream']) {
+  if (key_exists('downstream', $_GET)) {
     $form_state['values']['downstream'] = $_GET['downstream'];  
   }
-  if ($_GET['clear']) {
+  if (key_exists('clear', $_GET)) {
     unset($_SESSION['mainlab_tripal_seq_extract']);
   }
 
   // get defaults
-  $danalysis   = isset($form_state['values']['analysis'])   ? $form_state['values']['analysis']   : $_SESSION['mainlab_tripal_seq_extract']['analysis'];
-  $dftype      = isset($form_state['values']['ftype'])      ? $form_state['values']['ftype']      : $_SESSION['mainlab_tripal_seq_extract']['ftype'];
-  $dfnames     = isset($form_state['values']['fnames'])     ? $form_state['values']['fnames']     : $_SESSION['mainlab_tripal_seq_extract']['fnames'];
-  $dupstream   = isset($form_state['values']['upstream'])   ? $form_state['values']['upstream']   : $_SESSION['mainlab_tripal_seq_extract']['upstream'];
-  $ddownstream = isset($form_state['values']['downstream']) ? $form_state['values']['downstream'] : $_SESSION['mainlab_tripal_seq_extract']['downstream'];
+  $danalysis   = key_exists('value', $form_state) && isset($form_state['values']['analysis'])   ? $form_state['values']['analysis']   : NULL;
+  $dftype      = key_exists('value', $form_state) &&isset($form_state['values']['ftype'])      ? $form_state['values']['ftype']      : NULL;
+  $dfnames     = key_exists('value', $form_state) &&isset($form_state['values']['fnames'])     ? $form_state['values']['fnames']     : NULL;
+  $dupstream   = key_exists('value', $form_state) &&isset($form_state['values']['upstream'])   ? $form_state['values']['upstream']   : NULL;
+  $ddownstream = key_exists('value', $form_state) &&isset($form_state['values']['downstream']) ? $form_state['values']['downstream'] : NULL;
 
+  if (key_exists('mainlab_tripal_seq_extract', $_SESSION)) {
+    $danalysis   = NULL && key_exists('analysis', $_SESSION['mainlab_tripal_seq_extract'])  ? $form_state['values']['analysis']   : $_SESSION['mainlab_tripal_seq_extract']['analysis'];
+    $dftype      = NULL && key_exists('ftype', $_SESSION['mainlab_tripal_seq_extract']) ? $form_state['values']['ftype']      : $_SESSION['mainlab_tripal_seq_extract']['ftype'];
+    $dfnames     = NULL && key_exists('fnames', $_SESSION['mainlab_tripal_seq_extract']) ? $form_state['values']['fnames']     : $_SESSION['mainlab_tripal_seq_extract']['fnames'];
+    $dupstream   = NULL && key_exists('upstream', $_SESSION['mainlab_tripal_seq_extract']) ? $form_state['values']['upstream']   : $_SESSION['mainlab_tripal_seq_extract']['upstream'];
+    $ddownstream = NULL && key_exists('downstream', $_SESSION['mainlab_tripal_seq_extract']) ? $form_state['values']['downstream'] : $_SESSION['mainlab_tripal_seq_extract']['downstream'];
+  }
   
   $form = array();
   
@@ -199,6 +206,7 @@ function mainlab_tripal_seq_extract_form_validate($form, &$form_state) {
   $fnames     = $form_state['values']['fnames'];
   $upstream   = $form_state['values']['upstream'];
   $downstream = $form_state['values']['downstream'];
+  $sub_features = array();
   $op         = $form_state['values']['op'];
   
   if ($op == 'Retrieve') {
@@ -250,6 +258,9 @@ function mainlab_tripal_seq_extract_form_submit($form, &$form_state) {
 function mainlab_tripal_seq_extract_get_features($analysis_name, 
   $type, $feature_name, $upstream, $downstream) {
 
+  $derive_from_parent = 0;
+  $aggregate = 0;
+  $sub_features = array();
   $relationship = '';
   $rel_part = '';
     
@@ -266,85 +277,87 @@ function mainlab_tripal_seq_extract_get_features($analysis_name,
   $sql .= "WHERE (1=1) ";
   if ($type) {
     if ($type == 'CDS') {
-      $sql .= "AND CVT.name = '%s' ";
+      $sql .= "AND CVT.name = :CDS ";
       $derive_from_parent = 1;
       $aggregate = 1;
       $sub_features = array('CDS');
       $type = 'mRNA';
-      $vars[] = $type;
+      $vars[':CDS'] = $type;
     }
     elseif ($type == 'gene') {
-      $sql .= "AND CVT.name = '%s' ";
+      $sql .= "AND CVT.name = :gene ";
       $derive_from_parent = 1;
       $type = 'gene';
-      $vars[] = $type;
+      $vars[':gene'] = $type;
     }
     elseif ($type == 'mapped_genetic_marker') {
-      $sql .= "AND (CVT.name = '%s' or CVT.name = 'genetic_marker') ";
+      $sql .= "AND (CVT.name = :marker or CVT.name = 'genetic_marker') ";
       $derive_from_parent = 1;
       $type = 'match';
-      $vars[] = $type;
+      $vars[':marker'] = $type;
     }
     elseif ($type == 'genetic_marker') {
-      $sql .= "AND CVT.name = '%s' ";
+      $sql .= "AND CVT.name = :genetic_marker ";
       $relationship = 'sequence_of';
       $rel_part = 'object';
-      $vars[] = $type;
+      $vars[':genetic_marker'] = $type;
       $upstream = 0;
       $downstream = 0;
     }
     elseif ($type == 'polypeptide') {
-      $sql .= "AND CVT.name = '%s' ";
+      $sql .= "AND CVT.name = :polypeptide ";
       $derive_from_parent = 0;
-      $vars[] = $type;
+      $vars[':polypeptide'] = $type;
       $upstream = 0;
       $downstream = 0;
     }
     else {
-      $sql .= "AND CVT.name = '%s' ";
-      $vars[] = $type;
+      $sql .= "AND CVT.name = :type ";
+      $vars[':type'] = $type;
     }
   }
   if ($feature_name) {
     if (is_array($feature_name)) {
       $sql .= "AND F.name IN (";
       foreach ($feature_name as $i => $fname) {
-        $sql .= "'%s', ";
-        $vars[] = $fname;
+        $sql .= ":feature$i, ";
+        $vars[":feature$i"] = $fname;
       } 
       // remove the trailing comma and close the paren
       $sql = substr($sql, 0, -2) . ")";
     }
     else {
-      $sql .= "AND F.name = '%s'";
-      $vars[] = $feature_name;
+      $sql .= "AND F.name = :featurename";
+      $vars[':featurename'] = $feature_name;
     }
   }
   if ($analysis_name) {
-    $sql .= "AND A.name = '%s'";
-    $vars[] = $analysis_name;
+    $sql .= "AND A.name = :analysis";
+    $vars[':analysis'] = $analysis_name;
   }
   $num_bases_per_line = 50;
   $num_seqs = 0;
   $q = chado_query($sql, $vars);
  
-  while ($feature = db_fetch_object($q)) {
-    
+  while ($feature = $q->fetchObject()) {
     $feature_id = $feature->feature_id;
     
     // build the header for each FASTA entry
-    $feature_name = "$feature->uniquename|$feature->name|$feature->genus $feature->species|$feature->feature_type";
+    $feature_name = $feature->name;
       
     // generate the sequence
     if ($upstream > 0 or $downstream > 0) {
       $derive_from_parent = 1;
     }
-    $sequence = tripal_feature_get_formatted_sequence($feature_id, $feature_name, 
-      $num_bases_per_line, $derive_from_parent, $aggregate, 'fasta_txt',
-      $upstream, $downstream, $sub_features, $relationship, $rel_part);
+    $sequences = tripal_get_feature_sequences(array('feature_id' => $feature_id, 'name' => $feature_name), 
+      array('width' => $num_bases_per_line, 'derive_from_parent' => $derive_from_parent, 'aggregate' => $aggregate,
+      'upstream' => $upstream, 'downstream' => $downstream, 'sub_feature_types' => $sub_features, 'relationship_type' => $relationship, 'relationship_part' => $rel_part));
     
     // print the sequence
-    print $sequence;
+    foreach ($sequences AS $sequence) {
+      print '>' . $sequence['defline'] . "\n";
+      print $sequence['residues'] . "\n";
+    }
     $num_seqs++;
   }
   if ($num_seqs == 0) {    
