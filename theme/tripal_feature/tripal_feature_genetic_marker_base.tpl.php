@@ -214,7 +214,7 @@ if (count($primers) > 0) {
   foreach($primers AS $primer) {
     $primer = chado_expand_var($primer, 'field', 'feature.residues');
     if ($primer->type_id->name == 'primer') {
-      $primername = mainlab_tripal_get_site() == 'cottongen' ? $primer->name : $primer->uniquename;
+      $primername = mainlab_tripal_get_site() == 'cottongen' ? $primer->name ? $primer->name : $primer->uniquename : $primer->uniquename;
       $rows [] = array(array('data' => "Primer $no_primers", 'header' => TRUE, 'width' => '20%'), $primername . ": " . $primer->residues);
       $no_primers ++;
     }

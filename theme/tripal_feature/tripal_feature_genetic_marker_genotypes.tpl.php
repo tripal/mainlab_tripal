@@ -1,4 +1,5 @@
 <?php
+return; // Disable this template
 /*
  * Details about genotypes associated with features can be found in the following way:
  * 

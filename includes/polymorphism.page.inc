@@ -22,14 +22,15 @@ function mainlab_show_polymorphism ($feature_id) {
                 FROM {genotype} G 
                 INNER JOIN {feature_genotype} FG ON G.genotype_id = FG.genotype_id 
                 INNER JOIN {nd_experiment_genotype} NEG ON G.genotype_id = NEG.genotype_id
-                INNER JOIN {nd_experiment_project} NEP ON NEP.nd_experiment_id = NEG.nd_experiment_id
-                INNER JOIN {project} P ON P.project_id = NEP.project_id
+                LEFT JOIN {nd_experiment_project} NEP ON NEP.nd_experiment_id = NEG.nd_experiment_id
+                LEFT JOIN {project} P ON P.project_id = NEP.project_id
                 WHERE feature_id = :feature_id
                 GROUP BY G.genotype_id
                 ORDER BY G.genotype_id";
   $result = chado_query($sql, array(':feature_id' => $feature_id));
  
   $counter = 0;
+  $polymorphisms = array();
   while ($poly = $result->fetchObject()) {
     $poly->marker_name = $mname;
     $poly->marker_nid = $mnid;
@@ -61,7 +62,7 @@ function mainlab_show_polymorphism ($feature_id) {
   
   // Reorder alleles. We want to show 'Allele' instead of the real 'Genotype' separated by a bar '|', So we split the allleles and combine the list
   $hashed_poly = array(); // hash the allele by key
-  if ($polymorphisms) {
+  if (count($polymorphisms) > 0) {
     foreach ($polymorphisms AS $p) {
       $keys = explode('|', $p->description);
 
