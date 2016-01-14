@@ -307,3 +307,20 @@ function mainlab_tripal_generate_organism_relationships_var($node) {
   $node->organism =$organism;
   return $node;
 }
+
+function mainlab_tripal_generate_featurepos_var ($featuremap_id) {
+  $sql = "
+      SELECT F.uniquename AS LG, F2.uniquename AS marker, FPP.value AS position 
+      FROM {featurepos} FP 
+      INNER JOIN {featuremap} FM ON FM.featuremap_id = FP.featuremap_id
+      INNER JOIN {feature} F ON F.feature_id = FP.map_feature_id
+      INNER JOIN {feature} F2 ON F2.feature_id = FP.feature_id
+      INNER JOIN {featureposprop} FPP ON FP.featurepos_id = FPP.featurepos_id AND FPP.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'start' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
+      WHERE FM.featuremap_id = :featuremap_id";
+  $results = chado_query ($sql, array(':featuremap_id' => $featuremap_id));
+  $positions = array();
+  while ($pos = $results->fetchObject()) {
+    $positions [] = $pos;
+  }
+  return $positions;
+}

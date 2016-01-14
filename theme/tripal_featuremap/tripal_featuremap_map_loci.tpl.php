@@ -1,28 +1,7 @@
 <?php
 $featuremap = $variables['node']->featuremap;
 $feature_positions = array();
-
-// get the features aligned on this map
-$options = array(  
-  'return_array' => 1,
-  'order_by' => array('map_feature_id' => 'ASC'),
-  'include_fk' => array(
-    'map_feature_id' => array(
-      'type_id' => 1,
-      'organism_id' => 1,
-    ),
-    'feature_id' => array(
-      'type_id' => 1,
-    ),
-    'featuremap_id' => array(
-       'unittype_id' => 1,
-    ),
-  ),
-);
-
-$featuremap = chado_expand_var($featuremap, 'table', 'featurepos', $options);
-$feature_positions = $featuremap->featurepos;
-
+$feature_positions = mainlab_tripal_generate_featurepos_var($featuremap->featuremap_id);
 
 // get the total number of records
 $total_features = count($feature_positions);
@@ -34,7 +13,7 @@ if(count($feature_positions) > 0){ ?>
   // the $headers array is an array of fields to use as the colum headers.
   // additional documentation can be found here
   // https://api.drupal.org/api/drupal/includes%21theme.inc/function/theme_table/7
-  $headers = array('Linkage Group', 'Locus Name', 'Type', 'Position');
+  $headers = array('Linkage Group', 'Locus Name', 'Position');
   
   // the $rows array contains an array of rows where each row is an array
   // of values for each column of the table in that row.  Additional documentation
@@ -43,78 +22,10 @@ if(count($feature_positions) > 0){ ?>
   $rows = array();
   
   foreach ($feature_positions as $position){
-    $map_feature = $position->map_feature_id;
-    $feature     = $position->feature_id;  
-    $organism    = $map_feature->organism_id; 
-
-    // check if there are any values in the featureposprop table for the start and stop
-    $mappos = $position->mappos;
-    $options = array(
-      'return_array' => 1,
-      'include_fk' => array(
-        'type_id' => 1,            
-      ),
-    );
-    $position = chado_expand_var($position, 'table', 'featureposprop', $options);
-    $featureposprop = $position->featureposprop;
-    $start = 0;
-    $stop = 0;
-    if (is_array($featureposprop)) {
-      foreach ($featureposprop as $index => $property) {
-         if ($property->type_id->name == 'start') {
-           $start = number_format($property->value, 1);
-         }
-         if ($property->type_id->name == 'stop') {
-           $stop = number_format($property->value, 1);
-         }
-      }      
-    }  
-    if ($start and $stop and $start != $stop) {
-      $mappos = "$start-$stop";
-    }
-    if ($start and !$stop) {
-      $mappos = $start;
-    } 
-    if ($start and $stop and $start == $stop) {
-      $mappos = $start;
-    }
-    
-    if ($feature->type_id->name == 'QTL' || $feature->type_id->name == 'MTL') {
-      $qtl_posprop = $position->featureposprop;
-      foreach ($qtl_posprop AS $qtl_pp) {
-        if ($qtl_pp->type_id->name == 'qtl_peak') {
-          $mappos = number_format($qtl_pp->value, 1);
-        }
-      }
-    }
-    
-    $mfname = $map_feature->name;
-    if (property_exists($map_feature, 'nid')) {
-      $mfname =  l($mfname, 'node/' . $map_feature->nid, array('attributes' => array('target' => '_blank')));
-    }
-    $orgname = $organism->genus ." " . $organism->species ." (" . $organism->common_name .")";
-    if (property_exists($organism, 'nid')) {
-      $orgname = l(
-        "<i>" . $organism->genus . " " . $organism->species . "</i> (" . $organism->common_name .")", 
-        "node/". $organism->nid, 
-        array('html' => TRUE, 'attributes' => array('target' => '_blank'))
-      );
-    }
-    if ($organism->genus == 'N/A') {
-      $orgname = "N/A";
-    }
-    $organism =  $organism->genus . ' ' . $organism->species;
-
-    $fname = $feature->name;
-    if (property_exists($feature, 'nid')) {
-      $fname = l($fname, 'node/' . $feature->nid, array('attributes' => array('target' => '_blank')));
-    }
-
     $rows[] = array(
-      $mfname,
-      $fname,
-      $feature->type_id->name,
-      $mappos. ' ' . $position->featuremap_id->unittype_id->name
+      $position->lg,
+      $position->marker,
+      $position->position . ' ' . $featuremap->unittype_id->name
     );
   } 
   // the $table array contains the headers and rows array as well as other
