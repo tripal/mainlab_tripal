@@ -22,10 +22,11 @@ if(count($feature_positions) > 0){ ?>
   $rows = array();
   
   foreach ($feature_positions as $position){
+    $nid = chado_get_nid_from_id ('feature', $position->feature_id);
     $rows[] = array(
       $position->lg,
-      $position->marker,
-      $position->position . ' ' . $featuremap->unittype_id->name
+      $nid ? "<a href='/node/$nid'>" . $position->marker . '</a>': $position->marker,
+      round($position->position, 1) . ' ' . $featuremap->unittype_id->name
     );
   } 
   // the $table array contains the headers and rows array as well as other
