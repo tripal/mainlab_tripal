@@ -2,8 +2,8 @@
 $featuremap  = $variables['node']->featuremap;
 // expand featuremap to include stockprop so we can find out the population size 
 $featuremap = chado_expand_var($featuremap, 'table', 'featuremap_stock');
-$stock = $featuremap->featuremap_stock->stock_id;
-$stockprops = $stock->stockprop;
+$stock = $featuremap->featuremap_stock ? $featuremap->featuremap_stock->stock_id : '';
+$stockprops = property_exists($stock, 'stockprop') ? $stock->stockprop : '';
 
 if ($stock) {
   $rows = array();

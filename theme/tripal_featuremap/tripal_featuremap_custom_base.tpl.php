@@ -34,7 +34,7 @@ $pop_size = NULL;
 if (is_array($featuremap->featuremap_stock)) {
   $featuremap->featuremap_stock = $featuremap->featuremap_stock [0];
 }
-$stockprop = property_exists($featuremap->featuremap_stock, 'stock_id') &&
+$stockprop = $featuremap->featuremap_stock && property_exists($featuremap->featuremap_stock, 'stock_id') &&
 property_exists($featuremap->featuremap_stock->stock_id, 'stockprop') ?
 $featuremap->featuremap_stock->stock_id->stockprop :
 NULL;
@@ -49,7 +49,7 @@ if ($stockprop) {
   
 // expand featuremap to include stock parents
 $featuremap = chado_expand_var($featuremap, 'table', 'stock_relationship', array('return_array' => TRUE));
-$parents = property_exists($featuremap, 'featuremap_stock') &&
+$parents = property_exists($featuremap, 'featuremap_stock') && $featuremap->featuremap_stock &&
 property_exists($featuremap->featuremap_stock, 'stock_id') &&
 property_exists($featuremap->featuremap_stock->stock_id, 'stock_relationship') ?
 $featuremap->featuremap_stock->stock_id->stock_relationship->object_id :
