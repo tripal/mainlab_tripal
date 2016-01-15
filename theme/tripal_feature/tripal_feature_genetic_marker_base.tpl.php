@@ -75,7 +75,7 @@ if ($objs) {
     array_push($objs, $tmp);
   }
   foreach ($objs AS $obj) {
-    if ($obj->type_id->name == 'sequence_of') {
+    if ($obj->type_id->name == 'derives_from') {
       $seq = $obj->subject_id;
       array_push($seqs, $seq);
     }
