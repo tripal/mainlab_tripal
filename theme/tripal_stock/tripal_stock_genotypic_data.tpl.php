@@ -31,7 +31,7 @@ $('#tripal_stock-table-genotypic_data_value-link').click(function() {
         $download = $dir . '/genotypic_data_stock_id_' . $stock->stock_id . '.csv';
         $handle = fopen($download, "w");
         fwrite($handle, "Genotypic Data for Germplasm '" . $stock->uniquename. "'\n");
-        fwrite($handle, '"#","Dataset","Marker","Genotype","Marker_Allele"' . "\n");
+        fwrite($handle, '"#","Dataset","Marker","Marker Type","Genotype","Marker_Allele"' . "\n");
     ?>
     <div style="float: right">Download <a href="<?php print '/' . $download;?>">Table</a></div>
     <table id="tripal_stock-genotypic_data-table" class="tripal_stock-table tripal-table tripal-table-horz" style="margin-bottom:20px;">
@@ -39,6 +39,7 @@ $('#tripal_stock-table-genotypic_data_value-link').click(function() {
              <th>#</th>
                <th>Dataset</th>
                <th>Marker</th>
+               <th>Marker Type</th>
                <th>Genotype</th>
                <th>Marker_Allele</th>
              </tr>
@@ -70,9 +71,9 @@ $('#tripal_stock-table-genotypic_data_value-link').click(function() {
             }
             $index ++;
          }
-         print "<tr class=\"$class\"><td>". ($counter + 1) . "</td><td>$data->project</td><td><a href=\"/node/$data->marker_nid\">$marker</a></td><td>$descriptor[1]</td><td>$link_alleles</td></tr>";
+         print "<tr class=\"$class\"><td>". ($counter + 1) . "</td><td>$data->project</td><td><a href=\"/node/$data->marker_nid\">$marker</a></td><td>$data->marker_type</td><td>$descriptor[1]</td><td>$link_alleles</td></tr>";
          global $base_url;
-         fwrite($handle, '"' . ($counter + 1) . '","'. $data->project . '","=HYPERLINK(""' . $base_url . '/node/' . $data->marker_nid . '"",""' . $marker . '"")","'. $descriptor[1] . '","'. $alleles_wo_link . '"' . "\n");
+         fwrite($handle, '"' . ($counter + 1) . '","'. $data->project . '","=HYPERLINK(""' . $base_url . '/node/' . $data->marker_nid . '"",""' . $marker . '"")","' . $data->marker_type . '","' . $descriptor[1] . '","'. $alleles_wo_link . '"' . "\n");
          $counter ++;
       }
       fclose($handle);

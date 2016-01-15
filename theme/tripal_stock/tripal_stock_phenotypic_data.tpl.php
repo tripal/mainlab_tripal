@@ -44,8 +44,10 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/m
          }
          $descriptors = explode("_", $score->uniquename);
          $descriptor = $descriptors[count($descriptors) - 2];
-         $env = str_replace("COTTONDB_", "", $score->environment);
-         print "<tr class=\"$class\"><td>". ($counter + 1) . "</td><td>$score->project</td><td>$descriptor</td><td>$score->value</td><td>$env</td><td>$score->replications</td></tr>";
+         $env = str_replace(array("COTTONDB_", "CDB_NCGC_"), array("", ""), $score->environment);
+         $env_nid = chado_get_nid_from_id ('nd_geolocation', $score->nd_geolocation_id);
+         $env_display = $env_nid ? "<a href='/node/$env_nid'>" . $env . '</a>' : $env;
+         print "<tr class=\"$class\"><td>". ($counter + 1) . "</td><td>$score->project</td><td>$descriptor</td><td>$score->value</td><td>$env_display</td><td>$score->replications</td></tr>";
          fwrite($handle, '"' . ($counter + 1) . '","'. $score->project . '","' . $descriptor . '","' . $score->value . '","' . $env . '","' . $score->replications . '"' . "\n");
          $counter ++;
       }

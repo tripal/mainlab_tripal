@@ -13,7 +13,7 @@ if(count($feature_positions) > 0){ ?>
   // the $headers array is an array of fields to use as the colum headers.
   // additional documentation can be found here
   // https://api.drupal.org/api/drupal/includes%21theme.inc/function/theme_table/7
-  $headers = array('Linkage Group', 'Locus Name', 'Position');
+  $headers = array('Linkage Group', 'Locus Name', 'Type', 'Position');
   
   // the $rows array contains an array of rows where each row is an array
   // of values for each column of the table in that row.  Additional documentation
@@ -26,6 +26,7 @@ if(count($feature_positions) > 0){ ?>
     $rows[] = array(
       $position->lg,
       $nid ? "<a href='/node/$nid'>" . $position->marker . '</a>': $position->marker,
+      $position->type,
       round($position->position, 1) . ' ' . $featuremap->unittype_id->name
     );
   } 

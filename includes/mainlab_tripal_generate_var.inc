@@ -147,7 +147,7 @@ function mainlab_tripal_generate_tripal_stock_phenotypic_data_var($node) {
   $stock = $node->stock;
   $results = chado_query(
       "SELECT
-			P.uniquename, P.value, J.name AS project, GEO.environment, SP.value AS replications
+			P.uniquename, P.value, J.name AS project, GEO.nd_geolocation_id, GEO.environment, SP.value AS replications
 			FROM {nd_experiment_phenotype} NEP
 			INNER JOIN {phenotype} P ON NEP.phenotype_id = P.phenotype_id
 			INNER JOIN {nd_experiment_stock} NES ON NES.nd_experiment_id = NEP.nd_experiment_id
@@ -184,7 +184,9 @@ function mainlab_tripal_generate_tripal_stock_genotypic_data_var($node) {
   $stock = $node->stock;
   $results = chado_query(
       "SELECT
-			G.uniquename, G.description, J.name AS project, F.organism_id, (SELECT nid FROM chado_feature WHERE feature_id = F.feature_id) AS marker_nid
+			G.uniquename, G.description, J.name AS project, F.organism_id, 
+            (SELECT nid FROM chado_feature WHERE feature_id = F.feature_id) AS marker_nid,
+            (SELECT name FROM {cvterm} WHERE cvterm_id = F.type_id) AS marker_type
 			FROM {nd_experiment_genotype} NEG
 			INNER JOIN {genotype} G ON NEG.genotype_id = G.genotype_id
 			INNER JOIN {feature_genotype} FG ON G.genotype_id = FG.genotype_id
@@ -312,8 +314,9 @@ function mainlab_tripal_generate_featurepos_var ($featuremap_id) {
   $sql = "
       SELECT 
         F.uniquename AS LG, 
-        (SELECT object_id FROM {feature_relationship} WHERE subject_id = F2.feature_id AND type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'instance_of' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'relationship'))) AS feature_id, 
+        (SELECT first (object_id) FROM {feature_relationship} WHERE subject_id = F2.feature_id AND type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'instance_of' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'relationship'))) AS feature_id, 
         F2.uniquename AS marker, 
+        (SELECT name FROM {cvterm} WHERE cvterm_id = F2.type_id) AS type,
         FPP.value AS position 
       FROM {featurepos} FP 
       INNER JOIN {featuremap} FM ON FM.featuremap_id = FP.featuremap_id
