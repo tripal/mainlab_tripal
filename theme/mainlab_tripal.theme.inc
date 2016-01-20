@@ -72,6 +72,10 @@ function tripal_featuremap_preprocess_tripal_featuremap_custom_base(&$variables)
  */
 function tripal_pub_preprocess_tripal_pub_image(&$variables) {
   $pub = $variables['node']->pub;
+  if (!db_table_exists('chado.pub_image')) {
+    $pub->images = array();
+    return;
+  }
   // We want to show maps for this pub and maps of its children
   $results = chado_query(
       "SELECT eimage_type, image_uri, value as legend
