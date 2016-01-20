@@ -31,6 +31,12 @@ function mainlab_tripal_generate_nd_geolocation_var ($node) {
  */
 function mainlab_tripal_generate_stock_in_collection_var($node) {
   $stock = $node->stock;
+  if (!db_table_exists('chado.stockcollection_db')) {
+    $stock->in_collection = null;
+    $node->stock = $stock;
+    return $node;
+  }
+
   $results = chado_query(
       "SELECT
 			max(SC.name) AS collection,

@@ -10,6 +10,8 @@ if ($site == 'gdr') {
 } else if ($site == 'cottongen') {
 	$icons = '/bulk_data/www.cottongen.org/cotton_photo/germplasm/icon/icon-';
 	$imgs = '/bulk_data/www.cottongen.org/cotton_photo/germplasm/image/';
+} else {
+  return;
 }
 
 $icon_path = 'sites/default/files' . $icons;
