@@ -18,6 +18,10 @@ function mainlab_tripal_install() {
    // add custom chado tables
    mainlab_tripal_add_custom_tables();
 
+   // load MAIN obo
+   $obo_path = '{mainlab_tripal}/files/main.obo';
+   $obo_id = tripal_insert_obo('MAIN', $obo_path);
+   tripal_submit_obo_job(array('obo_id' => $obo_id));
 }
 
 /*******************************************************************************
