@@ -6,7 +6,3 @@ package = Tripal Extensions
 dependencies[] = tripal_core
 dependencies[] = tripal_feature
 dependencies[] = tripal_analysis
-dependencies[] = tripal_analysis
-dependencies[] = views_php
-#dependencies[] = better_exposed_filters
-
