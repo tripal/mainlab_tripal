@@ -24,30 +24,6 @@ function mainlab_tripal_init() {
 }
 
 /**
- * Provide information to drupal about the node types that we're creating
- * in this module
- *
- * @ingroup mainlab_tripal
- */
-function mainlab_tripal_node_info() {
-  $nodes = array();
-
-  return $nodes;
-}
-
-/**
- * Set the permission types that the chado module uses.  Essentially we
- * want permissionis that protect creation, editing and deleting of chado
- * data objects
- *
- * @ingroup mainlab_tripal
- */
-function mainlab_tripal_perm() {
-  return array(
-
-  );
-}
-/**
  * Menu items are automatically added for the new node types created
  * by this module to the 'Create Content' Navigation menu item.  This function
  * adds more menu items needed for this module.
@@ -56,6 +32,16 @@ function mainlab_tripal_perm() {
  */
 function mainlab_tripal_menu() {
   $items = array();
+  
+  $items['admin/mainlab_tripal'] = array(
+    'title' => 'Mainlab Tripal',
+    'description' => ('Settings for the mainlab tripal custom displays.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mainlab_tripal_admin_form'),
+    'access arguments' => array('administer tripal'),
+    'file' => 'includes/mainlab_tripal.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
 
   // the custom sequence retrieval form
   $items['retrieve/sequences'] = array(
@@ -142,42 +128,6 @@ function mainlab_tripal_menu() {
   );
   
   return $items;
-}
-
-/**
- * Implements hook_views_api()
- * Purpose: Essentially this hook tells drupal that there is views support for
- *  for this module which then includes tripal_db.views.inc where all the
- *  views integration code is
- *
- * @ingroup mainlab_tripal
- */
-function mainlab_tripal_views_api() {
-  return array(
-    'api' => 3.0,
-  );
-}
-
-
-/**
- * Administrative settings form
- *
- * @ingroup mainlab_tripal
- */
-function mainlab_tripal_admin() {
-  $form = array();
-
-
-
-  return system_settings_form($form);
-}
-
-/**
- *
- * @ingroup mainlab_tripal
- */
-function mainlab_tripal_admin_validate($form, &$form_state) {
- 
 }
 
 /**
@@ -516,8 +466,22 @@ function mainlab_tripal_node_view_alter(&$build) {
  * @ingroup mainlab_tripal
  */
 function mainlab_tripal_theme($existing, $type, $theme, $path) {
-  $path = drupal_get_path('module', 'mainlab_tripal') . '/theme';
+  $path = drupal_get_path('module', 'mainlab_tripal') . '/theme/';
   $core_path = drupal_get_path('module', 'tripal_core');
+  $themes = array();
+  $templates = mainlab_tripal_get_templates ();
+  $settings = variable_get('mainlab_tripal_enabled_templates', array());
+  
+  foreach ($templates AS $key => $file) {
+    if ($settings[$key]) {
+      $themes[$file->name] = array(
+        'variables' => array('node' => NULL),
+        'template' => $file->name,
+        'path' => $path . $file->folder,
+      );
+    }
+  }
+  /*
   $themes = array(
     'tripal_organism_custom_base' => array(
       'variables' => array('node' => NULL),
@@ -743,16 +707,8 @@ function mainlab_tripal_theme($existing, $type, $theme, $path) {
       'path' => $path . '/tripal_organism',
     ),
   );
+  */
   return $themes;
-}
-
-
-/**
- *
- * @ingroup mainlab_tripal
- */
-function mainlab_tripal_cron() {
-
 }
 
 /**
@@ -782,4 +738,23 @@ function mainlab_tripal_form_tripal_pub_search_form_alter (&$form, &$form_state)
     $val = $form['instructions']['#markup'];
     $form['instructions']['#markup'] = $val . "(<a href=\"/tutorial/publication_search\"><b>Help</b></a>)";
   }
+}
+
+function mainlab_tripal_get_templates() {
+  $theme = array ();
+  $theme_path = drupal_get_path('module', 'mainlab_tripal') . '/theme';
+  $templates = file_scan_directory($theme_path, '/\.tpl\.php/', array('recurse' => TRUE));
+  
+  foreach ($templates AS $path => $template) {
+    $file = new stdClass();
+    $file->name = str_replace('.tpl.php', '' , $template->filename);
+    $folder = trim(str_replace(array($theme_path, $template->filename), array('', ''), $path), '/');
+    if ($folder) {
+      $file->folder = $folder;
+      $key = 'mainlab_tripal--' . $folder.'--'. $file->name;
+    }
+    $theme[$key] = $file;
+  }  
+  ksort($theme);
+  return $theme;
 }
