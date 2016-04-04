@@ -7,7 +7,7 @@ if ($num_genotypic_data > 0) {
 
 <?php 
 // Load the table pager javascript code as we'll need it after the allele table is created.
-drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/mainlab_table_pager.js");
+drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/js/mainlab_table_pager.js");
 ?>
 
 <script type="text/javascript">

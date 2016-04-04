@@ -5,30 +5,52 @@
  */
 function mainlab_tripal_admin_form() {
   // Get existing settings
-  $settings = variable_get('mainlab_tripal_enabled_templates', array());
-  dpm($settings);
+  $enabled_themes = variable_get('mainlab_tripal_enabled_themes', array());
 
   $form = array();
+  
+  $form ['group'] = array (
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#title' => 'Mainlab Themes',
+    '#description' => 'Check to enable the display.'
+  );
+
   // Get available templates
   $templates = mainlab_tripal_get_templates ();
+  uksort($templates, 'strcasecmp');
+  $override_folders = array('templates' => 'Use default and do not override');
 
   // Parse the template file name
   foreach ($templates AS $key => $file) {
-    if (! key_exists ($file->folder, $form)) {
-      $form [$file->folder] = array (
-        '#type' => 'fieldset',
-        '#collapsible' => TRUE,
-        '#title' => str_replace(array('_', '/'), array(' ', ' '), $file->folder),
-        '#description' => t('Check to enable display:'),
-      );
+    if (!key_exists ($file->folder, $form['group'])) {
+      if (preg_match('/^templates\//', $file->folder)) {
+        $form ['group'][$file->folder] = array (
+          '#type' => 'checkbox',
+          '#title' => ucwords(str_replace(array('_', '/', 'templates'), array(' ', ' ', ''), $file->folder)),
+          '#default_value' => key_exists(str_replace('/', '--', $file->folder), $enabled_themes) ? $enabled_themes[str_replace('/', '--', $file->folder)] : 0,
+        );
+      }
+      else {
+        $override_folders[$file->folder] = $file->folder;
+      }
     }
-    $form[$file->folder][$key] = array(
-      '#type' => 'checkbox',
-      '#title' => $file->name,
-      '#default_value' => key_exists($key, $settings) ? $settings[$key] : 0,
-    );
   }
   
+  // Folder to override theme templates
+  $form ['override'] = array (
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#title' => 'Override Default Templates',
+    '#description' => 'Select a folder to override the default templates. Default template will be overridden by the file with the same name in the selected folder.'
+  );
+
+  $override = variable_get('mainlab_tripal_override_folder', 'templates');
+  $form['override']['override_folder'] = array (
+    '#type' => 'select',
+    '#options' => $override_folders,
+    '#default_value' => $override
+  );
   return system_settings_form($form);
 }
 
@@ -38,12 +60,38 @@ function mainlab_tripal_admin_form() {
  */
 function mainlab_tripal_admin_form_validate($form, &$form_state) {
   $values = $form_state['values'];
-  $settings = array();
+  variable_set('mainlab_tripal_override_folder', $values['override_folder']);
+  
+  $enabled_themes = array();
   foreach ($values AS $key => $val) {
-    if (preg_match('/^mainlab_tripal--/', $key)) {
-      $settings[$key] = $val;
+    if (preg_match('/^templates\//', $key)) {
+      $enabled_themes[str_replace('/', '--', $key)] = $val;
     }
   }
-  variable_set('mainlab_tripal_enabled_templates', $settings);
+  variable_set('mainlab_tripal_enabled_themes', $enabled_themes);
+
+  // Get available templates
+  $templates = mainlab_tripal_get_templates ();
+  $enabled_templates = array();
+  $high_priority = array();
+  foreach ($templates AS $key => $file) {
+    $folder = str_replace('/', '--', $file->folder);
+    // Enable all templates in the overriding folder
+    if ($file->folder == $values['override_folder']) {
+      $high_priority[$file->name] = TRUE;
+      $enabled_templates[$key] = $file->name;
+    // Enable templates for enabled themes
+    } else if (preg_match('/^templates--/', $folder) && $enabled_themes[$folder]) {
+      $enabled_templates[$key] = $file->name;
+    }
+  }
+  
+  // Set high priority templates to override the default template
+  foreach ($enabled_templates AS $key => $file) {
+    if (preg_match('/^mainlab_tripal--templates\//', $key)  && key_exists($file, $high_priority)) {
+      unset($enabled_templates[$key]);
+    }
+  }
+  variable_set('mainlab_tripal_enabled_templates', $enabled_templates);
   drupal_theme_rebuild();
 }

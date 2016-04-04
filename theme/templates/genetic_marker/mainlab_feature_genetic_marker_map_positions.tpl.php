@@ -1,6 +1,6 @@
 <?php
 $feature = $variables['node']->feature;
-$map_positions = $feature->map_positions;
+$map_positions = property_exists($feature, 'map_positions') ? $feature->map_positions : array();
 $counter_pos = count($map_positions);
  if ($counter_pos > 0) {
    $hasChr = false;

@@ -145,14 +145,6 @@ if (key_exists('alias', $kv_properties)) {$rows [] = array(array('data' => 'Alia
 //Genbank ID
 if ($marker_type != "SNP") {
   $gbid = "N/A";
-  if ($accession && $accession != 'GDR_markers') {
-    if ($feature->feature_dbxref->db_id->url) {
-      $gbid = "<a href=\"" . $feature->feature_dbxref->db_id->url . '/' . $accession . "\">$accession</a>";
-    }
-    else {
-      $gbid = $accession;
-    } 
-  } 
   $rows [] = array(array('data' => 'Genbank ID', 'header' => TRUE, 'width' => '20%'), $gbid);
 }
 //dbSNP ID

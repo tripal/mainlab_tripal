@@ -56,6 +56,10 @@ $featuremap->featuremap_stock->stock_id->stock_relationship->object_id :
 NULL;
   
 if ($parents) {
+  if (is_object($parents)) {
+    $arr = array($parents);
+    $parents = $arr;
+  };
   foreach($parents AS $parent) {
     if ($parent->type_id->name == 'is_a_maternal_parent_of') {
       $maternal = $parent->subject_id;

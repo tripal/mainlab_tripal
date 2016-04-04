@@ -1,6 +1,6 @@
 <?php
 
-$properties = $node->organism->organismprop;
+$properties = property_exists($node->organism, 'organismprop') ? $node->organism->organismprop : NULL;
 $cname = array();
 $syn = array();
 

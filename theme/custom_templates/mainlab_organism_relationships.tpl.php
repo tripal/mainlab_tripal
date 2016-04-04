@@ -2,9 +2,13 @@
 
 $organism = $variables['node']->organism;
 
-$all_relationships = $organism->all_relationships;
-$object_rels = $all_relationships['object'];
-$subject_rels = $all_relationships['subject'];
+$object_rels = array();
+$subject_rels =array();
+if (property_exists($organism, 'all_relationship')) {
+  $all_relationships = $organism->all_relationships;
+  $object_rels = $all_relationships['object'];
+  $subject_rels = $all_relationships['subject'];
+}
 
 if (count($object_rels) > 0 or count($subject_rels) > 0) {
 ?>

@@ -5,7 +5,7 @@ $counter_poly = count($polymorphism);
 
 <?php 
 // Load the table pager javascript code as we'll need it after the allele table is created.
-drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/mainlab_table_pager.js");
+drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/js/mainlab_table_pager.js");
 ?>
 
 <?php if ($counter_poly > 0) { 
@@ -24,9 +24,9 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/mainlab/js/m
      	    foreach($polymorphism AS $poly) {
               $class = NULL;
              if ($counter % 2 == 1) {
-	              $class = "tripal_feature-table-even-row even";
+	              $class = "tripal_feature-table-even-row tripal-table-even-row";
              } else {
-	              $class = "tripal_feature-table-odd-row odd";
+	              $class = "tripal_feature-table-odd-row tripal-table-odd-row";
              }
              $name = explode("_", $poly->uniquename);;
              $allele = $name [count($name) - 1];

@@ -1,6 +1,6 @@
 <?php
 $feature = $variables['node']->feature;
-$images = $feature->images;
+$images = property_exists($feature, 'images') ? $feature->images : array();
 
 $icon_path = '';
 $img_path = '';

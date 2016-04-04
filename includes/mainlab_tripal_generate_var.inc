@@ -257,6 +257,10 @@ function mainlab_tripal_generate_stock_image_var($node) {
 }
 
 function mainlab_tripal_generate_organism_relationships_var($node) {
+  
+  if (db_table_exists('organism_relationship')) {
+    return $node;
+  }
   // we want to provide a new variable that contains the matched organisms.
   $organism = $node->organism;
 

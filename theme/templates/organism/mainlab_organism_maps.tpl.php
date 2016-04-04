@@ -16,6 +16,7 @@ if (count($featuremap_organisms) > 0) {?>
         <th>Map Name</th>
         <th>Map Details</th>
       </tr> <?php
+      $i = 0;
       foreach ($featuremap_organisms as $featuremap_organism){ 
         // get the ma properties
         $featuremap = $featuremap_organism->featuremap_id;

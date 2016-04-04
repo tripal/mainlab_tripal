@@ -4,6 +4,7 @@
  * Contains functions used to install the mainlab tripal module
  */
 
+require_once 'includes/custom_tables.inc';
 
 /*******************************************************************************
  * Implementation of hook_install().
@@ -28,23 +29,18 @@ function mainlab_tripal_install() {
  * Implementation of hook_uninstall().
  */
 function mainlab_tripal_uninstall() {
-      drupal_uninstall_schema('mainlab_tripal');
+  drupal_uninstall_schema('mainlab_tripal');
+  variable_del('mainlab_tripal_enabled_themes');
+  variable_del('mainlab_tripal_enabled_templates');
+  variable_del('mainlab_tripal_overrider_folder');
 }
-/*******************************************************************************
-*  The blast analysis module creates it's own custom table for storing
-*  blast results in a format more condusive for fine-grained searching.
-*  Therefore,  we must define the hook_schema function, as recoginzed by
-*  the Tripal core API,  for specifying the details for this table.
-*/
-function mainlab_tripal_add_custom_tables() {
 
-}
 /*******************************************************************************
 * Implementation of hook_schema(). This table stores the parsers for blast xml
 * xml results.
 */
 function mainlab_tripal_schema() {
-   $schema = array();
+  $schema = array();
 
   return $schema;
 }

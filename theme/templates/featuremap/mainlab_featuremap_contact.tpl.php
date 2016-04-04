@@ -2,7 +2,7 @@
 $featuremap  = $variables['node']->featuremap;
 
 // expand featuremap to include contacts
-$contacts = $featuremap->featuremap_contact;
+$contacts = property_exists($featuremap, 'featuremap_contact') ? $featuremap->featuremap_contact : NULL;
 
 // return if no data
 if (!$contacts) {
