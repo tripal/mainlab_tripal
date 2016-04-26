@@ -157,7 +157,7 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
 
       //Environment
       case 'chado_nd_geolocation' :
-        $node = mainlab_tripal_generate_nd_geolocation_var ($node);
+
       break;
     }
 
