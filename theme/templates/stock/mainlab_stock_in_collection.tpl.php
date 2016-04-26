@@ -52,7 +52,8 @@ $('#tripal_stock-table-in_collection_value-link').click(function() {
                $link = "<a href=\"". $coll->urlprefix . $acc ."\" target=_blank>" . $coll->version . "</a>";
             }
          } 
-         print "<tr class=\"$class\"><td>$coll->collection</td><td>$coll->accession</td><td>$link</td></tr>";
+         $id = $coll->version ? $coll->version : $coll->accession;
+         print "<tr class=\"$class\"><td>$coll->collection</td><td>$id</td><td>$link</td></tr>";
          $counter ++;
       }
     ?>
