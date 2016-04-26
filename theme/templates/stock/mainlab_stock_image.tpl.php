@@ -19,7 +19,6 @@ $img_path = 'sites/default/files' . $imgs;
 
 if (count($images) > 0) { ?>
   <div id="tripal_stock-images-box" class="tripal_stock-info-box tripal-info-box">
-    <div class="tripal_stock-info-box-title tripal-info-box-title">Images</div>
     <!--<div class="tripal_stock-info-box-desc tripal-info-box-desc">The feature '<?php print $stock->name ?>' has the following images</div>  -->
         
     <table id="tripal_stock-images-table" class="tripal_stock-table tripal-table tripal-table-horz" style="width:700px;">

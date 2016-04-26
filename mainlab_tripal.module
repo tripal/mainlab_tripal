@@ -138,26 +138,9 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
   if ($view_mode == 'full') {
     // Load extra data for each node type
     switch ($node->type) {
-      // Organism
-      case 'chado_organism' :
-        break;
-        
       // Stock
       case 'chado_stock' :
-        if (db_table_exists('chado.library_stock')) {
-          $stock = chado_expand_var($node->stock, 'table', 'library_stock', array('return_array' => 1));
-          $node->stock = $stock;
-        }
-        $node = mainlab_tripal_generate_stock_in_collection_var ($node);
-        $node = mainlab_tripal_generate_stock_parents_var ($node);
-        $node = mainlab_tripal_generate_tripal_stock_phenotypic_data_var ($node);
-        $node = mainlab_tripal_generate_tripal_stock_genotypic_data_var ($node);
         $node = mainlab_tripal_generate_stock_image_var ($node);
-      break;
-
-      //Environment
-      case 'chado_nd_geolocation' :
-
       break;
     }
 
