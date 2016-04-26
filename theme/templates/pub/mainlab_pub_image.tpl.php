@@ -1,6 +1,6 @@
 <?php
 $pub = $variables['node']->pub;
-$images = $pub->images;
+$images = property_exists($pub, 'images') ? $pub->images : array();
 
 //$path = file_directory_path() . '/tripal/tripal_pub/images/';
 $icon_path = '';
