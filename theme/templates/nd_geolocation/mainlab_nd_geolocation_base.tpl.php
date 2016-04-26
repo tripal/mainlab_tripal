@@ -44,7 +44,7 @@ foreach ($nd_geolocationprops as $property) {
 $properties['site_code'] = str_replace('COTTONDB_', '', $properties['site_code']); // remove the 'COTTONDB_' prefix for site_code
 
 // Associated Dataset
-$display_proj = "<a href=\"#\" onClick=\"$('.tripal-info-box').hide();$('#tripal_nd_geolocation-associated_dataset-box').fadeIn('slow');$('.tripal_toc').height($('#tripal_nd_geolocation-associated_dataset-box').parent().height());return false;\">";
+$display_proj = "<a href=\"?pane=associated_dataset\">";
 if (count($projects) == 1) {
   $display_proj .=$projects[0]->name;  
 } else if (count($projects) > 1){

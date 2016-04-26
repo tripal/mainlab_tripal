@@ -47,9 +47,9 @@ $('#tripal_stock-table-in_collection_value-link').click(function() {
                $acc = $array[0] . " COTTON";
             }
             if ($coll->db == 'GRIN_COT') {
-               $link = "<a href=\"". $coll->urlprefix . $acc ."\" target=_blank>" . $db[0] . ": " . $coll->accession . "</a>";
+               $link = "<a href=\"". $coll->urlprefix . $acc ."\" target=_blank>" . $db[0] . ": " . $coll->version . "</a>";
             } else {
-               $link = "<a href=\"". $coll->urlprefix . $acc ."\" target=_blank>" . $coll->accession . "</a>";
+               $link = "<a href=\"". $coll->urlprefix . $acc ."\" target=_blank>" . $coll->version . "</a>";
             }
          } 
          print "<tr class=\"$class\"><td>$coll->collection</td><td>$coll->accession</td><td>$link</td></tr>";
