@@ -4,7 +4,7 @@ $organism = $variables['node']->organism;
 
 $object_rels = array();
 $subject_rels =array();
-if (property_exists($organism, 'all_relationship')) {
+if (property_exists($organism, 'all_relationships')) {
   $all_relationships = $organism->all_relationships;
   $object_rels = $all_relationships['object'];
   $subject_rels = $all_relationships['subject'];
