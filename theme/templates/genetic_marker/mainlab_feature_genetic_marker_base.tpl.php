@@ -226,12 +226,12 @@ if ($pubs) {$rows [] = array(array('data' => 'Publication', 'header' => TRUE, 'w
 $data_contact = "";
 if (is_array($contacts)) {
   foreach ($contacts AS $contact) {
-    $data_contact .= "<a href=\"?pane=genetic_marker_contacts\">" . $contact->contact_id->name . "</a><br>";
+    $data_contact .= "<a href=\"?pane=contact\">" . $contact->contact_id->name . "</a><br>";
   }
 }
 else {
   if ($contacts) {
-    $data_contact = "<a href=\"?pane=genetic_marker_contacts\">" . $contacts->contact_id->name . "</a><br>";
+    $data_contact = "<a href=\"?pane=contact\">" . $contacts->contact_id->name . "</a><br>";
   }
   else {
     $data_contact = "N/A";
