@@ -1,7 +1,6 @@
 <?php
 $featuremap = $variables['node']->featuremap;
-$feature_positions = array();
-$feature_positions = mainlab_tripal_generate_featurepos_var($featuremap->featuremap_id);
+$feature_positions = $featuremap->positions;
 
 // get the total number of records
 $total_features = count($feature_positions);
