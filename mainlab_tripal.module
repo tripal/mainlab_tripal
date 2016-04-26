@@ -140,8 +140,8 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
     switch ($node->type) {
       // Organism
       case 'chado_organism' :
-        $node = mainlab_tripal_generate_organism_relationships_var($node);
         break;
+        
       // Stock
       case 'chado_stock' :
         if (db_table_exists('chado.library_stock')) {
