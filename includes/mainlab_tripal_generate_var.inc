@@ -42,7 +42,8 @@ function mainlab_tripal_generate_stock_in_collection_var($node) {
 			max(SC.name) AS collection,
 			max(db.name) AS db,
 			max(db.urlprefix) AS urlprefix,
-			string_agg(X.accession, '; ') AS accession
+			string_agg(X.accession, '; ') AS accession,
+                        string_agg(X.version, '; ') AS version
 			FROM {stockcollection} SC
 			INNER JOIN {stockcollection_stock} SS ON SS.stockcollection_id = SC.stockcollection_id
 			INNER JOIN {stockcollection_db} SD ON SC.stockcollection_id = SD.stockcollection_id
