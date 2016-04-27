@@ -70,11 +70,6 @@ function mainlab_tripal_menu() {
   		'type' => MENU_CALLBACK
   );
   
-  if (mainlab_tripal_get_site() == 'gdr') {
-  	$items['polymorphism/%']['file'] = 'includes/gdr_polymorphism.page.inc';
-  	$items['allele/%/%/%']['file'] = 'includes/gdr_allele.page.inc';
-  }
-  
   // The sequence listing page
   $items['feature_listing/%/%/%'] = array(
   		'title' => 'Sequences',
