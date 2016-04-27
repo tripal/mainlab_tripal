@@ -136,14 +136,6 @@ function mainlab_tripal_menu() {
  */
 function mainlab_tripal_node_view($node, $view_mode, $langcode) {
   if ($view_mode == 'full') {
-    // Load extra data for each node type
-    switch ($node->type) {
-      // Stock
-      case 'chado_stock' :
-        $node = mainlab_tripal_generate_stock_image_var ($node);
-      break;
-    }
-
     // Get the chado type
     $type = preg_replace('/^chado_/', '', $node->type);
     
