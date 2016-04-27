@@ -135,7 +135,7 @@ $rows [] = array(array('data' => 'Paternal Parent of', 'header' => TRUE, 'width'
 $rows [] = array(array('data' => 'Phenotypic Data', 'header' => TRUE, 'width' => '20%'), $num_phenotypic_data > 0 ? "[<a href='?pane=phenotypic_data'>view all $num_phenotypic_data</a>]" : 'N/A');
 $rows [] = array(array('data' => 'Genotypic Data', 'header' => TRUE, 'width' => '20%'), $num_genotypic_data > 0 ? "[<a href='?pane=genotypic_data'>view all $num_genotypic_data</a>]" : 'N/A');
 $rows [] = array(array('data' => 'Map', 'header' => TRUE, 'width' => '20%'), $num_population_map > 0 ? "[<a href='?pane=population_map'>view all $num_population_map</a>]" : 'N/A');
-$rows [] = array(array('data' => 'DNA Library', 'header' => TRUE, 'width' => '20%'), $num_libraries > 0 ? "[<a href='?pane=dna_library'>view all $num_libraries </a>]" : 'N/A');
+$rows [] = array(array('data' => 'DNA Library', 'header' => TRUE, 'width' => '20%'), $num_libraries > 0 ? "[<a href='?pane=library'>view all $num_libraries </a>]" : 'N/A');
 $rows [] = array(array('data' => 'Sequence', 'header' => TRUE, 'width' => '20%'), $num_seq > 0 ? "[<a href=\"/feature_listing/_/_/$stock->uniquename\">view all $num_seq </a>]" : 'N/A');
 $rows [] = array(array('data' => 'Comments', 'header' => TRUE, 'width' => '20%'), $comment);
 $rows [] = array(array('data' => 'Reference', 'header' => TRUE, 'width' => '20%'), $reference);
