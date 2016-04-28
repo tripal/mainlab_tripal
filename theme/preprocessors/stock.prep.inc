@@ -121,8 +121,8 @@ function mainlab_tripal_preprocess_mainlab_stock_base(&$variables) {
 			FROM {nd_experiment_phenotype} NEP
 			INNER JOIN {phenotype} P ON NEP.phenotype_id = P.phenotype_id
 			INNER JOIN {nd_experiment_stock} NES ON NES.nd_experiment_id = NEP.nd_experiment_id
-			INNER JOIN {nd_experiment_project} NEJ ON NES.nd_experiment_id = NEJ.nd_experiment_id
-			INNER JOIN {project} J ON J.project_id = NEJ.project_id
+			LEFT JOIN {nd_experiment_project} NEJ ON NES.nd_experiment_id = NEJ.nd_experiment_id
+			LEFT JOIN {project} J ON J.project_id = NEJ.project_id
 			INNER JOIN {nd_experiment} NE ON NE.nd_experiment_id = NEP.nd_experiment_id
 			LEFT JOIN
 			(SELECT
@@ -155,8 +155,8 @@ function mainlab_tripal_preprocess_mainlab_stock_base(&$variables) {
 			INNER JOIN {feature_genotype} FG ON G.genotype_id = FG.genotype_id
 			INNER JOIN {feature} F ON F.feature_id = FG.feature_id
 			INNER JOIN {nd_experiment_stock} NES ON NES.nd_experiment_id = NEG.nd_experiment_id
-			INNER JOIN {nd_experiment_project} NEJ ON NES.nd_experiment_id = NEJ.nd_experiment_id
-			INNER JOIN {project} J ON J.project_id = NEJ.project_id
+			LEFT JOIN {nd_experiment_project} NEJ ON NES.nd_experiment_id = NEJ.nd_experiment_id
+			LEFT JOIN {project} J ON J.project_id = NEJ.project_id
 			WHERE stock_id IN
 			  (SELECT stock_id
 			   FROM {stock} S

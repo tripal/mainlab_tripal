@@ -48,8 +48,8 @@ function mainlab_get_allele_associated_stocks ($genotype_id) {
                     INNER JOIN {stock} EXP ON EXP.stock_id = NDS.stock_id
                     INNER JOIN {stock_relationship} SR ON SR.subject_id = EXP.stock_id
                     INNER JOIN {stock} S ON S.stock_id = SR.object_id
-			           INNER JOIN {nd_experiment_project} NEP ON NEP.nd_experiment_id = NDG.nd_experiment_id
-                    INNER JOIN {project} P ON P.project_id = NEP.project_id
+			           LEFT JOIN {nd_experiment_project} NEP ON NEP.nd_experiment_id = NDG.nd_experiment_id
+                    LEFT JOIN {project} P ON P.project_id = NEP.project_id
 			           LEFT JOIN
                       (SELECT nd_experiment_id, value FROM {nd_experimentprop} NEP
                        WHERE type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'dye_color')
