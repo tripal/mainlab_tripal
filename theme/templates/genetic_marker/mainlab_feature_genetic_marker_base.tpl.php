@@ -168,6 +168,7 @@ if (count($probes) > 0) {
   $no_probes = 1;
   foreach($probes AS $probe) {
     if ($probe->type_id->name == 'probe') {
+      $probe = chado_expand_var($probe, 'field', 'feature.residues');
       $probename = mainlab_tripal_get_site() == 'cottongen' ? $probe->name : $probe->uniquename;
       $rows [] = array(array('data' => "Probe $no_probes", 'header' => TRUE, 'width' => '20%'), $probename . ": " . $probe->residues);
       $no_probes ++;
