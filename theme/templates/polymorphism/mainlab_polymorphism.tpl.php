@@ -28,8 +28,9 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/js/mainlab_t
              } else {
 	              $class = "tripal_feature-table-odd-row odd";
              }
-             $name = explode("_", $poly->uniquename);;
-             $allele = $name [count($name) - 1];
+             $name = explode("_", $poly->uniquename);
+             // If allele = '+', it needs to be encoded
+             $allele = urlencode($name [count($name) - 1]);
              $allelepage = "/allele/$poly->marker_name/$allele/$poly->marker_oid";
              print "<tr class=\"$class\">
                            <td>$counter</td>
