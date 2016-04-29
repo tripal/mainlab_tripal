@@ -80,13 +80,5 @@ $('#tripal_stock-table-genotypic_data_value-link').click(function() {
     ?>
     </table>
   </div>
-<script type="text/javascript">
-// Create a pager for the allele table
-tripal_table_make_pager ('tripal_stock-genotypic_data-table', 0, 15);
-//Adjust hieght of two columns whenever the page changes
-$('#tripal_stock-genotypic_data-table-pager').click(function () {
-  $("#tripal_stock_toc").height($("#tripal_stock-genotypic_data-box").parent().height());
-});
-</script>  
  <?php
 }

@@ -55,13 +55,5 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/js/mainlab_t
     ?>
     </table>
   </div>
-<script type="text/javascript">
-// Create a pager for the allele table
-tripal_table_make_pager ('tripal_stock-phenotypic_data-table', 0, 15);
-//Adjust hieght of two columns whenever the page changes
-$('#tripal_stock-phenotypic_data-table-pager').click(function () {
-  $("#tripal_stock_toc").height($("#tripal_stock-phenotypic_data-box").parent().height());
-});
-</script>  
  <?php
 }
