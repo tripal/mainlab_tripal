@@ -51,15 +51,6 @@ function mainlab_tripal_schema() {
  */
 function mainlab_tripal_requirements($phase) {
    $requirements = array();
-   if ($phase == 'install') {
-      if (!function_exists('tripal_create_moddir') || !function_exists('tripal_analysis_register_child')) {
-         $requirements ['mainlab_tripal'] = array(
-            'title' => "mainlab_tripal",  
-            'value' => "error. Some required modules are just being installed. Please try again.",  
-            'severity' => REQUIREMENT_ERROR,
-         );
-      }
-   }
    return $requirements;
 }
 
