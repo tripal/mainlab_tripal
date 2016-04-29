@@ -38,15 +38,19 @@ if ($num_in_collection > 0) {
                $array = explode("-", $acc);
                $acc = $array[0] . " COTTON";
             }
+            // Add hyperlinks
+            $accs = explode(';', $acc);
+            $versions = explode(';', $coll->version);
             if ($coll->db == 'GRIN_COT') {
-              $accs = explode(';', $acc);
-              $versions = explode(';', $coll->version);
               for ($i = 0; $i < count($accs); $i ++) {
                  $link .= "<a href=\"". $coll->urlprefix . $accs[$i] ."\" target=_blank>" . $db[0] . ": " . $versions[$i] . "</a> ";
-                 $link = $i < count($accs) - 1 ? $link .= '; ' : $link;
+                 $link = $i < count($accs) - 1 ? $link .= '; ' : $link; // Add a semicolon if there are more than one record
               }
             } else {
-               $link = "<a href=\"". $coll->urlprefix . $acc ."\" target=_blank>" . $coll->version . "</a>";
+              for ($i = 0; $i < count($accs); $i ++) {
+                 $link = "<a href=\"". $coll->urlprefix . $accs[$i] ."\" target=_blank>" . $versions[$i] . "</a>";
+                 $link = $i < count($accs) - 1 ? $link .= '; ' : $link; // Add a semicolon if there are more than one record
+               }
             }
          }
          // Use accession instead of version if version is empty
