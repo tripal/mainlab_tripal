@@ -61,6 +61,7 @@ function mainlab_stock_listing ($organism, $page) {
 	  'colgroups' => array(),
 	  'empty' => '',
 	);
+	$output = "";
 	if ($total > 0) {
       $output = theme_table($table);
 	}
