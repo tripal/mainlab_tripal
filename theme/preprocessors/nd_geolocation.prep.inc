@@ -5,7 +5,7 @@ function mainlab_tripal_preprocess_mainlab_nd_geolocation_associated_dataset(&$v
   $node = $variables['node'];
   $nd_geolocation_id = chado_get_id_from_nid('nd_geolocation', $node->nid);
   $values = array('nd_geolocation_id' => $nd_geolocation_id);
-  $nd_geolocation = tripal_core_generate_chado_var('nd_geolocation', $values);
+  $nd_geolocation = chado_generate_var('nd_geolocation', $values);
   // expand the nd_geolocation to include the properties.
   $nd_geolocation = chado_expand_var($nd_geolocation,'table', 'nd_geolocationprop', array('return_array' => 1));
   $sql =

@@ -19,7 +19,7 @@ if (count($library_stocks) > 0) {?>
         // get the ma properties
         $library = $library_stock->library_id;
         $values = array('library_id' => $library->library_id);
-        $properties = tripal_core_generate_chado_var('libraryprop', $values, array('return_array' => 1));
+        $properties = chado_generate_var('libraryprop', $values, array('return_array' => 1));
 
         $class = 'tripal_stock-table-odd-row odd';
         if($i % 2 == 0 ){

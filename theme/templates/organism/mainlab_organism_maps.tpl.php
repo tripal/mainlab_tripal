@@ -21,7 +21,7 @@ if (count($featuremap_organisms) > 0) {?>
         // get the ma properties
         $featuremap = $featuremap_organism->featuremap_id;
         $values = array('featuremap_id' => $featuremap->featuremap_id);
-        $properties = tripal_core_generate_chado_var('featuremapprop', $values, $options);
+        $properties = chado_generate_var('featuremapprop', $values, $options);
         
         $class = 'tripal_organism-table-odd-row tripal-table-odd-row';
         if($i % 2 == 0 ){
