@@ -43,7 +43,7 @@ if ($num_in_collection > 0) {
             $versions = explode(';', $coll->version);
             if ($coll->db == 'GRIN_COT') {
               for ($i = 0; $i < count($accs); $i ++) {
-                 $link .= "<a href=\"". $coll->urlprefix . $accs[$i] ."\" target=_blank>" . $db[0] . ": " . $versions[$i] . "</a> ";
+                 $link .= "<a href=\"". $coll->urlprefix . $accs[$i] ."\" target=_blank>" . $db[0] . ": " . $versions[$i] . "</a>";
                  $link = $i < count($accs) - 1 ? $link .= '; ' : $link; // Add a semicolon if there are more than one record
               }
             } else {
