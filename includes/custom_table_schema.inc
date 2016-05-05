@@ -89,6 +89,29 @@ function mainlab_tripal_chado_schema_contact_image() {
   $description = array(
     'description' => '',
     'table' => 'contact_image',
+    'fields' =>
+    array (
+      'contact_image_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+      'contact_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+      'eimage_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+      'type_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+    ),
     'foreign keys' => array(
       'cvterm' => array(
         'table' => 'cvterm',
@@ -381,6 +404,24 @@ function mainlab_tripal_chado_schema_feature_image() {
   $description = array(
     'description' => '',
     'table' => 'feature_image',
+    'fields' =>
+    array (
+      'feature_image_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+      'feature_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+      'eimage_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+    ),
     'foreign keys' => array(
       'eimage' => array(
         'table' => 'eimage',
@@ -915,6 +956,24 @@ function mainlab_tripal_chado_schema_feature_project() {
   $description = array(
     'description' => '',
     'table' => 'feature_project',
+    'fields' =>
+    array (
+      'feature_project_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+      'feature_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+      'project_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+    ),
     'foreign keys' => array(
       'feature' => array(
         'table' => 'feature',
@@ -1252,6 +1311,24 @@ function mainlab_tripal_chado_schema_organism_image() {
   $description = array(
     'description' => '',
     'table' => 'organism_image',
+    'fields' =>
+    array (
+      'organism_image_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+      'organism_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+      'eimage_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+    ),
     'foreign keys' => array(
       'organism' => array(
         'table' => 'organism',
@@ -1473,6 +1550,33 @@ function mainlab_tripal_chado_schema_phenstatementprop() {
   $description = array(
     'description' => '',
     'table' => 'phenstatementprop',
+    'fields' =>
+    array (
+      'phenstatementprop_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+      'phenstatement_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+      'type_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+      'value' =>
+      array (
+        'type' => 'text',
+      ),
+      'rank' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+    ),
     'foreign keys' => array(
       'cvterm' => array(
         'table' => 'cvterm',
@@ -1577,6 +1681,29 @@ function mainlab_tripal_chado_schema_pub_image() {
   $description = array(
     'description' => '',
     'table' => 'pub_image',
+    'fields' =>
+    array (
+      'pub_image_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+      'pub_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+      'eimage_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+      'type_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+    ),
     'foreign keys' => array(
       'cvterm' => array(
         'table' => 'cvterm',
@@ -1683,6 +1810,24 @@ function mainlab_tripal_chado_schema_stock_image() {
   $description = array(
     'description' => '',
     'table' => 'stock_image',
+    'fields' =>
+    array (
+      'stock_image_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+      'stock_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+      'eimage_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+    ),
     'foreign keys' => array(
       'eimage' => array(
         'table' => 'eimage',
@@ -1722,6 +1867,24 @@ function mainlab_tripal_chado_schema_stock_project() {
   $description = array(
     'description' => '',
     'table' => 'stock_project',
+    'fields' =>
+    array (
+      'stock_project_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+      'stock_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+      'project_id' =>
+      array (
+        'type' => 'int',
+        'not null' => true,
+      ),
+    ),
     'foreign keys' => array(
       'stock' => array(
         'table' => 'stock',
