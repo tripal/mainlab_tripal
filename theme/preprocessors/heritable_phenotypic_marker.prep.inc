@@ -5,7 +5,7 @@
  *
  * @param $variables
  */
-function mainlab_tripal_preprocess_mainlab_feature_MTL_base(&$variables) {
+function mainlab_tripal_preprocess_mainlab_feature_heritable_phenotypic_marker_base(&$variables) {
   $feature = $variables['node']->feature;
   $feature_id = $feature->feature_id;
   $mtl = new stdClass();
@@ -124,7 +124,7 @@ function mainlab_tripal_preprocess_mainlab_feature_MTL_base(&$variables) {
  *
  * @param $variables
  */
-function mainlab_tripal_preprocess_mainlab_feature_MTL_map_positions(&$variables) {
+function mainlab_tripal_preprocess_mainlab_feature_heritable_phenotypic_marker_map_positions(&$variables) {
   $feature = $variables['node']->feature;
   $sql = "
   SELECT
@@ -200,7 +200,7 @@ function mainlab_tripal_preprocess_mainlab_feature_MTL_map_positions(&$variables
  *
  * @param $feature_id
  */
-function getMTLDetails ($feature_id) {
+function getheritable_phenotypic_markerDetails ($feature_id) {
   $mtl = new stdClass();
   // Get Trait Study
   $sql =

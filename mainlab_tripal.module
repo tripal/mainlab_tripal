@@ -183,8 +183,9 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
                 case 'QTL':
                   $toc = 'QTL_overview';
                   break;
+                default:
+                  $toc = $featuretype . '_overview';
               }
-              $toc = $featuretype . '_overview';
               break;
             case 'stock':
               $toc = 'germplasm_overview';
@@ -257,7 +258,7 @@ function mainlab_tripal_node_view_alter(&$build) {
         }
         break;
       case 'heritable_phenotypic_marker':
-        if ($enabled_themes['templates--MTL']) {
+        if ($enabled_themes['templates--heritable_phenotypic_marker']) {
           unset($build['tripal_feature_base']);
           unset($build['tripal_feature_properties']);
           unset($build['tripal_feature_terms']);
