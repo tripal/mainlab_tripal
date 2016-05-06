@@ -167,6 +167,41 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
         if ($toc == 'base') {
           $node->content[$template_name]['#weight'] = -99;
           $toc = 'overview';
+          switch ($type) {
+            case 'organism':
+              $toc = 'species_overview';
+              break;
+            case 'feature':
+              $featuretype = $node->feature->type_id->name;
+              switch ($featuretype) {
+                case 'genetic_marker':
+                  $toc = 'marker_overview';
+                  break;
+                case 'heritable_phenotypic_marker':
+                  $toc = 'MTL_overview';
+                  break;
+                case 'QTL':
+                  $toc = 'QTL_overview';
+                  break;
+              }
+              $toc = $featuretype . '_overview';
+              break;
+            case 'stock':
+              $toc = 'germplasm_overview';
+              break;
+            case 'featuremap':
+              $toc = 'map_overview';
+              break;
+            case 'eimage':
+              $toc = 'image_overview';
+              break;
+            case 'nd_geolocation':
+              $toc = 'environment_overview';
+              break;
+            case 'pub':
+              $toc = 'publication_overview';
+              break;
+          }
         }
         
         // Attach theme to the content
