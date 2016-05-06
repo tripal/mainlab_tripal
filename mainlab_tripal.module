@@ -232,6 +232,22 @@ function mainlab_tripal_node_view_alter(&$build) {
     unset($build['tripal_organism_properties']);
   }
   
+  // Analysis
+  if (property_exists($node, 'analysis')) {
+    $analysis = $build['#node']->analysis;
+    $analysis = chado_expand_var($analysis, 'table', 'analysisprop', array('return_array' => TRUE));
+    $is_genome = FALSE;
+    foreach ($analysis->analysisprop AS $prop) {
+      if ($prop->type_id->name == 'Analysis Type') {
+        $is_genome = $prop->value == 'whole_genome' ? TRUE : FALSE;
+      }
+    }
+    // Genome
+    if ($is_genome) {
+      $build['tripal_analysis_base']['#tripal_toc_title'] = 'Genome Overview';
+    }
+  }
+  
   //Feature
   if (property_exists($node, 'feature') && key_exists('templates--feature', $enabled_themes) && $enabled_themes['templates--feature']) {
     unset($build['tripal_feature_references']);
