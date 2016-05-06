@@ -264,6 +264,18 @@ function mainlab_tripal_node_view_alter(&$build) {
           unset($build['tripal_feature_terms']);
         }
         break;
+      case 'mRNA':
+        $build['tripal_feature_base']['#tripal_toc_title'] = 'Transcript Overview';
+        break;
+      case 'gene':
+        $build['tripal_feature_base']['#tripal_toc_title'] = 'Gene Overview';
+        break;
+      case 'EST':
+        $build['tripal_feature_base']['#tripal_toc_title'] = 'EST Overview';
+        break;
+      case 'contig':
+        $build['tripal_feature_base']['#tripal_toc_title'] = 'Contig Overview';
+        break;
     }
   }
   
