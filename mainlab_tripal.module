@@ -237,9 +237,13 @@ function mainlab_tripal_node_view_alter(&$build) {
     $analysis = $build['#node']->analysis;
     $analysis = chado_expand_var($analysis, 'table', 'analysisprop', array('return_array' => TRUE));
     $is_genome = FALSE;
-    foreach ($analysis->analysisprop AS $prop) {
-      if ($prop->type_id->name == 'Analysis Type') {
-        $is_genome = $prop->value == 'whole_genome' ? TRUE : FALSE;
+    if (property_exists($analysis, 'analysisprop')) {
+      if (is_array($analysis->analysisprop)) {
+        foreach ($analysis->analysisprop AS $prop) {
+          if ($prop->type_id->name == 'Analysis Type') {
+            $is_genome = $prop->value == 'whole_genome' ? TRUE : FALSE;
+          }
+        }
       }
     }
     // Genome
