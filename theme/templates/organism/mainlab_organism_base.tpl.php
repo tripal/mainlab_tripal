@@ -8,6 +8,14 @@ $organism = chado_expand_var($organism,'field','organism.comment'); ?>
 // generate the image tag
 $image = '';
 $image_url = tripal_get_organism_image_url($organism); 
+// If image not found, try to get image from organism_id (Tripal 1.x)
+if (!$image_url) {
+  $file =  '/sites/default/files/tripal/tripal_organism/images/' . $organism->nid . '.jpg';
+  if(file_exists(getcwd() . $file)) {
+    global $base_url;
+    $image_url = $base_url . $file; 
+  }
+}
 if ($image_url) {
   $image = "<img class=\"tripal-organism-img\" src=\"$image_url\">";
 }
@@ -62,6 +70,21 @@ $rows[] = array(
   '<i>'. $organism->abbreviation . '</i>'
 );
 
+// allow site admins to see the organism ID
+if (user_access('view ids')) {
+  // Organism ID
+  $rows[] = array(
+    array(
+      'data'   => 'Organism ID',
+      'header' => TRUE,
+      'class'  => 'tripal-site-admin-only-table-row',
+    ),
+    array(
+      'data'  => $organism->organism_id,
+      'class' => 'tripal-site-admin-only-table-row',
+    ),
+  );
+}
 
 // If the comment is an HTML table, append the content to the main table
 $comment = preg_replace('/\s{2,}/', ' ', $organism->comment);
@@ -83,19 +106,11 @@ if ($has_table) {
     }
   }
 }
-
-// allow site admins to see the organism ID
-if (user_access('view ids')) {
-  // Organism ID
+else {
   $rows[] = array(
     array(
-      'data'   => 'Organism ID',
-      'header' => TRUE,
-      'class'  => 'tripal-site-admin-only-table-row',
-    ),
-    array(
-     'data'  => $organism->organism_id,
-     'class' => 'tripal-site-admin-only-table-row',
+      'data' => $organism->comment,
+      'colspan' => 2
     ),
   );
 }
@@ -122,7 +137,4 @@ $table = array(
 print theme_table($table); ?>
 <div style="text-align: justify"><?php 
   print $image;
-  if (!$has_table) {
-    print $organism->comment;
-  }
 ?></div>  
