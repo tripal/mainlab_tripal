@@ -261,6 +261,9 @@ function mainlab_tripal_node_view_alter(&$build) {
           unset($build['tripal_feature_base']);
           unset($build['tripal_feature_properties']);
           unset($build['tripal_feature_genotypes']);
+          unset($build['tripal_feature_phenotypes']);
+          unset($build['tripal_feature_nd_genotypes']);
+          unset($build['tripal_feature_nd_phenotypes']);
           unset($build['tripal_feature_seqence']);
         }
         break;

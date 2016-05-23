@@ -18,12 +18,12 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/js/mainlab_t
      	<?php 
      	    print "Total $counter_poly polymorphisms. <p><i>Note: </i>click on allele name to see all stocks.</p>";
      	    print "<div id=\"mainlab-genetic_marker-polymorphism\">
-      					<table id=\"mainlab-genetic_marker-polymorphism-table\"class=\"tripal_feature-table tripal-table tripal-table-horz\" style=\"margin-top:15px;margin-bottom:15px;border-bottom:2px solid #999999;;border-top:2px solid #999999\">
+      					<table id=\"mainlab-genetic_marker-polymorphism-table\"class=\"tripal_feature-table tripal-table tripal-table-horz\" style=\"margin-top:15px;margin-bottom:15px;\">
       						<tr><th style=\"width:20px;\">#</th><th style=\"width:160px;\">Marker_Allele</th><th>Allele</th><th>Germplasm</th><th>Dataset</th></tr>";
      	    $counter = 1;
      	    foreach($polymorphism AS $poly) {
               $class = NULL;
-             if ($counter % 2 == 1) {
+             if ($counter % 2 == 0) {
 	              $class = "tripal_feature-table-even-row even";
              } else {
 	              $class = "tripal_feature-table-odd-row odd";

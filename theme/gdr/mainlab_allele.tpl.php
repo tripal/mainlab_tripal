@@ -18,12 +18,12 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/js/mainlab_t
      	<?php 
      	    print "Total $count_stock germplasms.";
      	    print "<div id=\"mainlab-allele\">
-      					<table id=\"mainlab-allele-table\"class=\"tripal_feature-table tripal-table tripal-table-horz\" style=\"margin-top:15px;margin-bottom:15px;border-bottom:2px solid #999999;;border-top:2px solid #999999\">
+      					<table id=\"mainlab-allele-table\"class=\"tripal_feature-table tripal-table tripal-table-horz\" style=\"margin-top:15px;margin-bottom:15px;\">
       						<tr><th>#</th><th>Germplasm</th><th>Diversity Data</th><th>Dataset</th></tr>";
      	    $counter = 1;
      	    foreach($stocks AS $stock) {
               $class = NULL;
-             if ($counter % 2 == 1) {
+             if ($counter % 2 == 0) {
 	              $class = "tripal_feature-table-even-row even";
              } else {
 	              $class = "tripal_feature-table-odd-row odd";
