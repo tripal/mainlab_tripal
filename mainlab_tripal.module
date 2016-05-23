@@ -307,6 +307,8 @@ function mainlab_tripal_node_view_alter(&$build) {
     unset($build['tripal_stock_references']);
     unset($build['tripal_stock_synonyms']);
     unset($build['tripal_stock_collections']);
+    unset($build['tripal_stock_nd_genotypes']);
+    unset($build['tripal_stock_nd_phenotypes']);
   }
   
   // Map

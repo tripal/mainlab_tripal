@@ -9,7 +9,7 @@ $stock->stock_synonyms = chado_generate_var(
 		array(
 				'stock_id'=> $stock->stock_id,
 				'type_id' => array(
-						'cv_id' => variable_get('chado_stock_prop_types_cv', 'null'),
+						'cv_id' => array('name' => 'feature_property'),
 						'name'  => 'synonym'
 				),
 		)
@@ -23,7 +23,7 @@ if (!$synonyms) {
 			array(
 					'stock_id'=> $stock->stock_id,
 					'type_id' => array(
-							'cv_id' => variable_get('chado_stock_prop_types_cv', 'null'),
+							'cv_id' => array('name' => 'MAIN'),
 							'name'  => 'alias'
 					),
 			)
