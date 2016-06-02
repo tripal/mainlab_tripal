@@ -3,7 +3,7 @@
 $marker_link = "/node/";
 
 $feature  = $variables['node']->feature;
-$feature = tripal_core_expand_chado_vars($feature,'table','featureprop', array('return_array' => 1));
+$feature = chado_expand_var($feature,'table','featureprop', array('return_array' => 1));
 
 // Process featureprop (i.e. Triait Symbol / Comments
 $properties = $feature->featureprop;

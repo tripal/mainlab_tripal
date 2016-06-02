@@ -4,8 +4,8 @@ $organism = $variables['node']->organism;
 
 // the comment field is a database text field so we have to expand it so that
 // it is included in the organism object
-$organism = tripal_core_expand_chado_vars($organism,'field','organism.comment');
-$organism = tripal_core_expand_chado_vars($organism, 'table', 'organismprop');
+$organism = chado_expand_var($organism,'field','organism.comment');
+$organism = chado_expand_var($organism, 'table', 'organismprop');
 $properties = $node->organism->organismprop;
 
 $prop = array();
@@ -40,7 +40,7 @@ if (key_exists('incompatible with', $subj_rel)) {
   $incompatible = $incompatible_first->genus . ' ' . $incompatible_first->species . ' [<a href="?pane=relationships">view all ' . $incompatible_count . '</a>]';
 }
 
-$organism = tripal_core_expand_chado_vars($organism,'table','library');
+$organism = chado_expand_var($organism,'table','library');
 
 
 // get the references. if only one reference exists then we want to convert
