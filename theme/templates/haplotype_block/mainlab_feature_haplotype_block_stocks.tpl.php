@@ -13,10 +13,10 @@ if (count($stocks) > 0) { ?>
             $count = 1;
             foreach($stocks as $stock) {
               $class = "even";
-              if ($count % 2 == 0) {
+              if ($count % 2 == 1) {
                 $class = "odd";
               }
-              print "<tr class=\"tripal_feature-table-$class-row tripal-table-$class-row\"><td>$count</td><td><a href=/breeders_toolbox/germplasm//$stock->stock_id>$stock->uniquename</a></td></tr>";
+              print "<tr class=\"tripal_feature-table-$class-row $class\"><td>$count</td><td><a href=/breeders_toolbox/germplasm//$stock->stock_id>$stock->uniquename</a></td></tr>";
               $count ++; 
             }
             // Add more td to ensure the width of each cell is fixed

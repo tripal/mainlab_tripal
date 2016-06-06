@@ -3,7 +3,7 @@
 /**
  * @ingroup tripal_feature
  */
-function mainlab_tripal_preprocess_mainlab_feature_haplotype_block(&$variables) {
+function mainlab_tripal_preprocess_mainlab_feature_haplotype_block_base(&$variables) {
   $feature = $variables['node']->feature;
 
   // Get stocks

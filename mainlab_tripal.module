@@ -137,22 +137,35 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
     $templates = mainlab_tripal_get_templates (TRUE);
     $enabled_themes = variable_get('mainlab_tripal_enabled_themes', array());
     
-    // Load appropriate templates
+    // Load appropriate templates for the node. Scan through all enabled mainlab templates.
     foreach ($templates AS $key => $template) {
+
+      //The key is in format: mainlab_tripal--<sub_folder>--mainlab_<chado_type>_<*>
       if (preg_match('/^mainlab_tripal--.*?--mainlab_' . $type . '_/', $key) && $enabled_themes['templates--' . $type]) {
         
         $template = $templates[$key];
         $template_name = $template->name;
         
-        // Match feature type for the feature page
         $toc = '';
+        
+        // For chado_feature we want to match feature type (i.e. gene/mRNA/contig/QTL, etc.)
         if ($type == 'feature') {
           $featuretype = $node->feature->type_id->name;
-          $shown = array('mainlab_feature_contact', 'mainlab_feature_references');
-          if (!preg_match('/mainlab_feature_' . $featuretype . '_/', $template_name) || in_array($template_name, $shown)) {
+          // Always show contact/references when available for features
+          if ($template_name == 'mainlab_feature_contact') {
+            $toc = 'Contact';
+          }
+          else if ($template_name == 'mainlab_feature_references') {
+            $toc = 'References';
+          }
+          else if (preg_match('/mainlab_feature_' . $featuretype . '_/', $template_name)) {
+            $toc = preg_replace('/mainlab_'. $type . '_' . $featuretype . '_/', '', $template_name);
+          }
+          else {
+            // Skip the feature template if it does not match the naming scheme
             continue;
           }
-          $toc = preg_replace('/mainlab_'. $type . '_' . $featuretype . '_/', '', $template_name);
+          
         }
         else {
           $toc = preg_replace('/mainlab_'. $type . '_/', '', $template_name);
@@ -221,8 +234,9 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
  * @ingroup mainlab_qtl
  */
 function mainlab_tripal_node_view_alter(&$build) {
+  // Hide default templates in this function
+  
   $node = $build['#node'];
-  // Hide default templates
   $enabled_themes = variable_get('mainlab_tripal_enabled_themes', array());
   
   // Organism
@@ -256,6 +270,7 @@ function mainlab_tripal_node_view_alter(&$build) {
   if (property_exists($node, 'feature') && key_exists('templates--feature', $enabled_themes) && $enabled_themes['templates--feature']) {
     unset($build['tripal_feature_references']);
     switch ($node->feature->type_id->name) {
+      // Use mainlab templates if it's enabled
       case 'genetic_marker':
         if ($enabled_themes['templates--genetic_marker']) {
           unset($build['tripal_feature_base']);
@@ -287,6 +302,17 @@ function mainlab_tripal_node_view_alter(&$build) {
           unset($build['tripal_feature_terms']);
         }
         break;
+      case 'haplotype_block':
+        if ($enabled_themes['templates--haplotype_block']) {
+          unset($build['tripal_feature_base']);
+          unset($build['tripal_feature_genotypes']);
+          unset($build['tripal_feature_phenotypes']);
+          unset($build['tripal_feature_nd_genotypes']);
+          unset($build['tripal_feature_nd_phenotypes']);
+          unset($build['tripal_feature_relationships']);
+        }
+        break;
+      // The following features use the default Tripal templates but we want to change the title
       case 'mRNA':
         $build['tripal_feature_base']['#tripal_toc_title'] = 'Transcript Overview';
         break;

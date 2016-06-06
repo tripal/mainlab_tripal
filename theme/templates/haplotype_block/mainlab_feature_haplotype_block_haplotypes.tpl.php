@@ -21,10 +21,10 @@ if (count($haplotypes) > 0) { ?>
                 print "</tr>";
               }
               $class = "even";
-              if ($count % 2 == 0) {
+              if ($count % 2 == 1) {
                 $class = "odd";
               }
-              print "<tr class=\"tripal_feature-table-$class-row tripal-table-$class-row\">";
+              print "<tr class=\"tripal_feature-table-$class-row $class\">";
               print "<td><a href=/node/$haplotype->nid>$haplotype->name</a></td>";
               foreach ($arr AS $k => $v) {
               	print "<td>$v</td>";

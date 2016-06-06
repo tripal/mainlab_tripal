@@ -14,17 +14,17 @@ if (!$feature->name) {
   <table id="tripal_feature-base-table" class="tripal_feature-table tripal-table tripal-table-vert">
 
     <!-- Name -->
-    <tr class="tripal_feature-table-even-row tripal-table-even-row">
+    <tr class="tripal_feature-table-even-row even">
       <th width=30%>Name</th>
       <td><?php print $feature->name; ?></td>
     </tr>
     <!-- Species -->
-    <tr class="tripal_feature-table-odd-row tripal-table-odd-row">
+    <tr class="tripal_feature-table-odd-row odd">
       <th>Species</th>
       <td><?php print $feature->organism_id->genus . ' '. $feature->organism_id->species; ?></td>
     </tr>
     <!-- Germplasms -->
-    <tr class="tripal_feature-table-even-row tripal-table-even-row">
+    <tr class="tripal_feature-table-even-row even">
       <th>Germplasm</th>
       <td><?php 
         $num_stocks = count($feature->stocks);
@@ -33,7 +33,7 @@ if (!$feature->name) {
       ?></td>
     </tr>
     <!-- Haplotypes -->
-    <tr class="tripal_feature-table-odd-row tripal-table-odd-row">
+    <tr class="tripal_feature-table-odd-row odd">
       <th>Haplotype</th>
       <td><?php 
         $num_haplotypes = count($feature->haplotypes);
