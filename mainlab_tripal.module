@@ -173,6 +173,9 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
               $featuretype = 'generic_gene';
               $toc = preg_replace('/mainlab_'. $type . '_' . $featuretype . '_/', '', $template_name);
             }
+            else {
+              continue;
+            }
           }
           else if (preg_match('/mainlab_feature_' . $featuretype . '_/', $template_name)) {
             $toc = preg_replace('/mainlab_'. $type . '_' . $featuretype . '_/', '', $template_name);
@@ -180,7 +183,7 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
           else {
             // Skip the feature template if it does not match the naming scheme
             continue;
-          }          
+          }
         }
         // For all other chad_* type
         else {

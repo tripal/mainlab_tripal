@@ -69,5 +69,7 @@ $table = array(
   'colgroups' => array(),
   'empty' => '',
 );
-print theme_table($table);
+if (count($rows) > 0) {
+  print theme_table($table);
+}
 ?>
