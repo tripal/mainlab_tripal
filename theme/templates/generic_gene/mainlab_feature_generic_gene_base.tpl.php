@@ -1,5 +1,6 @@
 <?php
-$feature = tripal_core_expand_chado_vars($feature, 'table', 'feature_relationship', array ('return_array' => 1));
+$feature = $node->feature;
+$feature = chado_expand_var($feature, 'table', 'feature_relationship', array ('return_array' => 1));
 
 $object_rels = $feature->feature_relationship->object_id;
 if (!is_array($object_rels)) {
@@ -38,7 +39,7 @@ foreach ($object_rels as $rels){
 }
 
 // We want to display all synonyms and the product in one field as 'Synonym'
-$feature = tripal_core_expand_chado_vars($feature,'table','feature_synonym', array ('return_array' => 1));
+$feature = chado_expand_var($feature,'table','feature_synonym', array ('return_array' => 1));
 foreach ($feature->feature_synonym AS $synonym) {
   if (!in_array($synonym->synonym_id->name,$product)) {
     array_push($product, $synonym->synonym_id->name);
@@ -47,7 +48,7 @@ foreach ($feature->feature_synonym AS $synonym) {
 
 // We want to display both 'function' and 'description' in one field as 'Description'
 // We also want to display both 'note' and 'comment' in one field as 'Comment'
-$feature = tripal_core_expand_chado_vars($feature,'table','featureprop', array ('return_array' => 1));
+$feature = chado_expand_var($feature,'table','featureprop', array ('return_array' => 1));
 foreach ($feature->featureprop AS $prop) {
   if (!in_array($prop->value,$function) && $prop->type_id->name == 'description') {
     array_push($function, $prop->value);
@@ -71,26 +72,25 @@ $dis_note = count ($note) == 0 ? "NA" : implode ('<br>', $note);
 $dis_evidence = count ($evidence) == 0 ? "NA" : implode ('<br>', $evidence);
 ?>
 <div id="tripal_feature-base-box" class="tripal_feature-info-box tripal-info-box">
-  <div class="tripal_feature-info-box-title tripal-info-box-title"><?php print $feature->type_id->name ?> Details</div>
   <div class="tripal_feature-info-box-desc tripal-info-box-desc"></div>
 
    <?php if(strcmp($feature->is_obsolete,'t')==0){ ?>
       <div class="tripal_feature-obsolete">This feature is obsolete</div>
    <?php }?>
    <table id="tripal_feature-base-table" class="tripal_feature-table tripal-table tripal-table-vert">
-      <tr class="tripal_feature-table-even-row tripal-table-even-row">
+      <tr class="tripal_feature-table-even-row even">
         <th width="250px">Name</th>
         <td><?php print $feature->name; ?></td>
       </tr>
-      <tr class="tripal_feature-table-odd-row tripal-table-odd-row">
+      <tr class="tripal_feature-table-odd-row odd">
         <th nowrap>Gene Symbol</th>
         <td><?php print $feature->uniquename; ?></td>
       </tr>
-      <tr class="tripal_feature-table-odd-row tripal-table-even-row">
+      <tr class="tripal_feature-table-odd-row even">
         <th>Type</th>
         <td><?php print $feature->type_id->name; ?></td>
       </tr>
-      <tr class="tripal_feature-table-even-row tripal-table-odd-row">
+      <tr class="tripal_feature-table-even-row odd">
         <th>Organism</th>
         <td>
           <?php if ($feature->organism_id->nid) { 
@@ -100,19 +100,19 @@ $dis_evidence = count ($evidence) == 0 ? "NA" : implode ('<br>', $evidence);
           } ?>
         </td>
      	</tr>
-      <tr class="tripal_feature-table-odd-row tripal-table-even-row">
+      <tr class="tripal_feature-table-odd-row even">
         <th>Synonym</th>
         <td><?php print $dis_product; ?></td>
       </tr>
-      <tr class="tripal_feature-table-even-row tripal-table-odd-row">
+      <tr class="tripal_feature-table-even-row odd">
         <th>Description</th>
         <td><?php print $dis_function; ?></td>
       </tr>
-            <tr class="tripal_feature-table-odd-row tripal-table-even-row">
+            <tr class="tripal_feature-table-odd-row even">
         <th>Comment</th>
         <td><?php print $dis_note; ?></td>
       </tr>
-      <tr class="tripal_feature-table-odd-row tripal-table-odd-row">
+      <tr class="tripal_feature-table-odd-row odd">
         <th>Evidence for the gene structure</th>
         <td><?php print $dis_evidence; ?></td>
       </tr>   
