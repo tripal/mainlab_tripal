@@ -42,7 +42,10 @@ function mainlab_tripal_admin_form() {
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
     '#title' => 'Override Default Templates',
-    '#description' => 'Select a folder to override the default templates. Default template will be overridden by the file with the same name in the selected folder.'
+    '#description' => 'Select a folder to search for templates. Default templates will 
+                                    be overridden by the counterpart (i.e. same name) in the folder you  
+                                    selected. If you add a new template, save the settings again so theme 
+                                    cache will be cleared and Drupal can pick up the change.'
   );
 
   $override = variable_get('mainlab_tripal_override_folder', 'templates');
