@@ -166,7 +166,7 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
             $is_generic = FALSE;
             $props = is_array($feature->featureprop) ? $feature->featureprop : array($feature->featureprop);
             foreach ($props AS $prop) {
-              if ($prop->type_id->name == 'source' && $prop->value == 'tripal_genbank_parser_generic_gene') {
+              if (is_object($prop) &&$prop->type_id->name == 'source' && $prop->value == 'tripal_genbank_parser_generic_gene') {
                 $is_generic = TRUE;
               }
             }
@@ -341,7 +341,7 @@ function mainlab_tripal_node_view_alter(&$build) {
         $feature = $node->feature;
         $props = is_array($feature->featureprop) ? $feature->featureprop : array($feature->featureprop);
         foreach ($props AS $prop) {
-          if ($prop->type_id->name == 'source' && $prop->value == 'tripal_genbank_parser_generic_gene') {
+          if (is_object($prop) && $prop->type_id->name == 'source' && $prop->value == 'tripal_genbank_parser_generic_gene') {
             $is_generic = TRUE;
           }
         }
