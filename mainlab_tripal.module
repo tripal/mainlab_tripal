@@ -164,7 +164,8 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
             $feature = $node->feature;
             $feature = chado_expand_var($feature, 'table', 'featureprop', array('return_array' => 1));
             $is_generic = FALSE;
-            foreach ($feature->featureprop AS $prop) {
+            $props = is_array($feature->featureprop) ? $feature->featureprop : array($feature->featureprop);
+            foreach ($props AS $prop) {
               if ($prop->type_id->name == 'source' && $prop->value == 'tripal_genbank_parser_generic_gene') {
                 $is_generic = TRUE;
               }
@@ -338,7 +339,8 @@ function mainlab_tripal_node_view_alter(&$build) {
       case 'gene':
         $is_generic = FALSE;
         $feature = $node->feature;
-        foreach ($feature->featureprop AS $prop) {
+        $props = is_array($feature->featureprop) ? $feature->featureprop : array($feature->featureprop);
+        foreach ($props AS $prop) {
           if ($prop->type_id->name == 'source' && $prop->value == 'tripal_genbank_parser_generic_gene') {
             $is_generic = TRUE;
           }
