@@ -32,6 +32,7 @@ function mainlab_tripal_preprocess_mainlab_allele(&$variables) {
     $stock = mainlab_get_allele_associated_stocks($gtype);
     $stocks = array_merge($stocks, $stock);
   }
+  $allele = new stdClass();
   $allele->stock = $stocks;
   
   // Get  the genotype name
