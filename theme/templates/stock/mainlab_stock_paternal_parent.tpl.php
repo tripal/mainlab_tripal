@@ -27,7 +27,7 @@ $('#tripal_stock-table-paternal_parent_value-link').click(function() {
                <th>Type</th>
              </tr>
     <?php
-      $counter = 0;
+      $counter = 1;
       $class = "";
       foreach ($paternal_parent as $parent){
          if ($counter % 2 == 0) {
