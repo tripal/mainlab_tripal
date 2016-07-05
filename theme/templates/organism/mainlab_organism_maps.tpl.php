@@ -9,8 +9,6 @@ $featuremap_organisms = key_exists('featuremap_organism', $organism) ? $organism
 
 if (count($featuremap_organisms) > 0) {?>
   <div id="tripal_organism-maps-box" class="tripal_organism-info-box tripal-info-box">
-    <div class="tripal_organism-info-box-title tripal-info-box-title">Maps</div>
-<!--    <div class="tripal_organism-info-box-desc tripal-info-box-desc">This organism has been used with the following maps.</div> -->
     <table id="tripal_organism-table-collection" class="tripal_organism-table tripal-table tripal-table-horz">     
       <tr class="tripal_organism-table-odd-row tripal-table-even-row">
         <th>Map Name</th>
