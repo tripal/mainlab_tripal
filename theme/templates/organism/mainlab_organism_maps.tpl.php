@@ -16,7 +16,7 @@ if (count($featuremap_organisms) > 0) {?>
         <th>Map Name</th>
         <th>Map Details</th>
       </tr> <?php
-      $i = 0;
+      $i = 1;
       foreach ($featuremap_organisms as $featuremap_organism){ 
         // get the ma properties
         $featuremap = $featuremap_organism->featuremap_id;
@@ -24,7 +24,7 @@ if (count($featuremap_organisms) > 0) {?>
         $properties = chado_generate_var('featuremapprop', $values, $options);
         
         $class = 'tripal_organism-table-odd-row odd';
-        if($i % 2 == 0 ){
+        if($i % 2 == 0){
           $class = 'tripal_organism-table-odd-row even';
         } ?>
         <tr class="<?php print $class ?>">
