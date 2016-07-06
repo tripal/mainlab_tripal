@@ -42,7 +42,7 @@ function mainlab_stock_listing ($organism, $page) {
 			$class = array('tripal-table-odd-row');
 		}
 		if ($row->nid) {
-			$rows[] = array('data' => array("<a href=\"/node/$row->nid\">" . $row->uniquename . "</a>", $row->type)
+			$rows[] = array('data' => array(l($row->uniquename, "/node/$row->nid"), $row->type)
 					, 'class' =>$class);
 		} else {
 			$rows[] = array('data' => array($row->uniquename, $row->type)
@@ -76,7 +76,8 @@ function mainlab_stock_listing ($organism, $page) {
 	$pager .= "</select> of $pages</div>";
 	$stock->total_number = $total;
 	$stock->table = "<div id=\"mainlab_tripal-stock_listing-table\">" . $output . $pager . "</div>";
-	$ajax_link = "/stock_listing_page/$organism/";
+	global $base_url;
+	$ajax_link = $base_url ? $base_url . "/stock_listing_page/$organism/" : "/stock_listing_page/$organism/";
 	$stock->js = 
 	"<script type=\"text/javascript\">
    // Switch pages for stock listing
