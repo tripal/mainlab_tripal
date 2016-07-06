@@ -153,15 +153,15 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
           $featuretype = $node->feature->type_id->name;
           // Use generic feature Contact template
           if ($template_name == 'mainlab_feature_contact') {
-            $toc = 'Contact';
+            $toc = 'contact';
           }
           // Use generic feature References template
           else if ($template_name == 'mainlab_feature_references') {
-            $toc = 'References';
+            $toc = 'references';
           }
           // Use generic feature Alignments template
           else if ($template_name == 'mainlab_feature_alignments') {
-            $toc = 'Alignments';
+            $toc = 'alignments';
           }
           // Use the GenericGene template when applicable
           else if (preg_match('/mainlab_feature_generic_gene_/', $template_name)) {
