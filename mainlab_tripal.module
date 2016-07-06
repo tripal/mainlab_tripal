@@ -31,12 +31,23 @@ function mainlab_tripal_init() {
 function mainlab_tripal_menu() {
   $items = array();
   
-  $items['admin/mainlab_tripal'] = array(
+  // Mainlab setting groups
+  $items['admin/mainlab'] = array(
+    'title' => 'Mainlab',
+    'description' => t("Manage the behavior or Mainlab modules."),
+    'weight' => -1,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+  
+  $items['admin/mainlab/mainlab_tripal'] = array(
     'title' => 'Mainlab Tripal',
     'description' => ('Settings for the mainlab tripal custom displays.'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('mainlab_tripal_admin_form'),
-    'access arguments' => array('administer tripal'),
+    'access arguments' => array('administer site configuration'),
     'file' => 'includes/mainlab_tripal.admin.inc',
     'type' => MENU_NORMAL_ITEM,
   );
