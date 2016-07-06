@@ -11,12 +11,12 @@ $properties = $node->organism->organismprop;
 $prop = array();
 $count_cname = 0;
 if ($properties) {
-	foreach ($properties AS $p) {
-		$prop[$p->type_id->name] = $p->value;
-		if ($p->type_id->name == 'alias_common') {
-			$count_cname ++;
-		}
-	}
+  foreach ($properties AS $p) {
+    $prop[$p->type_id->name] = $p->value;
+    if ($p->type_id->name == 'alias_common') {
+      $count_cname ++;
+    }
+  }
 }
 $num_seq = chado_query("SELECT count (*) FROM {feature} WHERE organism_id = :organism_id", array(':organism_id' => $organism->organism_id))->fetchField();
 $rel = $organism->all_relationships;

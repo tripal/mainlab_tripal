@@ -14,20 +14,20 @@ function mainlab_tripal_preprocess_mainlab_stock_base(&$variables) {
   else {
     $results = chado_query(
         "SELECT
-  			max(SC.name) AS collection,
-  			max(db.name) AS db,
-  			max(db.urlprefix) AS urlprefix,
-  			string_agg(X.accession, '; ') AS accession,
+        max(SC.name) AS collection,
+        max(db.name) AS db,
+        max(db.urlprefix) AS urlprefix,
+        string_agg(X.accession, '; ') AS accession,
                           string_agg(X.version, '; ') AS version
-  			FROM {stockcollection} SC
-  			INNER JOIN {stockcollection_stock} SS ON SS.stockcollection_id = SC.stockcollection_id
-  			INNER JOIN {stockcollection_db} SD ON SC.stockcollection_id = SD.stockcollection_id
-  			INNER JOIN {db} ON db.db_id = SD.db_id
-  			INNER JOIN {stock_dbxref} SX ON SX.stock_id = SS.stock_id
-  			INNER JOIN {dbxref} X ON SX.dbxref_id = X.dbxref_id AND X.db_id = db.db_id
-  			WHERE SS.stock_id = :stock_id
-  			GROUP BY SC.stockcollection_id
-  			",  array(':stock_id' => $stock->stock_id));
+        FROM {stockcollection} SC
+        INNER JOIN {stockcollection_stock} SS ON SS.stockcollection_id = SC.stockcollection_id
+        INNER JOIN {stockcollection_db} SD ON SC.stockcollection_id = SD.stockcollection_id
+        INNER JOIN {db} ON db.db_id = SD.db_id
+        INNER JOIN {stock_dbxref} SX ON SX.stock_id = SS.stock_id
+        INNER JOIN {dbxref} X ON SX.dbxref_id = X.dbxref_id AND X.db_id = db.db_id
+        WHERE SS.stock_id = :stock_id
+        GROUP BY SC.stockcollection_id
+        ",  array(':stock_id' => $stock->stock_id));
     $coll = NULL;
     $counter = 0;
     while ($c = $results->fetchObject()) {
@@ -40,7 +40,7 @@ function mainlab_tripal_preprocess_mainlab_stock_base(&$variables) {
   // Get Maternal Parent
   $results = chado_query(
       "SELECT S2.stock_id, S2.uniquename, S2.description, V.name AS type
-			 FROM {stock} S1
+       FROM {stock} S1
          INNER JOIN {stock_relationship} SR ON SR.subject_id = S1.stock_id
          INNER JOIN {stock} S2 ON S2.stock_id = SR.object_id
          INNER JOIN {cvterm} V ON V.cvterm_id = S2.type_id
@@ -62,7 +62,7 @@ function mainlab_tripal_preprocess_mainlab_stock_base(&$variables) {
   // Get Paternal Parent
   $results = chado_query(
       "SELECT S2.stock_id, S2.uniquename, S2.description, V.name AS type
-			 FROM {stock} S1
+       FROM {stock} S1
          INNER JOIN {stock_relationship} SR ON SR.subject_id = S1.stock_id
          INNER JOIN {stock} S2 ON S2.stock_id = SR.object_id
          INNER JOIN {cvterm} V ON V.cvterm_id = S2.type_id
@@ -86,12 +86,12 @@ function mainlab_tripal_preprocess_mainlab_stock_base(&$variables) {
   $results = chado_query(
       "SELECT
            M.featuremap_id,
-			  M.name
+        M.name
            FROM {featuremap} M
            INNER JOIN {featuremap_stock} MS ON M.featuremap_id = MS.featuremap_id
            WHERE MS.stock_id = :stock_id1
            OR MS.stock_id in
-			     (SELECT SR.object_id FROM {stock} S1
+           (SELECT SR.object_id FROM {stock} S1
                INNER JOIN {stock_relationship} SR ON S1.stock_id = SR.subject_id
                WHERE SR.type_id IN
                   (SELECT cvterm_id
@@ -117,25 +117,25 @@ function mainlab_tripal_preprocess_mainlab_stock_base(&$variables) {
   // Get phenotypic data
   $results = chado_query(
       "SELECT
-			P.uniquename, P.value, J.name AS project, GEO.nd_geolocation_id, GEO.environment, SP.value AS replications
-			FROM {nd_experiment_phenotype} NEP
-			INNER JOIN {phenotype} P ON NEP.phenotype_id = P.phenotype_id
-			INNER JOIN {nd_experiment_stock} NES ON NES.nd_experiment_id = NEP.nd_experiment_id
-			LEFT JOIN {nd_experiment_project} NEJ ON NES.nd_experiment_id = NEJ.nd_experiment_id
-			LEFT JOIN {project} J ON J.project_id = NEJ.project_id
-			INNER JOIN {nd_experiment} NE ON NE.nd_experiment_id = NEP.nd_experiment_id
-			LEFT JOIN
-			(SELECT
-			   NG.nd_geolocation_id,
-	           NGP.value AS environment
-			 FROM {nd_geolocation} NG
-			 INNER JOIN {nd_geolocationprop} NGP ON NG.nd_geolocation_id = NGP.nd_geolocation_id
-			 AND NGP.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'site_code' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
-			) GEO ON GEO.nd_geolocation_id = NE.nd_geolocation_id
-	        LEFT JOIN {stockprop} SP ON NES.stock_id = SP.stock_id AND SP.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'rep' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
-			WHERE NES.stock_id = :stock_id OR NES.stock_id IN (SELECT subject_id FROM {stock_relationship} WHERE object_id = :object_id
-			AND type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN')))
-	        ORDER BY project, environment, replications, uniquename", array(':stock_id' => $stock->stock_id, ':object_id' => $stock->stock_id));
+      P.uniquename, P.value, J.name AS project, GEO.nd_geolocation_id, GEO.environment, SP.value AS replications
+      FROM {nd_experiment_phenotype} NEP
+      INNER JOIN {phenotype} P ON NEP.phenotype_id = P.phenotype_id
+      INNER JOIN {nd_experiment_stock} NES ON NES.nd_experiment_id = NEP.nd_experiment_id
+      LEFT JOIN {nd_experiment_project} NEJ ON NES.nd_experiment_id = NEJ.nd_experiment_id
+      LEFT JOIN {project} J ON J.project_id = NEJ.project_id
+      INNER JOIN {nd_experiment} NE ON NE.nd_experiment_id = NEP.nd_experiment_id
+      LEFT JOIN
+      (SELECT
+         NG.nd_geolocation_id,
+             NGP.value AS environment
+       FROM {nd_geolocation} NG
+       INNER JOIN {nd_geolocationprop} NGP ON NG.nd_geolocation_id = NGP.nd_geolocation_id
+       AND NGP.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'site_code' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
+      ) GEO ON GEO.nd_geolocation_id = NE.nd_geolocation_id
+          LEFT JOIN {stockprop} SP ON NES.stock_id = SP.stock_id AND SP.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'rep' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
+      WHERE NES.stock_id = :stock_id OR NES.stock_id IN (SELECT subject_id FROM {stock_relationship} WHERE object_id = :object_id
+      AND type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN')))
+          ORDER BY project, environment, replications, uniquename", array(':stock_id' => $stock->stock_id, ':object_id' => $stock->stock_id));
   $phenotypic_data = NULL;
   $counter = 0;
   while ($traits = $results->fetchObject()) {
@@ -147,23 +147,23 @@ function mainlab_tripal_preprocess_mainlab_stock_base(&$variables) {
   // Get genotypic data
   $results = chado_query(
       "SELECT
-			G.uniquename, G.description, J.name AS project, F.organism_id,
+      G.uniquename, G.description, J.name AS project, F.organism_id,
             (SELECT nid FROM chado_feature WHERE feature_id = F.feature_id) AS marker_nid,
             (SELECT name FROM {cvterm} WHERE cvterm_id = F.type_id) AS marker_type
-			FROM {nd_experiment_genotype} NEG
-			INNER JOIN {genotype} G ON NEG.genotype_id = G.genotype_id
-			INNER JOIN {feature_genotype} FG ON G.genotype_id = FG.genotype_id
-			INNER JOIN {feature} F ON F.feature_id = FG.feature_id
-			INNER JOIN {nd_experiment_stock} NES ON NES.nd_experiment_id = NEG.nd_experiment_id
-			LEFT JOIN {nd_experiment_project} NEJ ON NES.nd_experiment_id = NEJ.nd_experiment_id
-			LEFT JOIN {project} J ON J.project_id = NEJ.project_id
-			WHERE stock_id IN
-			  (SELECT stock_id
-			   FROM {stock} S
-			   INNER JOIN {stock_relationship} SR ON S.stock_id = SR.subject_id
-			   WHERE SR.type_id =
-			      (SELECT cvterm_id FROM {cvterm} WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
-			   AND SR.object_id = :object_id)",  array(':object_id' => $stock->stock_id));
+      FROM {nd_experiment_genotype} NEG
+      INNER JOIN {genotype} G ON NEG.genotype_id = G.genotype_id
+      INNER JOIN {feature_genotype} FG ON G.genotype_id = FG.genotype_id
+      INNER JOIN {feature} F ON F.feature_id = FG.feature_id
+      INNER JOIN {nd_experiment_stock} NES ON NES.nd_experiment_id = NEG.nd_experiment_id
+      LEFT JOIN {nd_experiment_project} NEJ ON NES.nd_experiment_id = NEJ.nd_experiment_id
+      LEFT JOIN {project} J ON J.project_id = NEJ.project_id
+      WHERE stock_id IN
+        (SELECT stock_id
+         FROM {stock} S
+         INNER JOIN {stock_relationship} SR ON S.stock_id = SR.subject_id
+         WHERE SR.type_id =
+            (SELECT cvterm_id FROM {cvterm} WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
+         AND SR.object_id = :object_id)",  array(':object_id' => $stock->stock_id));
   $gdata = NULL;
   $counter = 0;
   while ($gtype = $results->fetchObject()) {

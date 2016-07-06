@@ -32,7 +32,7 @@ if ($num_in_collection > 0) {
                $array = explode(" ", $acc);
                $acc = $array[0];
                if (key_exists(1, $array)) {
-	             $acc .= "+" . $array[1];
+               $acc .= "+" . $array[1];
                }
             } else if ($coll->db == 'GRIN_Regist') {
                $array = explode("-", $acc);

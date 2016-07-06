@@ -14,9 +14,9 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/js/mainlab_t
 // Insert Genotypic data value to the base template
 $('#tripal_stock-table-genotypic_data_value').html("[<a href='#' id='tripal_stock-table-genotypic_data_value-link'>view all <?php print $num_genotypic_data;?></a>]");
 $('#tripal_stock-table-genotypic_data_value-link').click(function() {
-	$('.tripal-info-box').hide();
-	$('#tripal_stock-genotypic_data-box').fadeIn('slow');
-	$('#tripal_stock_toc').height($('#tripal_stock-genotypic_data-box').parent().height());
+  $('.tripal-info-box').hide();
+  $('#tripal_stock-genotypic_data-box').fadeIn('slow');
+  $('#tripal_stock_toc').height($('#tripal_stock-genotypic_data-box').parent().height());
 })
 </script>
 

@@ -3,18 +3,18 @@ $stock = $variables['node']->stock;
 $paternal_parent = $stock->paternal_parent;
 $num_mparent = count($paternal_parent);
 if ($num_mparent > 0) {
-	$first_mparent = $paternal_parent[0]->uniquename;
-	if ($num_mparent > 1) {
-		$first_mparent .= " [<a href=\"#\" id=\"tripal_stock-table-paternal_parent_value-link\">view all " . $num_mparent . "</a>]";
-	}
+  $first_mparent = $paternal_parent[0]->uniquename;
+  if ($num_mparent > 1) {
+    $first_mparent .= " [<a href=\"#\" id=\"tripal_stock-table-paternal_parent_value-link\">view all " . $num_mparent . "</a>]";
+  }
 ?>
 <script type="text/javascript">
 // Insert paternal parent value to the base template
 $('#tripal_stock-table-paternal_parent_value').html('<?php print $first_mparent;?>');
 $('#tripal_stock-table-paternal_parent_value-link').click(function() {
-	$('.tripal-info-box').hide();
-	$('#tripal_stock-paternal_parent-box').fadeIn('slow');
-	$('#tripal_stock_toc').height($('#tripal_stock-paternal_parent-box').parent().height());
+  $('.tripal-info-box').hide();
+  $('#tripal_stock-paternal_parent-box').fadeIn('slow');
+  $('#tripal_stock_toc').height($('#tripal_stock-paternal_parent-box').parent().height());
 })
 </script>
 

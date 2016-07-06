@@ -12,15 +12,15 @@ function mainlab_tripal_pub_preprocess_mainlab_pub_image(&$variables) {
   // We want to show maps for this pub and maps of its children
   $results = chado_query(
       "SELECT eimage_type, image_uri, value as legend
-			 FROM {pub_image} SI
-			 INNER JOIN {eimage} I ON SI.eimage_id = I.eimage_id
-			 INNER JOIN {eimageprop} IP ON I.eimage_id = IP.eimage_id
-			 WHERE IP.type_id = (SELECT cvterm_id
-			                                      FROM {cvterm}
-			                                      WHERE name = 'legend'
-			                                      AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN')
-			                                    )
-			AND pub_id = :pub_id",
+       FROM {pub_image} SI
+       INNER JOIN {eimage} I ON SI.eimage_id = I.eimage_id
+       INNER JOIN {eimageprop} IP ON I.eimage_id = IP.eimage_id
+       WHERE IP.type_id = (SELECT cvterm_id
+                                            FROM {cvterm}
+                                            WHERE name = 'legend'
+                                            AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN')
+                                          )
+      AND pub_id = :pub_id",
       array(':pub_id' => $pub->pub_id));
   $images = NULL;
   $counter = 0;

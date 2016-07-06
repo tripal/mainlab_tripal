@@ -4,7 +4,7 @@ $feature = tripal_core_expand_chado_vars($feature, 'table', 'feature_relationshi
 
 $object_rels = $feature->feature_relationship->object_id;
 if (!is_array($object_rels)) {
-	$object_rels = array($object_rels);
+  $object_rels = array($object_rels);
 }
 
 if (count($object_rels) > 0) {
@@ -27,7 +27,7 @@ if (count($object_rels) > 0) {
             foreach ($object_rels as $rels){
               $class = 'tripal-table-odd-row odd';
               if ($i % 2 == 0 ) {
-	            $class = 'tripal-table-even-row even';
+              $class = 'tripal-table-even-row even';
               }
               
             // Get associated genes for this generic gene
@@ -37,7 +37,7 @@ if (count($object_rels) > 0) {
               $table_options =  array(
                 'include_fk' => array(
                   'srcfeature_id' => array('type_id' => 1),
-            	  'feature_id' => array('type_id' => 1)
+                'feature_id' => array('type_id' => 1)
                 )
               );
             

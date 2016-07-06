@@ -99,8 +99,8 @@ if(count($alignments) > 0){ ?>
               // Show Apple alignments (all Malus are aligned to Malus x domestica)
               } 
               else if($feature->organism_id->genus == 'Malus' && ($alignment->right_feature->type_id->name == 'supercontig' || $alignment->right_feature->type_id->name == 'chromosome')) {
-              	$match_name = db_result(db_query("SELECT uniquename FROM feature WHERE feature_id = %d", $alignment->record->left_feature_id));
-              	if (!preg_match("/_apple-prime/", $match_name)) {
+                $match_name = db_result(db_query("SELECT uniquename FROM feature WHERE feature_id = %d", $alignment->record->left_feature_id));
+                if (!preg_match("/_apple-prime/", $match_name)) {
                   $location = "<a href=\"http://www.rosaceae.org/gb/gbrowse/malus_x_domestica?name=". $floc ."\" target=\"_blank\">$location</a>"; // add hyperlink to the location
                   if ($img_count < 10) {
                      $gbrowse_imgs['malus_x_domestica-combine'] .= "<h4>Malus x domestica v1.0</h4><img style=\"width:100%\" border=0 src=\"http://www.rosaceae.org/gb/gbrowse_img/malus_x_domestica?name=". $floc ."\" width=500px>";
@@ -162,8 +162,8 @@ if(count($alignments) > 0){ ?>
                     $gbrowse_imgs['fragaria_vesca_v1.1'] = "<img style=\"width:100%\" border=0 src=\"http://www.rosaceae.org/gb/gbrowse_img/fragaria_vesca_v1.1-lg?name=". $floc ."&type=scaffold_alignments+genemark_hybrid+genemark_hybrid_transcripts+RosCos+NCBI_Sequence_Alignments\" width=500px>";
                   }
                   else if($analysisfeature->analysis_id->name == 'Pyrus communis Genome v1.0 Draft Assembly & Annotation') {
-                  	$location = "<a href=\"http://www.rosaceae.org/gb/gbrowse/pyrus_communis_v1.0/?name=". $floc ."\" target=\"_blank\">$location</a>"; // add hyperlink to the location
-                  	$gbrowse_imgs['pyrus_communis_v1.0'] = "<img style=\"width:100%\" border=0 src=\"http://www.rosaceae.org/gb/gbrowse_img/pyrus_communis_v1.0/?name=". $floc ."&type=gene_hybrid+mRNA_hybrid+gene_augustus+mRNA_augustus+NCBI_Sequence_Alignments\" width=500px>";
+                    $location = "<a href=\"http://www.rosaceae.org/gb/gbrowse/pyrus_communis_v1.0/?name=". $floc ."\" target=\"_blank\">$location</a>"; // add hyperlink to the location
+                    $gbrowse_imgs['pyrus_communis_v1.0'] = "<img style=\"width:100%\" border=0 src=\"http://www.rosaceae.org/gb/gbrowse_img/pyrus_communis_v1.0/?name=". $floc ."&type=gene_hybrid+mRNA_hybrid+gene_augustus+mRNA_augustus+NCBI_Sequence_Alignments\" width=500px>";
                   }
                   else if($analysisfeature->analysis_id->name == 'Prunus persica Whole Genome Assembly v2.0 & Annotation v2.1 (v2.0.a1)') {
                     $location = "<a href=\"http://www.rosaceae.org/gb/gbrowse/prunus_persica_v2.0.a1/?name=". $floc ."\" target=\"_blank\">$location</a>"; // add hyperlink to the location

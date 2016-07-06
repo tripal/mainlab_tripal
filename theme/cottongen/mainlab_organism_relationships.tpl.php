@@ -46,11 +46,11 @@ if (count($object_rels) > 0 or count($subject_rels) > 0) {
                   } 
                   
                   if ($rel_type == 'fertile with') {
-                  	$first_fertile = $object->genus . " " . $object->species;
+                    $first_fertile = $object->genus . " " . $object->species;
                   } else if ($rel_type == 'sterile with') {
-                  	$first_sterile = $object->genus . " " . $object->species;
+                    $first_sterile = $object->genus . " " . $object->species;
                   } else if ($rel_type == 'incompatible with') {
-                  	$first_incompatible = $object->genus . " " . $object->species;
+                    $first_incompatible = $object->genus . " " . $object->species;
                   }
                   ?>
                </td>

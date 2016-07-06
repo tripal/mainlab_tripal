@@ -4,7 +4,7 @@ $feature = chado_expand_var($feature, 'table', 'feature_relationship', array ('r
 
 $object_rels = $feature->feature_relationship->object_id;
 if (!is_array($object_rels)) {
-	$object_rels = array($object_rels);
+  $object_rels = array($object_rels);
 }
 
 $function = array();
@@ -12,30 +12,30 @@ $product = array();
 $note = array();
 $evidence = array();
 if (!is_array($object_rels)) {
-	$object_rels = array($object_rels);
+  $object_rels = array($object_rels);
 }
 foreach ($object_rels as $rels){
-	if ($rels->type_id->name == 'associated_with') {
-		$rels = tripal_core_expand_chado_vars($rels, 'table', 'featureprop');
-		$fprop = $rels->subject_id->featureprop;
-		if (is_array($fprop)) {
-			foreach ($fprop AS $prop) {
-				if ($prop->type_id->name == 'product') {
-					if (!in_array($prop->value, $product)) {
-						array_push ($product, $prop->value);
-					}
-				} elseif ($prop->type_id->name == 'function') {
-					if (!in_array($prop->value, $function)) {
-						array_push ($function, $prop->value);
-					}
-				} elseif ($prop->type_id->name == 'genbank_note') {
-					if (!in_array($prop->value, $note)) {
-						array_push ($note, $prop->value);
-					}
-				}
-			}
-		}
-	}
+  if ($rels->type_id->name == 'associated_with') {
+    $rels = tripal_core_expand_chado_vars($rels, 'table', 'featureprop');
+    $fprop = $rels->subject_id->featureprop;
+    if (is_array($fprop)) {
+      foreach ($fprop AS $prop) {
+        if ($prop->type_id->name == 'product') {
+          if (!in_array($prop->value, $product)) {
+            array_push ($product, $prop->value);
+          }
+        } elseif ($prop->type_id->name == 'function') {
+          if (!in_array($prop->value, $function)) {
+            array_push ($function, $prop->value);
+          }
+        } elseif ($prop->type_id->name == 'genbank_note') {
+          if (!in_array($prop->value, $note)) {
+            array_push ($note, $prop->value);
+          }
+        }
+      }
+    }
+  }
 }
 
 // We want to display all synonyms and the product in one field as 'Synonym'
@@ -94,12 +94,12 @@ $dis_evidence = count ($evidence) == 0 ? "NA" : implode ('<br>', $evidence);
         <th>Organism</th>
         <td>
           <?php if ($feature->organism_id->nid) { 
-      	   print "<a href=\"".url("node/".$feature->organism_id->nid)."\">".$feature->organism_id->genus ." " . $feature->organism_id->species . "</a>";
+           print "<a href=\"".url("node/".$feature->organism_id->nid)."\">".$feature->organism_id->genus ." " . $feature->organism_id->species . "</a>";
           } else { 
             print $feature->organism_id->genus ." " . $feature->organism_id->species;
           } ?>
         </td>
-     	</tr>
+       </tr>
       <tr class="tripal_feature-table-odd-row even">
         <th>Synonym</th>
         <td><?php print $dis_product; ?></td>

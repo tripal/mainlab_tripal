@@ -11,29 +11,29 @@ if (!$contacts) {
 
 $mycontacts = array();
 if (is_array($contacts)) {
-	$index = 0;
-	foreach($contacts AS $contact) {
-		$contact = chado_expand_var($contact, 'table', 'contactprop');
-	   $contactprops = $contact->contact_id->contactprop;
-	   $contact_info = array();
-	   $contact_info['contact_name'] = $contact->contact_id->name;
-	   $contact_info['contact_desc'] = $contact->contact_id->description;
-	   foreach ($contactprops AS $cprop) {
-   		$contact_info[$cprop->type_id->name] = $cprop->value;
-   	}	
-	   $mycontacts[$index] = $contact_info;
-	   $index ++;
-	}
+  $index = 0;
+  foreach($contacts AS $contact) {
+    $contact = chado_expand_var($contact, 'table', 'contactprop');
+     $contactprops = $contact->contact_id->contactprop;
+     $contact_info = array();
+     $contact_info['contact_name'] = $contact->contact_id->name;
+     $contact_info['contact_desc'] = $contact->contact_id->description;
+     foreach ($contactprops AS $cprop) {
+       $contact_info[$cprop->type_id->name] = $cprop->value;
+     }  
+     $mycontacts[$index] = $contact_info;
+     $index ++;
+  }
 } else {
-	$contacts = chado_expand_var($contacts, 'table', 'contactprop');
-	$contactprops = $contacts->contact_id->contactprop;
-	$contact_info = array();
-	$contact_info['contact_name'] = $contacts->contact_id->name;
-	$contact_info['contact_desc'] = $contacts->contact_id->description;
-	foreach ($contactprops AS $cprop) {
-		$contact_info[$cprop->type_id->name] = $cprop->value;
-	}	
-	$mycontacts[0] = $contact_info; 
+  $contacts = chado_expand_var($contacts, 'table', 'contactprop');
+  $contactprops = $contacts->contact_id->contactprop;
+  $contact_info = array();
+  $contact_info['contact_name'] = $contacts->contact_id->name;
+  $contact_info['contact_desc'] = $contacts->contact_id->description;
+  foreach ($contactprops AS $cprop) {
+    $contact_info[$cprop->type_id->name] = $cprop->value;
+  }  
+  $mycontacts[0] = $contact_info; 
 }
 $rows = array();
 foreach ($mycontacts AS $con) {

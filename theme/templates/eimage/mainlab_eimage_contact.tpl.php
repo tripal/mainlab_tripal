@@ -16,14 +16,14 @@ if (count($contacts) < 1) {
 $class = "";
 $counter = 0;
 foreach($contacts AS $con) {
-	if ($counter % 2 == 1) {
-		$class = "tripal_eimage-table-even-row tripal-table-even-row";
-	} else {
-		$class = "tripal_eimage-table-odd-row tripal-table-odd-row";
-	}
-	print "<tr class=\"" . $class ."\">";
-	print "<td style=\"padding:5px 10px 5px 10px;\">" . $con->name . "</td><td>";
-	print "<table class=\"tripal-subtable\">";
+  if ($counter % 2 == 1) {
+    $class = "tripal_eimage-table-even-row tripal-table-even-row";
+  } else {
+    $class = "tripal_eimage-table-odd-row tripal-table-odd-row";
+  }
+  print "<tr class=\"" . $class ."\">";
+  print "<td style=\"padding:5px 10px 5px 10px;\">" . $con->name . "</td><td>";
+  print "<table class=\"tripal-subtable\">";
    if ($con->description) {
       print "<tr><td style=\"padding:2px 0px 2px 0px;width:80px;\">Description</td><td>:</td><td style=\"padding:2px 0px 2px 0px;\">" . $con->description . "</td></tr>";
    }
@@ -40,7 +40,7 @@ foreach($contacts AS $con) {
    if (property_exists($con, "last_update")) { print "<tr><td style=\"padding:2px 0px 2px 0px;width:80px;\">Last update</td><td>:</td><td style=\"padding:2px 0px 2px 0px;\">". $con->last_update . "</td></tr>";}
    print "</table>";
    print "</td></tr>";
-	$counter ++;
+  $counter ++;
 }
 ?>
    </table>

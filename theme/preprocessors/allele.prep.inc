@@ -10,13 +10,13 @@ function mainlab_tripal_preprocess_mainlab_allele(&$variables) {
                 INNER JOIN {feature_genotype} FG ON G.genotype_id = FG.genotype_id
                 INNER JOIN {nd_experiment_genotype} NEG ON G.genotype_id = NEG.genotype_id
                 WHERE feature_id =
-			          (SELECT feature_id
-			           FROM {feature}
-			           WHERE lower(uniquename) = lower(:uniquename) AND type_id =
-			              (SELECT cvterm_id FROM {cvterm} WHERE name = 'genetic_marker')
-					   AND organism_id = :organism_id
-			          )
-			       AND string_to_array(description, '|') @> ARRAY[:allele_id]
+                (SELECT feature_id
+                 FROM {feature}
+                 WHERE lower(uniquename) = lower(:uniquename) AND type_id =
+                    (SELECT cvterm_id FROM {cvterm} WHERE name = 'genetic_marker')
+             AND organism_id = :organism_id
+                )
+             AND string_to_array(description, '|') @> ARRAY[:allele_id]
                 GROUP BY G.genotype_id
                 ORDER BY G.genotype_id";
   $results = chado_query($sql, array(':uniquename' => $marker, ':organism_id' => $oid, ':allele_id' => $alleleid));
@@ -49,9 +49,9 @@ function mainlab_get_allele_associated_stocks ($genotype_id) {
                     INNER JOIN {stock} EXP ON EXP.stock_id = NDS.stock_id
                     INNER JOIN {stock_relationship} SR ON SR.subject_id = EXP.stock_id
                     INNER JOIN {stock} S ON S.stock_id = SR.object_id
-			           LEFT JOIN {nd_experiment_project} NEP ON NEP.nd_experiment_id = NDG.nd_experiment_id
+                 LEFT JOIN {nd_experiment_project} NEP ON NEP.nd_experiment_id = NDG.nd_experiment_id
                     LEFT JOIN {project} P ON P.project_id = NEP.project_id
-			           LEFT JOIN
+                 LEFT JOIN
                       (SELECT nd_experiment_id, value FROM {nd_experimentprop} NEP
                        WHERE type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'dye_color')
                       )DYE ON DYE.nd_experiment_id = NDG.nd_experiment_id

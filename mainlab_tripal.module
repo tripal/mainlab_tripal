@@ -53,56 +53,56 @@ function mainlab_tripal_menu() {
 
   // The polymorphism page
   $items['polymorphism/%'] = array(
-  		'title' => 'Polymorphism',
-  		'page callback' => 'mainlab_show_polymorphism',
-  		'page arguments' => array(1),
-  		'access arguments' => array('access content'),
-  		'file' => 'includes/polymorphism.page.inc',
-  		'type' => MENU_CALLBACK
+      'title' => 'Polymorphism',
+      'page callback' => 'mainlab_show_polymorphism',
+      'page arguments' => array(1),
+      'access arguments' => array('access content'),
+      'file' => 'includes/polymorphism.page.inc',
+      'type' => MENU_CALLBACK
   );
   // The allele page
   $items['allele/%/%/%'] = array(
-  		'title' => 'Allele',
-  		'page callback' => 'mainlab_show_allele',
-  		'page arguments' => array(1,2,3),
-  		'access arguments' => array('access content'),
-  		'file' => 'includes/allele.page.inc',
-  		'type' => MENU_CALLBACK
+      'title' => 'Allele',
+      'page callback' => 'mainlab_show_allele',
+      'page arguments' => array(1,2,3),
+      'access arguments' => array('access content'),
+      'file' => 'includes/allele.page.inc',
+      'type' => MENU_CALLBACK
   );
   
   // The sequence listing page
   $items['feature_listing/%/%/%'] = array(
-  		'title' => 'Sequences',
-  		'page callback' => 'mainlab_feature_listing',
-  		'page arguments' => array(1,2,3),
-  		'access arguments' => array('access content'),
-  		'file' => 'includes/feature_listing.page.inc',
-  		'type' => MENU_CALLBACK
+      'title' => 'Sequences',
+      'page callback' => 'mainlab_feature_listing',
+      'page arguments' => array(1,2,3),
+      'access arguments' => array('access content'),
+      'file' => 'includes/feature_listing.page.inc',
+      'type' => MENU_CALLBACK
   );
   // Switching page for the stock listing
   $items['stock_listing_page/%/%'] = array(
-  		'page callback' => 'mainlab_stock_listing_switch_page',
-  		'page arguments' => array(1,2),
-  		'access arguments' => array('access content'),
-  		'type' => MENU_CALLBACK
+      'page callback' => 'mainlab_stock_listing_switch_page',
+      'page arguments' => array(1,2),
+      'access arguments' => array('access content'),
+      'type' => MENU_CALLBACK
   );
   
   // The gene class browser
   $items['gene_class_listing'] = array(
-  		'page callback' => 'mainlab_gene_class_listing_page',
-  		'page arguments' => array(1),
-  		'access arguments' => array('access content'),
-  		'type' => MENU_CALLBACK,
-  		'file' => 'includes/gene_class_listing.page.inc',
+      'page callback' => 'mainlab_gene_class_listing_page',
+      'page arguments' => array(1),
+      'access arguments' => array('access content'),
+      'type' => MENU_CALLBACK,
+      'file' => 'includes/gene_class_listing.page.inc',
   );
   
   // The gene class page
   $items['gene_class'] = array(
-  		'page callback' => 'mainlab_gene_class_page',
-  		'page arguments' => array(1),
-  		'access arguments' => array('access content'),
-  		'type' => MENU_CALLBACK,
-  		'file' => 'includes/gene_class.page.inc',
+      'page callback' => 'mainlab_gene_class_page',
+      'page arguments' => array(1),
+      'access arguments' => array('access content'),
+      'type' => MENU_CALLBACK,
+      'file' => 'includes/gene_class.page.inc',
   );
   
   // Replicate Tripal Pub Search URLs
@@ -450,14 +450,14 @@ function mainlab_tripal_theme($existing, $type, $theme, $path) {
  *  'cottongen' for CottonGen
  */
 function mainlab_tripal_get_site () {
-	global $base_url;
-	if (preg_match('/rosaceae\.org/', $base_url) || preg_match('/rosaceae\.org/', $_SERVER['SERVER_NAME'])) {
-		return 'gdr';
-	} else if (preg_match('/cottongen\.org/', $base_url) || preg_match('/cottongen\.org/', $_SERVER['SERVER_NAME'])) {
-		return 'cottongen';
-	} else {
-		return 'unknown';
-	}
+  global $base_url;
+  if (preg_match('/rosaceae\.org/', $base_url) || preg_match('/rosaceae\.org/', $_SERVER['SERVER_NAME'])) {
+    return 'gdr';
+  } else if (preg_match('/cottongen\.org/', $base_url) || preg_match('/cottongen\.org/', $_SERVER['SERVER_NAME'])) {
+    return 'cottongen';
+  } else {
+    return 'unknown';
+  }
 }
 /**
  * Hook to Tripal Pub form to add a tutorial link

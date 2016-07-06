@@ -5,11 +5,11 @@ $images = $stock->images;
 //$path = file_directory_path() . '/tripal/tripal_stock/images/';
 $site = mainlab_tripal_get_site();
 if ($site == 'gdr') {
-	$icons = '/bulk_data/www.rosaceae.org/gdr_photo/germplasm/icon/';
-	$imgs = '/bulk_data/www.rosaceae.org/gdr_photo/germplasm/image/';
+  $icons = '/bulk_data/www.rosaceae.org/gdr_photo/germplasm/icon/';
+  $imgs = '/bulk_data/www.rosaceae.org/gdr_photo/germplasm/image/';
 } else if ($site == 'cottongen') {
-	$icons = '/bulk_data/www.cottongen.org/cotton_photo/germplasm/icon/icon-';
-	$imgs = '/bulk_data/www.cottongen.org/cotton_photo/germplasm/image/';
+  $icons = '/bulk_data/www.cottongen.org/cotton_photo/germplasm/icon/icon-';
+  $imgs = '/bulk_data/www.cottongen.org/cotton_photo/germplasm/image/';
 } else {
   return;
 }
@@ -46,7 +46,7 @@ if (count($images) > 0) { ?>
               // Add more td to ensure the width of each cell is fixed
               $more = 3 - (count($images) % 3);
               for ($i = 0; $i < $more; $i ++) {
-	            print "<td  style=\"width:200px;padding:20px 0px 0px 20px;\"></td>";
+              print "<td  style=\"width:200px;padding:20px 0px 0px 20px;\"></td>";
             }
 }
         ?>

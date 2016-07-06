@@ -5,41 +5,41 @@ $main_db_reference = $stock->dbxref_id;
 
 // synonyms are stored in the stockprop table with a type of 'synonym'  or 'alias'
 $stock->stock_synonyms = chado_generate_var(
-		'stockprop',
-		array(
-				'stock_id'=> $stock->stock_id,
-				'type_id' => array(
-						'cv_id' => array('name' => 'feature_property'),
-						'name'  => 'synonym'
-				),
-		)
+    'stockprop',
+    array(
+        'stock_id'=> $stock->stock_id,
+        'type_id' => array(
+            'cv_id' => array('name' => 'feature_property'),
+            'name'  => 'synonym'
+        ),
+    )
 );
 
 // Prepare synomyns data with type 'alias'
 $synonyms = $stock->stock_synonyms;
 if (!$synonyms) {
-	$stock->stock_synonyms = chado_generate_var(
-			'stockprop',
-			array(
-					'stock_id'=> $stock->stock_id,
-					'type_id' => array(
-							'cv_id' => array('name' => 'MAIN'),
-							'name'  => 'alias'
-					),
-			)
-	);
-	$synonyms = $stock->stock_synonyms;
+  $stock->stock_synonyms = chado_generate_var(
+      'stockprop',
+      array(
+          'stock_id'=> $stock->stock_id,
+          'type_id' => array(
+              'cv_id' => array('name' => 'MAIN'),
+              'name'  => 'alias'
+          ),
+      )
+  );
+  $synonyms = $stock->stock_synonyms;
 }
 $num_synonyms = count($synonyms);
 $syn = "";
 if ($num_synonyms == 0) {
-	$syn = "N/A";
+  $syn = "N/A";
 } else {
-	if (is_array($synonyms)) {
-	   $syn = $synonyms[0]->value . " [<a href=\"?pane=alias\">view all $num_synonyms</a>]";
-	} else {
-		$syn = $synonyms->value;
-	}
+  if (is_array($synonyms)) {
+     $syn = $synonyms[0]->value . " [<a href=\"?pane=alias\">view all $num_synonyms</a>]";
+  } else {
+    $syn = $synonyms->value;
+  }
 }
 
 // Prepare properties data

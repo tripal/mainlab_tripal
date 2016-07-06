@@ -16,10 +16,10 @@ if (count($contacts) > 0) {
       $contact_info['contact_desc'] = $contact->contact_id->description;
       foreach ($contactprops AS $cprop) {
         $contact_info[$cprop->type_id->name] = $cprop->value;
-      }	
+      }  
       $mycontacts[$index] = $contact_info;
       $index ++;
-	
+  
     }
 } ?>
 
