@@ -74,6 +74,7 @@ function mainlab_stock_listing ($organism, $page) {
     }
   }
   $pager .= "</select> of $pages</div>";
+  $stock = new stdClass();
   $stock->total_number = $total;
   $stock->table = "<div id=\"mainlab_tripal-stock_listing-table\">" . $output . $pager . "</div>";
   global $base_url;
