@@ -27,7 +27,7 @@ if (count($featuremap_organisms) > 0) {?>
         } ?>
         <tr class="<?php print $class ?>">
           <td><?php 
-            if($featuremap->nid){    
+            if(isset($featuremap->nid)){    
               $link =  url("node/$featuremap->nid");        
               print "<a href=\"$link\">$featuremap->name</a>";
             } 
