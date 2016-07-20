@@ -5,9 +5,7 @@ if (!$feature->name) {
 }
 ?>
 
-<div id="tripal_feature-base-box" class="tripal_feature-info-box tripal-info-box">
-  <div class="tripal_feature-info-box-title tripal-info-box-title">Haplotype Block Details</div>
-  <div class="tripal_feature-info-box-desc tripal-info-box-desc"></div> <?php 
+<div id="tripal_feature-base-box" class="tripal_feature-info-box tripal-info-box"><?php 
   if(strcmp($feature->is_obsolete,'t')==0){ ?>
     <div class="tripal_feature-obsolete">This feature is obsolete</div> <?php 
   }?>
@@ -28,7 +26,7 @@ if (!$feature->name) {
       <th>Germplasm</th>
       <td><?php 
         $num_stocks = count($feature->stocks);
-        $display_stocks = $num_stocks == 0 ? "N/A" : "[<a class=\"tripal_feature_toc_item\" href=\"#tripal_feature-stocks-box\">view all $num_stocks</a>]";
+        $display_stocks = $num_stocks == 0 ? "N/A" : "[<a class=\"tripal_feature_toc_item\" href=\"?pane=stocks\">view all $num_stocks</a>]";
         print $display_stocks;
       ?></td>
     </tr>
@@ -37,7 +35,7 @@ if (!$feature->name) {
       <th>Haplotype</th>
       <td><?php 
         $num_haplotypes = count($feature->haplotypes);
-        $display_haplotypes = $num_haplotypes == 0 ? "N/A" : "[<a class=\"tripal_feature_toc_item\" href=\"#tripal_feature-haplotypes-box\">view all</a>]";
+        $display_haplotypes = $num_haplotypes == 0 ? "N/A" : "[<a class=\"tripal_feature_toc_item\" href=\"?pane=haplotypes\">view all</a>]";
         print $display_haplotypes;
       ?></td>
     </tr>
