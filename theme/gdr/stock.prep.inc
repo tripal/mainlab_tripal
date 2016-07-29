@@ -122,8 +122,8 @@ function mainlab_tripal_preprocess_mainlab_stock_base(&$variables) {
       INNER JOIN {phenotype} P ON NEP.phenotype_id = P.phenotype_id
       INNER JOIN {cvterm} V ON V.cvterm_id = P.attr_id
       INNER JOIN {nd_experiment_stock} NES ON NES.nd_experiment_id = NEP.nd_experiment_id
-      INNER JOIN {nd_experiment_project} NEJ ON NES.nd_experiment_id = NEJ.nd_experiment_id
-      INNER JOIN {project} J ON J.project_id = NEJ.project_id
+      LEFT JOIN {nd_experiment_project} NEJ ON NES.nd_experiment_id = NEJ.nd_experiment_id
+      LEFT JOIN {project} J ON J.project_id = NEJ.project_id
       INNER JOIN {nd_experiment} NE ON NE.nd_experiment_id = NEP.nd_experiment_id
       LEFT JOIN
       (SELECT
@@ -136,6 +136,7 @@ function mainlab_tripal_preprocess_mainlab_stock_base(&$variables) {
           LEFT JOIN {stockprop} SP ON NES.stock_id = SP.stock_id AND SP.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'rep' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
       WHERE NES.stock_id = :stock_id OR NES.stock_id IN (SELECT subject_id FROM {stock_relationship} WHERE object_id = :object_id
       AND type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN')))
+      AND J.name !~ '(_PRV_|_BPS_|Cherry_NO)'
           ORDER BY project, environment, replications, uniquename", array(':stock_id' => $stock->stock_id, ':object_id' => $stock->stock_id));
   $phenotypic_data = NULL;
   $counter = 0;
@@ -156,15 +157,16 @@ function mainlab_tripal_preprocess_mainlab_stock_base(&$variables) {
       INNER JOIN {feature_genotype} FG ON G.genotype_id = FG.genotype_id
       INNER JOIN {feature} F ON F.feature_id = FG.feature_id
       INNER JOIN {nd_experiment_stock} NES ON NES.nd_experiment_id = NEG.nd_experiment_id
-      INNER JOIN {nd_experiment_project} NEJ ON NES.nd_experiment_id = NEJ.nd_experiment_id
-      INNER JOIN {project} J ON J.project_id = NEJ.project_id
+      LEFT JOIN {nd_experiment_project} NEJ ON NES.nd_experiment_id = NEJ.nd_experiment_id
+      LEFT JOIN {project} J ON J.project_id = NEJ.project_id
       WHERE stock_id IN
         (SELECT stock_id
          FROM {stock} S
          INNER JOIN {stock_relationship} SR ON S.stock_id = SR.subject_id
          WHERE SR.type_id =
             (SELECT cvterm_id FROM {cvterm} WHERE name = 'sample_of' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
-         AND SR.object_id = :object_id)",  array(':object_id' => $stock->stock_id));
+         AND SR.object_id = :object_id)
+      AND J.name !~ '(_PRV_|_BPS_|Cherry_NO)'",  array(':object_id' => $stock->stock_id));
   $gdata = NULL;
   $counter = 0;
   while ($gtype = $results->fetchObject()) {

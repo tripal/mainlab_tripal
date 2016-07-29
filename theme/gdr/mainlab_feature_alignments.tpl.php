@@ -33,6 +33,8 @@
 // a single object for iteration.
 
 $feature = $variables['node']->feature;
+$options = array('return_array' => 1);
+$feature = chado_expand_var($feature, 'table', 'analysisfeature', $options);
 $alignments = $feature->all_featurelocs;
 $gbrowse_imgs = array();
 

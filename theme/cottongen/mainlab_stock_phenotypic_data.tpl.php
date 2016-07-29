@@ -2,7 +2,7 @@
 $stock = $variables['node']->stock;
 $phenotypic_data = $stock->phenotypic_data;
 $num_phenotypic_data = count($phenotypic_data);
-if ($num_phenotypic_data > 0) {
+if ($num_phenotypic_data > 0) {dpm($phenotypic_data);
 ?>
 
 <?php 
@@ -30,6 +30,8 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/js/mainlab_t
                <th>Dataset</th>
                <th>Descriptor</th>
                <th>Value</th>
+               <th>Environment</th>
+               <th>Replication</th>
              </tr>
     <?php
       $counter = 0;
@@ -40,8 +42,12 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/js/mainlab_t
          } else {
             $class = "tripal_stock-table-odd-row odd";
          }
-         print "<tr class=\"$class\"><td>". ($counter + 1) . "</td><td>$score->project</td><td>$score->descriptor</td><td>$score->value</td></tr>";
-         fwrite($handle, '"' . ($counter + 1) . '","'. $score->project . '","' . $score->descriptor . '","' . $score->value . '"' . "\n");
+         $descriptor = $score->descriptor;
+         $env = str_replace(array("COTTONDB_", "CDB_NCGC_"), array("", ""), $score->environment);
+         $env_nid = db_table_exists('chado_nd_geolocation') ? chado_get_nid_from_id ('nd_geolocation', $score->nd_geolocation_id) : NULL;
+         $env_display = $env_nid ? "<a href='/node/$env_nid'>" . $env . '</a>' : $env;
+         print "<tr class=\"$class\"><td>". ($counter + 1) . "</td><td>$score->project</td><td>$descriptor</td><td>$score->value</td><td>$env_display</td><td>$score->replications</td></tr>";
+         fwrite($handle, '"' . ($counter + 1) . '","'. $score->project . '","' . $descriptor . '","' . $score->value . '","' . $env . '","' . $score->replications . '"' . "\n");
          $counter ++;
       }
       fclose($handle);

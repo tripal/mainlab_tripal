@@ -170,6 +170,10 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
           else if ($template_name == 'mainlab_feature_references') {
             $toc = 'references';
           }
+          // Use generic feature Publications template
+          else if ($template_name == 'mainlab_feature_publications') {
+            $toc = 'publications';
+          }
           // Use generic feature Alignments template
           else if ($template_name == 'mainlab_feature_alignments') {
             $toc = 'alignments';
@@ -219,7 +223,7 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
           $toc = 'overview';
           switch ($type) {
             case 'organism':
-              $toc = 'species_overview';
+              //$toc = 'species_overview';
               break;
             case 'feature':
               $featuretype = $node->feature->type_id->name;
@@ -311,6 +315,7 @@ function mainlab_tripal_node_view_alter(&$build) {
     unset($build['tripal_feature_references']);
     unset($build['tripal_feature_contact']);
     unset($build['tripal_feature_alignments']);
+    unset($build['tripal_feature_publications']);
     switch ($node->feature->type_id->name) {
       // Use mainlab templates if it's enabled
       case 'genetic_marker':
@@ -479,7 +484,9 @@ function mainlab_tripal_form_tripal_pub_search_form_alter (&$form, &$form_state)
   $tutorial = db_query("select pid from url_alias where alias = 'tutorial/publication_search'")->fetchField();
   if ($tutorial) {
     $val = $form['instructions']['#markup'];
-    $form['instructions']['#markup'] = $val . "(<a href=\"/tutorial/publication_search\"><b>Help</b></a>)";
+    $append = '<b> | ' . l('Short video tutorial', 'contact') . ' | ' . l('Text tutorial', 'tutorial/publication_search') . ' | ' . 
+       l('Email us with problems and suggestions', 'contact') . '</b>';
+    $form['instructions']['#markup'] = $val . $append;
   }
 }
 

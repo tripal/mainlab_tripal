@@ -117,9 +117,10 @@ function mainlab_tripal_preprocess_mainlab_stock_base(&$variables) {
   // Get phenotypic data
   $results = chado_query(
       "SELECT
-      P.uniquename, P.value, J.name AS project, GEO.nd_geolocation_id, GEO.environment, SP.value AS replications
+      P.uniquename, P.value, J.name AS project, GEO.nd_geolocation_id, GEO.environment, SP.value AS replications, V.name AS descriptor
       FROM {nd_experiment_phenotype} NEP
       INNER JOIN {phenotype} P ON NEP.phenotype_id = P.phenotype_id
+      INNER JOIN {cvterm} V ON V.cvterm_id = P.attr_id
       INNER JOIN {nd_experiment_stock} NES ON NES.nd_experiment_id = NEP.nd_experiment_id
       LEFT JOIN {nd_experiment_project} NEJ ON NES.nd_experiment_id = NEJ.nd_experiment_id
       LEFT JOIN {project} J ON J.project_id = NEJ.project_id
