@@ -2,7 +2,7 @@
 $stock = $variables['node']->stock;
 $phenotypic_data = $stock->phenotypic_data;
 $num_phenotypic_data = count($phenotypic_data);
-if ($num_phenotypic_data > 0) {dpm($phenotypic_data);
+if ($num_phenotypic_data > 0) {
 ?>
 
 <?php 

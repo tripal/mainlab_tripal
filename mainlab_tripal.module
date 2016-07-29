@@ -521,12 +521,23 @@ function mainlab_tripal_get_templates($enabled_only = FALSE) {
         $theme[$key] = $file;
       }
     }
-    // Get akk templates
+    // Get all templates
     else {
       $theme[$key] = $file;
     }
-  }  
-  ksort($theme);
+  }
+  // Make sure the base template are loaded before other templates so all required variables are populated
+  $base_templates = array();
+  $other_templates = array();
+  foreach ($theme AS $k => $v) {
+    if (preg_match('/_base$/', $k)) {
+      $base_templates [$k] = $v;
+    }
+    else {
+      $other_templates[$k] = $v;
+    }
+  }
+  $theme = array_merge($base_templates, $other_templates);
   return $theme;
 }
 
