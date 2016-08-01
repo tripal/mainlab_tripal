@@ -134,8 +134,18 @@ function mainlab_tripal_seq_extract_form($form, &$form_state) {
   while ($analysis = $results->fetchObject()) {
     $analyses[$analysis->name] = $analysis->name;  
   }
+  $form['instruction'] = array(
+    '#markup' => 'Download nucleotide and protein sequences including full chromosomes, 
+    scaffolds, genes, full transcripts, transcript coding sequences, proteins, genetic markers 
+    aligned to chromosomes, unigene contigs, and ESTs. You can filter by dataset, sequence 
+    type or sequence name. For sequences aligned to a whole genome, such as genes, 
+    transcripts, and genetic markers, you can include a specified number of upstream and 
+    downstream bases in the retrieved sequence. (also add the usual link to tutorials, email etc)',
+    '#prefix' => '<div style="padding:10px 0px">',
+    '#suffix' => '</div>'
+  );
   $form['analysis'] = array(
-    '#title'         => t('Analyses'),
+    '#title'         => t('Dataset'),
     '#type'          => 'select',
     '#options'       => $analyses, 
     '#default_value' => $danalysis,    
@@ -157,7 +167,7 @@ function mainlab_tripal_seq_extract_form($form, &$form_state) {
     'supercontig'    => 'scaffold',
   );
   $form['ftype'] = array(
-    '#title'         => t('Feature Type'),
+    '#title'         => t('Sequence Type'),
     '#type'          => 'select',
     '#options'       => $ftype,     
     '#multiple'      => FALSE,
@@ -166,7 +176,7 @@ function mainlab_tripal_seq_extract_form($form, &$form_state) {
   );
   
   $form['fnames'] = array(
-    '#title'         => t('Feature Name'),
+    '#title'         => t('Sequence Name'),
     '#type'          => 'file_upload_combo',
     '#default_value' => $dfnames,
     '#description'   => t('The names of the features to retrieve. Separate each with a new line or comma. Leave blank to retrieve all features matching other criteria.'),
