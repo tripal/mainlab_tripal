@@ -481,6 +481,7 @@ function mainlab_tripal_get_site () {
  * @param unknown $form_state
  */
 function mainlab_tripal_form_tripal_pub_search_form_alter (&$form, &$form_state) {
+  drupal_set_title('Search Publications');
   $tutorial = db_query("select pid from url_alias where alias = 'tutorial/publication_search'")->fetchField();
   if ($tutorial) {
     $val = $form['instructions']['#markup'];
