@@ -140,7 +140,9 @@ function mainlab_tripal_seq_extract_form($form, &$form_state) {
     aligned to chromosomes, unigene contigs, and ESTs. You can filter by dataset, sequence 
     type or sequence name. For sequences aligned to a whole genome, such as genes, 
     transcripts, and genetic markers, you can include a specified number of upstream and 
-    downstream bases in the retrieved sequence. (also add the usual link to tutorials, email etc)',
+    downstream bases in the retrieved sequence. ' . 
+    '<b> | <a href="https://www.youtube.com/watch?v=">Short video tutorial</a> | <a href="/tutorial/sequence_retrieval">Text tutorial</a> | <a href="/contact">Email us with problems and suggestions</a></b>'
+    ,
     '#prefix' => '<div style="padding:10px 0px">',
     '#suffix' => '</div>'
   );
