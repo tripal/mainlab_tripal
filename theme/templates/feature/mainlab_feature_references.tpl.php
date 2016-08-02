@@ -12,6 +12,9 @@ if ($feature->dbxref_id) {
 $options = array('return_array' => 1);
 $feature = chado_expand_var($feature, 'table', 'feature_dbxref', $options);
 $feature_dbxrefs = $feature->feature_dbxref;
+if ($feature_dbxrefs && !is_array($feature_dbxrefs)) {
+  $feature_dbxrefs = array($feature_dbxrefs);
+}
 if (count($feature_dbxrefs) > 0 ) {
   foreach ($feature_dbxrefs as $feature_dbxref) {    
     if($feature_dbxref->dbxref_id->db_id->name == 'GFF_source'){
