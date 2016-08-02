@@ -485,7 +485,7 @@ function mainlab_tripal_form_tripal_pub_search_form_alter (&$form, &$form_state)
   $tutorial = db_query("select pid from url_alias where alias = 'tutorial/publication_search'")->fetchField();
   if ($tutorial) {
     $val = $form['instructions']['#markup'];
-    $append = '<b> | ' . l('Short video tutorial', 'contact') . ' | ' . l('Text tutorial', 'tutorial/publication_search') . ' | ' . 
+    $append = '<b> | ' . l('Short video tutorial', 'https://www.youtube.com/watch?v=YxeTl2Lws74', array('attributes' => array('target' => '_blank'))) . ' | ' . l('Text tutorial', 'tutorial/publication_search') . ' | ' . 
        l('Email us with problems and suggestions', 'contact') . '</b>';
     $form['instructions']['#markup'] = $val . $append;
   }
