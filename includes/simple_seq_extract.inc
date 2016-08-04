@@ -132,15 +132,17 @@ function mainlab_tripal_seq_extract_form($form, &$form_state) {
   $sql .=" ORDER BY A.name ";
   $results = chado_query($sql, $args);  
   while ($analysis = $results->fetchObject()) {
+    if (in_array($analysis->name, array('Fragaria vesca Whole Genome v1.1.a2  (Re-annotation of v1.1)','Fragaria vesca Whole Genome v2.0.a1 Assembly & Annotation', 'Malus x domestica Whole Genome v3.0.a1 Assembly & Annotation'))) {
+      continue;
+    }
     $analyses[$analysis->name] = $analysis->name;  
   }
   $form['instruction'] = array(
-    '#markup' => 'Download nucleotide and protein sequences including full chromosomes, 
-    scaffolds, genes, full transcripts, transcript coding sequences, proteins, genetic markers 
-    aligned to chromosomes, unigene contigs, and ESTs. You can filter by dataset, sequence 
-    type or sequence name. For sequences aligned to a whole genome, such as genes, 
-    transcripts, and genetic markers, you can include a specified number of upstream and 
-    downstream bases in the retrieved sequence. ' . 
+    '#markup' => 'Download nucleotide and protein sequences including chromosomes, 
+    scaffolds, genes, mRNAs, transcript coding sequences, protein, reftrans contigs and 
+    unigene contigs. For the sequences aligned to larger sequences, such as genes, mRNAs 
+    and transcript coding sequences, a numeric value specifying the number of upstream 
+    bases and downstream bases can be typed in the text boxes.' . 
     '<b> | <a href="https://www.youtube.com/watch?v=">Short video tutorial</a> | <a href="/tutorial/sequence_retrieval">Text tutorial</a> | <a href="/contact">Email us with problems and suggestions</a></b>'
     ,
     '#prefix' => '<div style="padding:10px 0px">',
@@ -155,7 +157,7 @@ function mainlab_tripal_seq_extract_form($form, &$form_state) {
     '#description'  => t('You can limit sequences by the analyses to which it was derived or was used. If specified, only features associated with the specific analysis will be retrieved.'),
   );
   
-  $ftype = array(
+/*   $ftype = array(
     '' => '',
     'CDS' => 'CDS',
     'chromosome' => 'chromosome',
@@ -175,7 +177,7 @@ function mainlab_tripal_seq_extract_form($form, &$form_state) {
     '#multiple'      => FALSE,
     '#default_value' => $dftype,
     '#description'   => t('The type of feature to retrieve (e.g. mRNA). All features that match this type will be retrieved.'),
-  );
+  ); */
   
   $form['fnames'] = array(
     '#title'         => t('Sequence Name'),
