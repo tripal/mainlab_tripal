@@ -131,11 +131,13 @@ function mainlab_tripal_seq_extract_form($form, &$form_state) {
   $args = array();
   $sql .=" ORDER BY A.name ";
   $results = chado_query($sql, $args);  
+  $dataset = '';
   while ($analysis = $results->fetchObject()) {
     if (in_array($analysis->name, array('Fragaria vesca Whole Genome v1.1.a2  (Re-annotation of v1.1)','Fragaria vesca Whole Genome v2.0.a1 Assembly & Annotation', 'Malus x domestica Whole Genome v3.0.a1 Assembly & Annotation'))) {
       continue;
     }
     $analyses[$analysis->name] = $analysis->name;  
+    $dataset .= "<li>$analysis->name</li>";
   }
   $form['instruction'] = array(
     '#markup' => 'Download nucleotide and protein sequences including chromosomes, 
@@ -148,7 +150,10 @@ function mainlab_tripal_seq_extract_form($form, &$form_state) {
     '#prefix' => '<div style="padding:10px 0px">',
     '#suffix' => '</div>'
   );
-  $form['analysis'] = array(
+  $form['dataset'] = array(
+    '#markup' => '<strong>Dataset</strong><div style="margin:0px 0px 10px 20px;"><ur>' . $dataset . '</ul></div>',
+ );
+/*  $form['analysis'] = array(
     '#title'         => t('Dataset'),
     '#type'          => 'select',
     '#options'       => $analyses, 
@@ -156,7 +161,7 @@ function mainlab_tripal_seq_extract_form($form, &$form_state) {
     '#multiple'      => FALSE,
     '#description'  => t('You can limit sequences by the analyses to which it was derived or was used. If specified, only features associated with the specific analysis will be retrieved.'),
   );
-  
+*/  
 /*   $ftype = array(
     '' => '',
     'CDS' => 'CDS',
