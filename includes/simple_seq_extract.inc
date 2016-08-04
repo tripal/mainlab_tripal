@@ -151,7 +151,7 @@ function mainlab_tripal_seq_extract_form($form, &$form_state) {
     '#suffix' => '</div>'
   );
   $form['dataset'] = array(
-    '#markup' => '<strong>Dataset</strong><div style="margin:0px 0px 10px 20px;"><ur>' . $dataset . '</ul></div>',
+    '#markup' => '<strong>Available Dataset</strong><div style="margin:0px 0px 10px 20px;"><ur>' . $dataset . '</ul></div>',
  );
 /*  $form['analysis'] = array(
     '#title'         => t('Dataset'),
