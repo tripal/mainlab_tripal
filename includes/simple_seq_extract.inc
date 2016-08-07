@@ -145,7 +145,7 @@ function mainlab_tripal_seq_extract_form($form, &$form_state) {
     unigene contigs. For the sequences aligned to larger sequences, such as genes, mRNAs 
     and transcript coding sequences, a numeric value specifying the number of upstream 
     bases and downstream bases can be typed in the text boxes.' . 
-    '<b> | <a href="https://www.youtube.com/watch?v=">Short video tutorial</a> | <a href="/tutorial/sequence_retrieval">Text tutorial</a> | <a href="/contact">Email us with problems and suggestions</a></b>'
+    '<b> | <a href="https://www.youtube.com/watch?v=HApBhgOnX1g">Short video tutorial</a> | <a href="/tutorial/sequence_retrieval">Text tutorial</a> | <a href="/contact">Email us with problems and suggestions</a></b>'
     ,
     '#prefix' => '<div style="padding:10px 0px">',
     '#suffix' => '</div>'
