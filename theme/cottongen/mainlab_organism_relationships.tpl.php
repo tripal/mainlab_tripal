@@ -63,7 +63,7 @@ if (count($object_rels) > 0 or count($subject_rels) > 0) {
              $counter ++;
            } ?>
          </table>
-         </p><br><?php
+         <br><?php
       }
       ?>
   </div> 

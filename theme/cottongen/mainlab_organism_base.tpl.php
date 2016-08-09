@@ -121,5 +121,4 @@ $image_file = "sites/default/files/tripal/tripal_organism/images/".$node->nid.".
   </table>
   <?php if (file_exists($image_file)) {?>
   <div style="float:right;padding:10px 4px;"><img width="238px" src ="/<?php print $image_file;?>"></div>
-  <?php } ?>   
-</div>
+  <?php } ?>

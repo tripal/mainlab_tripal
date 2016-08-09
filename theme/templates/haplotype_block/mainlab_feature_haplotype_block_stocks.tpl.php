@@ -5,7 +5,7 @@ $stocks = $feature->stocks;
 if (count($stocks) > 0) { ?>
   <div id="tripal_feature-stocks-box" class="tripal_feature-info-box tripal-info-box">
     <table id="tripal_feature-stocks-table" class="tripal_feature-table tripal-table tripal-table-horz" style="width:100%;">
-      <tr width=100%><th>#</th><th>Germplasm</th></tr>
+      <tr><th>#</th><th>Germplasm</th></tr>
           <?php 
             $count = 1;
             foreach($stocks as $stock) {

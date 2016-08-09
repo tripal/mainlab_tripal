@@ -5,7 +5,7 @@ $haplotypes = $feature->haplotypes;
 if (count($haplotypes) > 0) { ?>
   <div id="tripal_feature-haplotypes-box" class="tripal_feature-info-box tripal-info-box">
     <table id="tripal_feature-haplotypes-table" class="tripal_feature-table tripal-table tripal-table-horz" style="width:100%;">
-      <tr width=100%><th>Marker</th>
+      <tr><th>Marker</th>
           <?php 
             $count = 1;
             foreach($haplotypes as $marker_feature_id => $haplotype) {
