@@ -1,6 +1,6 @@
 <?php
 $feature = $node->feature;
-$feature = tripal_core_expand_chado_vars($feature, 'table', 'feature_relationship');
+$feature = chado_expand_var($feature, 'table', 'feature_relationship');
 
 $object_rels = $feature->feature_relationship->object_id;
 if (!is_array($object_rels)) {
@@ -33,7 +33,7 @@ if (count($object_rels) > 0) {
             // Get associated genes for this generic gene
             if ($rels->type_id->name == 'associated_with') {
               $gene = $rels->subject_id;
-              $gene = tripal_core_expand_chado_vars($gene, 'table', 'feature_dbxref', array('return_array' => 1));
+              $gene = chado_expand_var($gene, 'table', 'feature_dbxref', array('return_array' => 1));
               $table_options =  array(
                 'include_fk' => array(
                   'srcfeature_id' => array('type_id' => 1),
@@ -41,7 +41,7 @@ if (count($object_rels) > 0) {
                 )
               );
             
-              $gene = tripal_core_expand_chado_vars($gene, 'table', 'featureloc', $table_options); // associated gene
+              $gene = chado_expand_var($gene, 'table', 'featureloc', $table_options); // associated gene
               $accessions = $gene->feature_dbxref;
               $accs = "";
               foreach ($accessions AS $accession) {
@@ -60,7 +60,7 @@ if (count($object_rels) > 0) {
               foreach ($flocs AS $floc) {
                 $counter_alignments = 0;
                 $srcfeature = $floc->srcfeature_id; // Alignement for the gene
-                $srcfeature = tripal_core_expand_chado_vars($srcfeature, 'table', 'analysisfeature');
+                $srcfeature = chado_expand_var($srcfeature, 'table', 'analysisfeature');
                 $analysis = $srcfeature->analysisfeature->analysis_id;
                 
                 if ($srcfeature->type_id->name == 'chromosome' || $srcfeature->type_id->name == 'supercontig' || $srcfeature->type_id->name == 'contig') {
@@ -85,7 +85,7 @@ if (count($object_rels) > 0) {
                 foreach ($flocs_mids AS $mid) {
                   $counter_alignments = 0;
                   $mid_feature = $mid->feature_id;
-                  $mid_feature = tripal_core_expand_chado_vars($mid_feature, 'table', 'featureloc',array('return_array' => 1));
+                  $mid_feature = chado_expand_var($mid_feature, 'table', 'featureloc',array('return_array' => 1));
                   $mid_locs = $mid_feature->featureloc->feature_id;
                   foreach($mid_locs AS $mid_loc) {
                     $mid_type = $mid_loc->srcfeature_id->type_id->name;
@@ -94,7 +94,7 @@ if (count($object_rels) > 0) {
                         break; // Limit the number of alignment to 5
                       }
                       $mid_srcfeature = $mid_loc->srcfeature_id; // Alignement for the gene
-                      $mid_srcfeature = tripal_core_expand_chado_vars($mid_srcfeature, 'table', 'analysisfeature');
+                      $mid_srcfeature = chado_expand_var($mid_srcfeature, 'table', 'analysisfeature');
                       $mid_analysis = $mid_srcfeature->analysisfeature->analysis_id;
                       $sf = $mid_type == 'contig' ? $mid_srcfeature->name : $mid_srcfeature->name . ":" . $mid_loc->fmin . ".." . $mid_loc->fmax;
                       $loc .= $sf;
@@ -118,7 +118,7 @@ if (count($object_rels) > 0) {
   </table><?php 
   print "<div><br>Sequence(s): </div>";
   foreach($genes AS $g) {
-    tripal_core_expand_chado_vars($g, 'field', 'feature.residues');
+    chado_expand_var($g, 'field', 'feature.residues');
     if ($g->residues) {
       $sequences_html = '<a name="residues"></a>';
       $sequences_html .= '<div id="residues" class="tripal_feature-sequence-item">';

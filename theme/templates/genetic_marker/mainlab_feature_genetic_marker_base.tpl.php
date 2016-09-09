@@ -125,7 +125,7 @@ $feature = chado_expand_var($feature, 'table', 'feature_genotype');
 $polymorphism = $feature->feature_genotype->feature_id;
 
 // expand the feature to include polymorphic sesquence
-$poly_seq = tripal_feature_get_property($feature->feature_id, 'polymorhpic_sequence', 'MAIN');
+// $poly_seq = tripal_feature_get_property($feature->feature_id, 'polymorhpic_sequence', 'MAIN');
 
 // expand feature to include pubs
 $feature = chado_expand_var($feature, 'table', 'feature_pub', array('return_array' => 1));

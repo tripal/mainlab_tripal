@@ -16,7 +16,7 @@ if (!is_array($object_rels)) {
 }
 foreach ($object_rels as $rels){
   if ($rels->type_id->name == 'associated_with') {
-    $rels = tripal_core_expand_chado_vars($rels, 'table', 'featureprop');
+    $rels = chado_expand_var($rels, 'table', 'featureprop');
     $fprop = $rels->subject_id->featureprop;
     if (is_array($fprop)) {
       foreach ($fprop AS $prop) {

@@ -3,13 +3,13 @@ $project = $variables['node']->project;
 
 // expand the project object to include the contacts from the project_contact
 // table in chado.
-$project = tripal_core_expand_chado_vars($project,'table','project_contact', array('return_array' => 1));
+$project = chado_expand_var($project,'table','project_contact', array('return_array' => 1));
 $contacts = $project->project_contact;
 
 if (count($contacts) > 0) {
   $index = 0;
     foreach($contacts AS $contact) {
-      $contact = tripal_core_expand_chado_vars($contact, 'table', 'contactprop');
+      $contact = chado_expand_var($contact, 'table', 'contactprop');
       $contactprops = $contact->contact_id->contactprop;
       $contact_info = array();
       $contact_info['contact_name'] = $contact->contact_id->name;

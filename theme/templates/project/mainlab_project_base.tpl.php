@@ -3,11 +3,11 @@ $node = $variables['node'];
 $project = $variables['node']->project;
 
 // expand the project to include the properties.
-$project = tripal_core_expand_chado_vars($project,'table', 'projectprop', array('return_array' => 1));
+$project = chado_expand_var($project,'table', 'projectprop', array('return_array' => 1));
 $projectprops = $project->projectprop;
 $properties = array();
 foreach ($projectprops as $property) {
-  $property = tripal_core_expand_chado_vars($property,'field','projectprop.value');
+  $property = chado_expand_var($property,'field','projectprop.value');
   if ($property->value) {
     if ($property->type_id->name == 'filename') {
       $properties[$property->type_id->name] = "<a href=\"/bulk_data/www.rosaceae.org/genotype_snp/$property->value\">". $property->value . "</a>";
@@ -19,11 +19,11 @@ foreach ($projectprops as $property) {
 asort($properties);
 
 // expand project to include pubs 
-//$project = tripal_core_expand_chado_vars($project, 'table', 'project_pub');
+//$project = chado_expand_var($project, 'table', 'project_pub');
 //$pubs = $project->project_pub;
 
 // expand project to include contacts
-//$project = tripal_core_expand_chado_vars($project, 'table', 'project_contact');
+//$project = chado_expand_var($project, 'table', 'project_contact');
 //$contacts = $project->project_contact;
 
 ?>
