@@ -1,5 +1,5 @@
 You can copy default templates and/or preprocessors here and modify their code  to 
-change their corresponding pages. You need to enable the 'custom_templates' in the 
+change their corresponding pages. You need to enable the 'custom_templates' from the 
 mainlab_tripal administrative interface.
 
 Alternatively, you can create your own sub-folder in the 'theme' folder to store  your own 

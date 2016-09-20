@@ -1,7 +1,11 @@
 Project
 --------------------
-Mainlab Tripal is a module 
-
+Mainlab Tripal contains a set of Drupal/PHP templates that organize and extend the default 
+display of the biological data hosted on a Tripal-enabled site (i.e. http://tripal.info). 
+Supported data type includes orgainsm, marker, QTL, germplasm, map, project and so 
+on. Each of the templates can be turned on/off as desired. The module supports overriding 
+built-in templates so site-specific customization is also supported (see Overriding 
+templates under the Administration section). 
 
 The Mainlab Tripal is created by Main Bioinformatics Lab (Main Lab) at Washington State 
 University. Information about the Main Lab can be found at: https://www.bioinfo.wsu.edu
@@ -30,23 +34,67 @@ After downloading the module, extract it into your site's module directory
     or by using the 'drush' command:
       drush pm-enable mainlab_tripal
 
+2. Enable the templates as desired by visiting http://your.site/admin/mainlab/mainlab_tripal
+
+Note: To get most out of these templates, please use the chado loader provided by the
+Main Lab to load data.
+
 Administration
 --------------------
- - Enabling/Disabling a search:
+ - Enabling/Disabling a template:
    Go to: Mainlab > Mainlab Tripal and check on the templates you want to enable 
    i.e. http://your.site/admin/mainlab/mainlab_tripal
    
  - Overriding templates
-    
-Customization
+   1. Create a subfolder in the module directory under 'mainlab_tripal/theme'. For example,
+       'mainlab_tripal/theme/custom_templates'
+       
+   2. Copy over any module provided template (located in theme/template) or preprocessor
+       (located in theme/preprocessors) you'd like to modify to the 
+       folder you created and make changes accordingly.
+       
+   3. Go to the Mainlab Tripal administrative interface 
+       (i.e. http://your.site/admin/mainlab/mainlab_tripal) and enable overriding built-in 
+       templates by selecting the custom folder under the 'Override Default Templates' 
+       section. Save the configuration. Because of Drupal's cache system, you'll need to visit 
+       this page to save the configuration everytime you copy over a new template. Otherwise
+       the new template may not be used.
+       
+Showcase
 --------------------
-You can customize the search for your site by modifying the 'settings.conf' file, the search 
-interface php file, and/or the materialized view definition php file. You can also create your 
-own search by creating these files accordingly. 
+This module is used by many web sites hosted at Main Bioinformatics Lab. You can visit 
+either GDR (http://www.rosaceae.org), CottonGen (http://www.cottongen.org), or CSFL
+(http://www.coolseasonfoodlegume.org) to see many of these templates in action. Please
+note that the templates will only show data that are available so they may look different 
+from pages on your site.
 
-Create New Templates (for Developers)
---------------------
-             
+- Organism
+   https://www.rosaceae.org/organism/Malus/x-domestica
+
+- Marker (type: genetic_marker)
+   https://www.rosaceae.org/node/3898850
+
+- Polymorphism
+   https://www.rosaceae.org/polymorphism/3409955
+  
+- Allele
+   https://www.rosaceae.org/allele/GD147/117/28
+
+- QTL (type: feature)
+   https://www.rosaceae.org/node/3883616
+  
+- MTL (type: feature)
+   https://www.rosaceae.org/node/1532116
+
+- Germplasm (type: stock)
+   https://www.rosaceae.org/node/1794344
+  
+- Map (type: featuremap)
+   https://www.rosaceae.org/node/1539087
+ 
+- Project (type: project)
+   https://www.rosaceae.org/node/4230961
+
 Problems/Suggestions
 --------------------
 Mainlab Tripal is still under active development. For questions or bug report, please contact 
