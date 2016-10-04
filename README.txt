@@ -22,7 +22,7 @@ Version
 Download
 --------------------
 The MainLab Tripal module can be download from GitHub:
-https://www.github.com/tripal/extension/mainlab_tripal
+https://www.github.com/mainlab-dev/mainlab_tripal
 
 Installation
 --------------------
