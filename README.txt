@@ -2,10 +2,16 @@ Project
 --------------------
 Mainlab Tripal contains a set of Drupal/PHP templates that organize and extend the default 
 display of the biological data hosted on a Tripal-enabled site (i.e. http://tripal.info). 
-Supported data type includes orgainsm, marker, QTL, germplasm, map, project and so 
-on. Each of the templates can be turned on/off as desired. The module supports overriding 
-built-in templates so site-specific customization is also supported (see Overriding 
-templates under the Administration section). 
+Supported data type includes orgainsm, marker, QTL, germplasm (stock), map 
+(featuremap), project, heritable phenotypic marker (MTL), environment (ND geolocation), 
+haplotype block, polymorphism, eimage, generic gene (genes created by parsing Genbank 
+files using the Mainlab 'tripal_genbank_parser' module), feature, and pub. Each of the 
+templates can be turned on/off as desired. The module supports overriding built-in 
+templates so site-specific customization is also supported (see Overriding templates under 
+the Administration section). To take full advantage of these templates, a data collecton 
+templates and loader (Mainlab Chado Loader, see 
+https://www.github.com/mainlab-dev/mainlab_chado_loader) are also provided as a 
+separate module.
 
 The Mainlab Tripal is created by Main Bioinformatics Lab (Main Lab) at Washington State 
 University. Information about the Main Lab can be found at: https://www.bioinfo.wsu.edu
@@ -21,7 +27,7 @@ Version
 
 Download
 --------------------
-The MainLab Tripal module can be download from GitHub:
+The MainLab Tripal module can be downloaded from GitHub:
 https://www.github.com/mainlab-dev/mainlab_tripal
 
 Installation
@@ -29,12 +35,13 @@ Installation
 After downloading the module, extract it into your site's module directory 
 (e.g. sites/all/modules) then follow the instructions below:
 
-1. Enable the module by usng the Drupal administrative interface: 
+1. Enable the module either by 1) using the Drupal administrative interface: 
       Go to: Modules, check Mainlab Tripal (under the Mainlab category) and save 
-    or by using the 'drush' command:
+    or 2) by using the 'drush' command:
       drush pm-enable mainlab_tripal
 
-2. Enable the templates as desired by visiting http://your.site/admin/mainlab/mainlab_tripal
+2. Enable the templates as desired by visiting 
+      http://your.site/admin/mainlab/mainlab_tripal
 
 Note: To get most out of these templates, please use the chado loader provided by the
 Main Lab to load data.
@@ -49,21 +56,21 @@ Administration
    1. Create a subfolder in the module directory under 'mainlab_tripal/theme'. For example,
        'mainlab_tripal/theme/custom_templates'
        
-   2. Copy over any module provided template (located in theme/template) or preprocessor
-       (located in theme/preprocessors) you'd like to modify to the 
+   2. Copy over any module-provided template (located in theme/template) or preprocessor
+       (located in theme/preprocessors) you would like to modify to the 
        folder you created and make changes accordingly.
        
    3. Go to the Mainlab Tripal administrative interface 
        (i.e. http://your.site/admin/mainlab/mainlab_tripal) and enable overriding built-in 
        templates by selecting the custom folder under the 'Override Default Templates' 
-       section. Save the configuration. Because of Drupal's cache system, you'll need to visit 
-       this page to save the configuration everytime you copy over a new template. Otherwise
-       the new template may not be used.
+       section. Save the configuration. Due to the Drupal's cache system, you will need to 
+       visit this page to save the configuration every time you copy over a new template. 
+       Otherwise the new template may not be used.
        
 Showcase
 --------------------
 This module is used by many web sites hosted at Main Bioinformatics Lab. You can visit 
-either GDR (http://www.rosaceae.org), CottonGen (http://www.cottongen.org), or CSFL
+GDR (http://www.rosaceae.org), CottonGen (http://www.cottongen.org), or CSFL
 (http://www.coolseasonfoodlegume.org) to see many of these templates in action. Please
 note that the templates will only show data that are available so they may look different 
 from pages on your site.
@@ -97,5 +104,6 @@ from pages on your site.
 
 Problems/Suggestions
 --------------------
-Mainlab Tripal is still under active development. For questions or bug report, please contact 
-the developers at the Main Bioinformatics Lab by emailin to: dev@bioinfo.wsu.edu
+Mainlab Tripal module is still under active development. For questions or bug report, 
+please contact the developers at the Main Bioinformatics Lab by emailing to: 
+dev@bioinfo.wsu.edu
