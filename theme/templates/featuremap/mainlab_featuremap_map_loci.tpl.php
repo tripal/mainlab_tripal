@@ -22,6 +22,9 @@ if(count($feature_positions) > 0){ ?>
   
   foreach ($feature_positions as $position){
     $nid = chado_get_nid_from_id ('feature', $position->feature_id);
+    if (!$nid) {
+      $nid = chado_get_nid_from_id ('feature', $position->marker_feature_id);
+    }
     $rows[] = array(
       $position->lg,
       $nid ? "<a href='/node/$nid'>" . $position->marker . '</a>': $position->marker,

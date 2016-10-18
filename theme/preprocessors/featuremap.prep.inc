@@ -43,6 +43,7 @@ function mainlab_tripal_preprocess_mainlab_featuremap_map_loci(&$variables) {
         F.uniquename AS LG, 
         (SELECT first (object_id) FROM {feature_relationship} WHERE subject_id = F2.feature_id AND type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'instance_of' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'relationship'))) AS feature_id, 
         F2.uniquename AS marker, 
+        F2.feature_id AS marker_feature_id,
         (SELECT name FROM {cvterm} WHERE cvterm_id = F2.type_id) AS type,
         FPP.value AS position 
       FROM {featurepos} FP 
