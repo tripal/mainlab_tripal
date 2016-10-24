@@ -40,9 +40,11 @@ foreach ($object_rels as $rels){
 
 // We want to display all synonyms and the product in one field as 'Synonym'
 $feature = chado_expand_var($feature,'table','feature_synonym', array ('return_array' => 1));
-foreach ($feature->feature_synonym AS $synonym) {
-  if (!in_array($synonym->synonym_id->name,$product)) {
-    array_push($product, $synonym->synonym_id->name);
+if ($feature->feature_synonym) {
+  foreach ($feature->feature_synonym AS $synonym) {
+    if (!in_array($synonym->synonym_id->name,$product)) {
+      array_push($product, $synonym->synonym_id->name);
+    }
   }
 }
 
