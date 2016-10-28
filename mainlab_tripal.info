@@ -1,5 +1,5 @@
 name = MainLab Tripal
-description = An extension module for Tripal the includes custom tables for Chado used by the Main Bioinformatics Laboratory.
+description = Extended Tripal themes and templates created by the Main Bioinformatics Lab
 core = 7.x
 #project = mainlab_tripal
 package = Mainlab
