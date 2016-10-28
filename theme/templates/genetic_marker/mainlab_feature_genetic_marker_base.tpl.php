@@ -60,9 +60,28 @@ if ($feature_dbxrefs) {
 
 // get germplasm
 $fstock = chado_expand_var($feature,'table','feature_stock');
-$stock = is_object($fstock->feature_stock) ? $fstock->feature_stock->stock_id->uniquename : NULL;
-$stock_nid = is_object($fstock->feature_stock) && property_exists($fstock->feature_stock->stock_id, 'nid') ? $fstock->feature_stock->stock_id->nid : NULL;
-
+$display_stock = NULL;
+if (is_object($fstock->feature_stock)) {
+  $stock =  $fstock->feature_stock->stock_id->uniquename;
+  $stock_nid = property_exists($fstock->feature_stock->stock_id, 'nid') ? $fstock->feature_stock->stock_id->nid : NULL;
+  if ($stock_nid) {
+    $display_stock = "<a href=\"/node/$stock_nid\">". $stock ."</a>";
+  }
+  else {
+    $display_stock = $stock;
+  }
+} else if (is_array($fstock->feature_stock)) {
+  foreach ($fstock->feature_stock AS $fs) {
+    $s = $fs->stock_id->uniquename;
+    $s_nid = property_exists($fs->stock_id, 'nid') ? $fs->stock_id->nid : NULL;
+    if ($s_nid) {
+      $display_stock .= "<a href=\"/node/$s_nid\">". $s ."</a><br>";
+    }
+    else {
+      $display_stock .= $s ."<br>";
+    }
+  }
+}
 // get source sequence & probes
 $f_rel = chado_expand_var($feature,'table','feature_relationship', array('return_array' => 1));
 $objs = $f_rel->feature_relationship->object_id;
@@ -180,7 +199,7 @@ if (count($probes) > 0) {
 // Species
 $rows [] = array(array('data' => 'Species', 'header' => TRUE, 'width' => '20%'), $feature->organism_id->nid ? "<a href=\"".url("node/".$feature->organism_id->nid)."\">".$feature->organism_id->genus ." " . $feature->organism_id->species . "</a>" : $feature->organism_id->genus ." " . $feature->organism_id->species);
 // Germplasm
-if ($stock) {$rows [] = array(array('data' => 'Germplasm', 'header' => TRUE, 'width' => '20%'), $stock ? "<a href=\"/node/$stock_nid\">". $stock ."</a>" : "N/A");}
+if ($display_stock) {$rows [] = array(array('data' => 'Germplasm', 'header' => TRUE, 'width' => '20%'), $display_stock ? $display_stock : "N/A");}
 // Source Sequence
 $srcseq = "";
 foreach ($seqs AS $seq) {
