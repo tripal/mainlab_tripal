@@ -1,5 +1,4 @@
-# Project
---------------------
+# Mainlab Tripal
 Mainlab Tripal contains a set of Drupal/PHP templates that organize and extend the default 
 display of the biological data hosted on a Tripal-enabled site (i.e. http://tripal.info). 
 Supported data type includes orgainsm, marker, QTL, germplasm (stock), map 
@@ -16,22 +15,18 @@ separate module.
 The Mainlab Tripal is created by Main Bioinformatics Lab (Main Lab) at Washington State 
 University. Information about the Main Lab can be found at: https://www.bioinfo.wsu.edu
  
-# Requirement
---------------------
+## Requirement
  - Drupal 7.x
  - Tripal 7.x-2.x
 
-# Version
---------------------
+## Version
 1.0.0
 
-# Download
---------------------
+## Download
 The MainLab Tripal module can be downloaded from GitHub:
 https://www.github.com/mainlab-dev/mainlab_tripal
 
-# Installation
---------------------
+## Installation
 After downloading the module, extract it into your site's module directory 
 (e.g. sites/all/modules) then follow the instructions below:
 
@@ -46,8 +41,7 @@ After downloading the module, extract it into your site's module directory
 Note: To get most out of these templates, please use the chado loader provided by the
 Main Lab to load data.
 
-# Administration
---------------------
+## Administration
  - Enabling/Disabling a template:
    Go to: Mainlab > Mainlab Tripal and check on the templates you want to enable 
    i.e. http://your.site/admin/mainlab/mainlab_tripal
@@ -67,8 +61,7 @@ Main Lab to load data.
        visit this page to save the configuration every time you copy over a new template. 
        Otherwise the new template may not be used.
        
-# Showcase
---------------------
+## Showcase
 This module is used by many web sites hosted at Main Bioinformatics Lab. You can visit 
 GDR (http://www.rosaceae.org), CottonGen (http://www.cottongen.org), or CSFL
 (http://www.coolseasonfoodlegume.org) to see many of these templates in action. Please
@@ -102,8 +95,7 @@ from pages on your site.
 - Project (type: project)
    https://www.rosaceae.org/node/4230961
 
-# Problems/Suggestions
---------------------
+## Problems/Suggestions
 Mainlab Tripal module is still under active development. For questions or bug report, 
 please contact the developers at the Main Bioinformatics Lab by emailing to: 
 dev@bioinfo.wsu.edu
