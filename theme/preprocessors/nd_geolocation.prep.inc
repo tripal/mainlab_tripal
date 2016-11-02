@@ -1,7 +1,7 @@
 <?php
 // The templates are loaded in alphabetic order so we load the $node->nd_geolocation in 
 // the 'assiciated_dataset' template which can be used by all other templates
-function mainlab_tripal_preprocess_mainlab_nd_geolocation_associated_dataset(&$variables) {
+function mainlab_tripal_preprocess_mainlab_nd_geolocation_base(&$variables) {
   $node = $variables['node'];
   $nd_geolocation_id = chado_get_id_from_nid('nd_geolocation', $node->nid);
   $values = array('nd_geolocation_id' => $nd_geolocation_id);
