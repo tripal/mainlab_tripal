@@ -76,9 +76,9 @@ note that the templates will only show data that are available so they may look 
 from pages on your site.
 
 - [Organism]
-   (https://www.rosaceae.org/organism/Malus/x-domestica)
+   (https://www.rosaceae.org/organism/Rubus/occidentalis)
 
-- [Marker (type: genetic_marker)]
+- [Marker]
    (https://www.rosaceae.org/node/3898850)
 
 - [Polymorphism]
@@ -87,19 +87,19 @@ from pages on your site.
 - [Allele]
    (https://www.rosaceae.org/allele/GD147/117/28)
 
-- [QTL (type: feature)]
+- [QTL]
    (https://www.rosaceae.org/node/3883616)
   
-- [MTL (type: feature)]
+- [MTL]
    (https://www.rosaceae.org/node/1532116)
 
-- [Germplasm (type: stock)]
+- [Germplasm]
    (https://www.rosaceae.org/node/1794344)
   
-- [Map (type: featuremap)]
+- [Map]
    (https://www.rosaceae.org/node/1539087)
  
-- [Project (type: project)]
+- [Project]
    (https://www.rosaceae.org/node/4230961)
 
 ## Problems/Suggestions
