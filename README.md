@@ -7,9 +7,9 @@ haplotype block, polymorphism, eimage, generic gene (genes created by parsing Ge
 files using the Mainlab 'tripal_genbank_parser' module), feature, and pub. Each of the 
 templates can be turned on/off as desired. The module supports overriding built-in 
 templates so site-specific customization is also supported (see Overriding templates under 
-the Administration section). To take full advantage of these templates, a data collecton 
-templates and loader (Mainlab Chado Loader, see 
-https://www.github.com/mainlab-dev/mainlab_chado_loader) are also provided as a 
+the Administration section). To take full advantage of these templates, data collecton 
+templates and a loader (Mainlab Chado Loader, see 
+https://www.github.com/mainlab-dev/mainlab_chado_loader) are also available as a 
 separate module.
 
 The Mainlab Tripal is created by Main Bioinformatics Lab (Main Lab) at Washington State 
@@ -30,12 +30,18 @@ https://www.github.com/mainlab-dev/mainlab_tripal
 After downloading the module, extract it into your site's module directory 
 (e.g. sites/all/modules) then follow the instructions below:
 
-1. Enable the module either by 1) using the Drupal administrative interface: 
+1. Enable the module either by 
+
+  using the Drupal administrative interface: 
       Go to: Modules, check Mainlab Tripal (under the Mainlab category) and save 
-    or 2) by using the 'drush' command:
-      drush pm-enable mainlab_tripal
+  or using the 'drush' command:
+  
+  ```
+  drush pm-enable mainlab_tripal
+  ```
 
 2. Enable the templates as desired by visiting 
+
       http://your.site/admin/mainlab/mainlab_tripal
 
 Note: To get most out of these templates, please use the chado loader provided by the
@@ -47,7 +53,7 @@ Main Lab to load data.
    i.e. http://your.site/admin/mainlab/mainlab_tripal
    
  - Overriding templates
-   1. Create a subfolder in the module directory under 'mainlab_tripal/theme'. For example,
+   1. Create a subfolder in the module directory 'mainlab_tripal/theme'. For example,
        'mainlab_tripal/theme/custom_templates'
        
    2. Copy over any module-provided template (located in theme/template) or preprocessor
@@ -63,37 +69,37 @@ Main Lab to load data.
        
 ## Showcase
 This module is used by many web sites hosted at Main Bioinformatics Lab. You can visit 
-GDR (http://www.rosaceae.org), CottonGen (http://www.cottongen.org), or CSFL
+[GDR] (http://www.rosaceae.org), [CottonGen] (http://www.cottongen.org), or [CSFL]
 (http://www.coolseasonfoodlegume.org) to see many of these templates in action. Please
 note that the templates will only show data that are available so they may look different 
 from pages on your site.
 
-- Organism
-   https://www.rosaceae.org/organism/Malus/x-domestica
+- [Organism]
+   (https://www.rosaceae.org/organism/Malus/x-domestica)
 
-- Marker (type: genetic_marker)
-   https://www.rosaceae.org/node/3898850
+- [Marker (type: genetic_marker)]
+   (https://www.rosaceae.org/node/3898850)
 
-- Polymorphism
-   https://www.rosaceae.org/polymorphism/3409955
+- [Polymorphism]
+   (https://www.rosaceae.org/polymorphism/3409955)
   
-- Allele
-   https://www.rosaceae.org/allele/GD147/117/28
+- [Allele]
+   (https://www.rosaceae.org/allele/GD147/117/28)
 
-- QTL (type: feature)
-   https://www.rosaceae.org/node/3883616
+- [QTL (type: feature)]
+   (https://www.rosaceae.org/node/3883616)
   
-- MTL (type: feature)
-   https://www.rosaceae.org/node/1532116
+- [MTL (type: feature)]
+   (https://www.rosaceae.org/node/1532116)
 
-- Germplasm (type: stock)
-   https://www.rosaceae.org/node/1794344
+- [Germplasm (type: stock)]
+   (https://www.rosaceae.org/node/1794344)
   
-- Map (type: featuremap)
-   https://www.rosaceae.org/node/1539087
+- [Map (type: featuremap)]
+   (https://www.rosaceae.org/node/1539087)
  
-- Project (type: project)
-   https://www.rosaceae.org/node/4230961
+- [Project (type: project)]
+   (https://www.rosaceae.org/node/4230961)
 
 ## Problems/Suggestions
 Mainlab Tripal module is still under active development. For questions or bug report, 
