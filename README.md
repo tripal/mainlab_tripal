@@ -24,6 +24,7 @@ University. Information about the Main Lab can be found at: https://www.bioinfo.
 
 ## Download
 The MainLab Tripal module can be downloaded from GitHub:
+
 https://www.github.com/mainlab-dev/mainlab_tripal
 
 ## Installation
