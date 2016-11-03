@@ -1,19 +1,20 @@
-# Mainlab Tripal
-Mainlab Tripal contains a set of Drupal/PHP templates that organize and extend the default 
-display of the biological data hosted on a Tripal-enabled site (i.e. http://tripal.info). 
-Supported data type includes orgainsm, marker, QTL, germplasm (stock), map 
-(featuremap), project, heritable phenotypic marker (MTL), environment (ND geolocation), 
-haplotype block, polymorphism, eimage, generic gene (genes created by parsing Genbank 
-files using the Mainlab 'tripal_genbank_parser' module), feature, and pub. Each of the 
-templates can be turned on/off as desired. The module supports overriding built-in 
-templates so site-specific customization is also supported (see Overriding templates under 
-the Administration section). To take full advantage of these templates, data collecton 
-templates and a loader (Mainlab Chado Loader, see 
+# Mainlab Tripal Data Display
+Mainlab Tripal Data Display contains a set of Drupal/PHP templates that organize and
+ extend the default display of the biological data hosted on a Tripal-enabled site 
+ (i.e. http://tripal.info). Supported data type includes orgainsm, marker, QTL, germplasm 
+ (stock), map (featuremap), project, heritable phenotypic marker (MTL), environment 
+ (ND geolocation), haplotype block, polymorphism, eimage, generic gene (genes created 
+ by parsing Genbank files using the Mainlab 'tripal_genbank_parser' module), feature, and 
+ pub. Each of the templates can be turned on/off as desired. The module supports 
+ overriding built-in templates so site-specific customization is also supported (see 
+ Overriding templates under the Administration section). To take full advantage of these 
+ templates, data collecton templates and a loader (Mainlab Chado Loader, see 
 https://www.github.com/mainlab-dev/mainlab_chado_loader) are also available as a 
 separate module.
 
-The Mainlab Tripal is created by Main Bioinformatics Lab (Main Lab) at Washington State 
-University. Information about the Main Lab can be found at: https://www.bioinfo.wsu.edu
+The Mainlab Tripal Data Display is created by Main Bioinformatics Lab (Main Lab) at 
+Washington State University. Information about the Main Lab can be found at: 
+https://www.bioinfo.wsu.edu
  
 ## Requirement
  - Drupal 7.x
@@ -23,7 +24,7 @@ University. Information about the Main Lab can be found at: https://www.bioinfo.
 1.0.0
 
 ## Download
-The MainLab Tripal module can be downloaded from GitHub:
+The Mainlab Tripal Data Display module can be downloaded from GitHub:
 
 https://www.github.com/mainlab-dev/mainlab_tripal
 
@@ -103,6 +104,6 @@ from pages on your site.
    (https://www.rosaceae.org/node/4230961)
 
 ## Problems/Suggestions
-Mainlab Tripal module is still under active development. For questions or bug report, 
-please contact the developers at the Main Bioinformatics Lab by emailing to: 
+Mainlab Tripal Data Display module is still under active development. For questions or bug 
+report, please contact the developers at the Main Bioinformatics Lab by emailing to: 
 dev@bioinfo.wsu.edu

@@ -1,4 +1,4 @@
-name = MainLab Tripal
+name = MainLab Tripal Data Display
 description = Extended Tripal themes and templates created by the Main Bioinformatics Lab
 core = 7.x
 #project = mainlab_tripal
