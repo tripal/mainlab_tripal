@@ -26,7 +26,7 @@ https://www.bioinfo.wsu.edu
 ## Download
 The Mainlab Tripal Data Display module can be downloaded from GitHub:
 
-https://www.github.com/mainlab-dev/mainlab_tripal
+https://www.github.com/mainlab-dev/mainlab_tripal/releases/latest
 
 ## Installation
 After downloading the module, extract it into your site's module directory 
