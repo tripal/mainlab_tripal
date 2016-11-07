@@ -9,8 +9,8 @@ Mainlab Tripal Data Display contains a set of Drupal/PHP templates that organize
  overriding built-in templates so site-specific customization is also supported (see 
  Overriding templates under the Administration section). To take full advantage of these 
  templates, data collecton templates and a loader (Mainlab Chado Loader, see 
-https://www.github.com/mainlab-dev/mcl) are also available as a 
-separate module.
+https://github.com/mainlab-dev/mainlab_chado_loader/releases/latest) are also available 
+as a separate module.
 
 The Mainlab Tripal Data Display is created by Main Bioinformatics Lab (Main Lab) at 
 Washington State University. Information about the Main Lab can be found at: 
