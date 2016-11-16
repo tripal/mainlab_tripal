@@ -9,7 +9,7 @@ Mainlab Tripal Data Display contains a set of Drupal/PHP templates that organize
  overriding built-in templates so site-specific customization is also supported (see 
  Overriding templates under the Administration section). To take full advantage of these 
  templates, data collecton templates and a loader (Mainlab Chado Loader, see 
-https://github.com/mainlab-dev/mainlab_chado_loader/releases/latest) are also available 
+https://github.com/tripal/mainlab_chado_loader/releases/latest) are also available 
 as a separate module.
 
 The Mainlab Tripal Data Display is created by Main Bioinformatics Lab (Main Lab) at 
@@ -26,7 +26,7 @@ https://www.bioinfo.wsu.edu
 ## Download
 The Mainlab Tripal Data Display module can be downloaded from GitHub:
 
-https://www.github.com/mainlab-dev/mainlab_tripal/releases/latest
+https://www.github.com/tripal/mainlab_tripal/releases/latest
 
 ## Installation
 After downloading the module, extract it into your site's module directory 
