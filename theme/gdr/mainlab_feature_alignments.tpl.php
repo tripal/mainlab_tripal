@@ -101,7 +101,7 @@ if(count($alignments) > 0){ ?>
               // Show Apple alignments (all Malus are aligned to Malus x domestica)
               } 
               else if($feature->organism_id->genus == 'Malus' && ($alignment->right_feature->type_id->name == 'supercontig' || $alignment->right_feature->type_id->name == 'chromosome')) {
-                $match_name = chado_query("SELECT uniquename FROM feature WHERE feature_id = :feature_id", array(':feature_id' => $alignment->record->left_feature_id))->fetchField();
+                $match_name = chado_query("SELECT uniquename FROM {feature} WHERE feature_id = :feature_id", array(':feature_id' => $alignment->record->left_feature_id))->fetchField();
                 if (!preg_match("/_apple-prime/", $match_name)) {
                   $location = "<a href=\"https://www.rosaceae.org/gb/gbrowse/malus_x_domestica?name=". $floc ."\" target=\"_blank\">$location</a>"; // add hyperlink to the location
                   if ($img_count < 10) {
