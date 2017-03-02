@@ -49,6 +49,7 @@ if(count($alignments) > 0){ ?>
       </tr><?php
       $i = 1; 
       $img_count = 0;
+      $hit_limit = FALSE;
       foreach ($alignments as $alignment){
         $class = 'tripal_feature-table-odd-row odd';
         if ($i % 2 == 0 ) {
@@ -56,7 +57,7 @@ if(count($alignments) > 0){ ?>
         }?> 
         <tr class="<?php print $class ?>">
           <td><?php 
-            if ($alignment->nid) {
+            if (isset($alignment->nid)) {
               print "<a href=\"" . url("node/".$alignment->nid) . "\">".$alignment->name."</a>";
             } else {
               print $alignment->name;
@@ -73,7 +74,7 @@ if(count($alignments) > 0){ ?>
             } 
 
             // if this is a match then make the other location 
-            if($alignment->right_feature){
+            if(isset($alignment->right_feature)){
               $rstrand = '.';
               if ($alignment->right_strand == -1) {
                    $rstrand = '-';
