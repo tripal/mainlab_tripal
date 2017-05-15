@@ -192,7 +192,7 @@ function mainlab_tripal_preprocess_mainlab_feature_QTL_map_positions(&$variables
   ";
   $qtl_map_pos = mainlab_tripal_dbresult_to_array(chado_query($sql, array(':feature_id1' => $feature->feature_id,
     ':feature_id2' => $feature->feature_id)));
-  
+  $feature->mainlab_qtl = new stdClass();
   $feature->mainlab_qtl->map_positions = $qtl_map_pos;
 }
 
