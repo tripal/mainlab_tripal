@@ -116,6 +116,7 @@ function mainlab_tripal_preprocess_mainlab_feature_QTL_base(&$variables) {
     WHERE FS.feature_id = :feature_id
   ";
   $qtl->synonyms = mainlab_tripal_dbresult_to_array(chado_query($sql, array(':feature_id' => $feature_id)));
+  $feature->mainlab_qtl = new stdClass();
   $feature->mainlab_qtl->qtl_details =  $qtl;
 }
 

@@ -116,6 +116,7 @@ function mainlab_tripal_preprocess_mainlab_feature_heritable_phenotypic_marker_b
     WHERE FS.feature_id = :feature_id
   ";
   $mtl->synonyms = mainlab_tripal_dbresult_to_array(chado_query($sql, array(':feature_id' => $feature_id)));
+  $feature->mainlab_mtl = new stdClass();
   $feature->mainlab_mtl->mtl_details =  $mtl;
 }
 
