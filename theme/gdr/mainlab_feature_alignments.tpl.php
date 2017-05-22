@@ -202,7 +202,18 @@ if(count($alignments) > 0){ ?>
                   } else if ($feature->organism_id->genus == 'Fragaria' && $feature->organism_id->species == 'vesca') {
                       $location = "<a href=\"https://www.rosaceae.org/gb/gbrowse/fragaria_vesca_v1.1-lg?name=". $floc ."\" target=\"_blank\">$location</a>"; // add hyperlink to the location
                       $gbrowse_imgs['fragaria_vesca_v1.1'] = "<img style=\"width:100%\" border=0 src=\"https://www.rosaceae.org/gb/gbrowse_img/fragaria_vesca_v1.1-lg?name=". $floc ."&type=scaffold_alignments+genemark_hybrid+genemark_hybrid_transcripts+RosCos+NCBI_Sequence_Alignments\" width=500px>";
+                  // Show Fragaria marker alignments
+                  } else if ($feature->organism_id->genus == 'Fragaria') {
+                      $srcfeature = $alignment->record->srcfeature_id;
+                      $srcfeature = chado_expand_var($srcfeature, 'table', 'analysisfeature');
+                      if ($srcfeature->analysisfeature->analysis_id->name == 'Fragaria vesca Whole Genome v1.1 Assembly & Annotation') {
+                        $location = "<a href=\"https://www.rosaceae.org/jbrowse/index.html?data=data/fragaria/fvesca_v1.1&loc=". $floc ."&tracks=snp90k\" target=\"_blank\">$location</a>"; // add hyperlink to the location
+                      }
+                      else if ($srcfeature->analysisfeature->analysis_id->name == 'Fragaria vesca Whole Genome v2.0.a1 Assembly & Annotation') {
+                        $location = "<a href=\"https://www.rosaceae.org/jbrowse/index.html?data=data/fragaria/fvesca_v2.0.a1&loc=". $floc ."&tracks=strawberry_90k_snp\" target=\"_blank\">$location</a>"; // add hyperlink to the location
+                      }
                   }
+                  
               }
               print $location;
             }?>
