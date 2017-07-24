@@ -73,8 +73,9 @@ if(count($alignments) > 0){ ?>
   
   foreach ($alignments as $alignment){
     $feature_name = $alignment->name;
-    if (property_exists($alignment, 'nid')) {
-      $feature_name = l($feature_name, "node/" . $alignment->nid);
+    $link = mainlab_tripal_link_record('feature', $alignment->record->srcfeature_id->feature_id);
+    if ($link) {
+      $feature_name = l($feature_name, $link);
     }
     $feature_loc = '';
     $strand = '.';
