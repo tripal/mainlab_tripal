@@ -13,7 +13,7 @@ function mainlab_gene_class_page ($symbol = '') {
   
   $sql = 
   "SELECT 
-      F.feature_id,
+      GENE.feature_id,
       (SELECT nid FROM chado_feature WHERE feature_id = GENE.feature_id) AS nid,
       GENE.uniquename,
       (SELECT genus || ' ' || species FROM organism WHERE organism_id = F.organism_id) AS organism,
@@ -30,7 +30,7 @@ function mainlab_gene_class_page ($symbol = '') {
         AND cv_id = 
         (SELECT cv_id FROM {cv} 
         WHERE name = 'sequence'))
-         GROUP BY F.feature_id,nid,GENE.uniquename, organism
+         GROUP BY GENE.feature_id,nid,GENE.uniquename, organism
          ORDER BY organism, GENE.uniquename";
   
   $result = chado_query($sql, array(':symbol' => $symbol));
