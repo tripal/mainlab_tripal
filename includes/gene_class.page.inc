@@ -30,7 +30,7 @@ function mainlab_gene_class_page ($symbol = '') {
         AND cv_id = 
         (SELECT cv_id FROM {cv} 
         WHERE name = 'sequence'))
-         GROUP BY nid,GENE.uniquename, organism
+         GROUP BY feature_id,nid,GENE.uniquename, organism
          ORDER BY organism, GENE.uniquename";
   
   $result = chado_query($sql, array(':symbol' => $symbol));
@@ -44,7 +44,7 @@ function mainlab_gene_class_page ($symbol = '') {
       $class = array('tripal-table-odd-row');
     }
     $link = mainlab_tripal_link_record('feature', $row->feature_id);
-    $rows[] = $link ? array('data' => array("<a href=\"//$link\">" . $row->uniquename . "</a>", $row->organism, $row->contact, ), 'class' =>$class) : array('data' => array($row->uniquename, $row->organism, $row->contact, ), 'class' =>$class);
+    $rows[] = $link ? array('data' => array("<a href=\"$link\">" . $row->uniquename . "</a>", $row->organism, $row->contact, ), 'class' =>$class) : array('data' => array($row->uniquename, $row->organism, $row->contact, ), 'class' =>$class);
     $row_count ++;
   }
   $header = array('Name', 'Organism', 'Contact');
