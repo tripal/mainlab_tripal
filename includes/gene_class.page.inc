@@ -30,7 +30,7 @@ function mainlab_gene_class_page ($symbol = '') {
         AND cv_id = 
         (SELECT cv_id FROM {cv} 
         WHERE name = 'sequence'))
-         GROUP BY feature_id,nid,GENE.uniquename, organism
+         GROUP BY F.feature_id,nid,GENE.uniquename, organism
          ORDER BY organism, GENE.uniquename";
   
   $result = chado_query($sql, array(':symbol' => $symbol));
