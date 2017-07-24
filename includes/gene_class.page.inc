@@ -13,6 +13,7 @@ function mainlab_gene_class_page ($symbol = '') {
   
   $sql = 
   "SELECT 
+      F.feature_id,
       (SELECT nid FROM chado_feature WHERE feature_id = GENE.feature_id) AS nid,
       GENE.uniquename,
       (SELECT genus || ' ' || species FROM organism WHERE organism_id = F.organism_id) AS organism,
@@ -42,7 +43,8 @@ function mainlab_gene_class_page ($symbol = '') {
     } else {
       $class = array('tripal-table-odd-row');
     }
-    $rows[] = $row->nid ? array('data' => array("<a href=\"/node/$row->nid\">" . $row->uniquename . "</a>", $row->organism, $row->contact, ), 'class' =>$class) : array('data' => array($row->uniquename, $row->organism, $row->contact, ), 'class' =>$class);
+    $link = mainlab_tripal_link_record('feature', $row->feature_id);
+    $rows[] = $link ? array('data' => array("<a href=\"//$link\">" . $row->uniquename . "</a>", $row->organism, $row->contact, ), 'class' =>$class) : array('data' => array($row->uniquename, $row->organism, $row->contact, ), 'class' =>$class);
     $row_count ++;
   }
   $header = array('Name', 'Organism', 'Contact');
