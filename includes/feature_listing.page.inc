@@ -45,11 +45,10 @@ function mainlab_feature_listing ($organism, $type, $stock) {
   $total = chado_query($qcount)->fetchField();
   $num_per_page = 20;
   $output = "<p>Total <strong>" . $total . "</strong> features.</p>";
-  $q = "SELECT nid, uniquename, cvterm.name AS type, genus, species 
+  $q = "SELECT feature_id, uniquename, cvterm.name AS type, genus, species 
        FROM {feature} 
        INNER JOIN {cvterm} ON cvterm_id = type_id
-       INNER JOIN {organism} O ON feature.organism_id = O.organism_id
-       LEFT JOIN chado_feature ON chado_feature.feature_id = feature.feature_id" . $sql;
+       INNER JOIN {organism} O ON feature.organism_id = O.organism_id" . $sql;
 
   $result = chado_pager_query($q, array(), 20, 0, $qcount);
   $rows = array();
@@ -65,11 +64,12 @@ function mainlab_feature_listing ($organism, $type, $stock) {
     } else {
       $class = array('tripal-table-odd-row');
     }
-    if ($row->nid) {
-       $rows[] = array('data' => array($offset + $row_count + 1,"<a href=\"/node/$row->nid\">" . $row->uniquename . "</a>", $row->type, $row->genus . " " . $row->species)
+    $link = mainlab_tripal_link_record('feature', $row->feature_id);
+    if ($link) {
+      $rows[] = array('data' => array($offset + $row_count + 1, "<a href=\"$link\">" . $row->uniquename . "</a>", $row->type, $row->genus . " " . $row->species)
                                  , 'class' =>$class);
     } else {
-      $rows[] = array('data' => array($row->uniquename, $row->type, $row->genus . " " . $row->species)
+      $rows[] = array('data' => array($offset + $row_count + 1, $row->uniquename, $row->type, $row->genus . " " . $row->species)
                                  , 'class' =>$class);
     }
     $row_count ++;

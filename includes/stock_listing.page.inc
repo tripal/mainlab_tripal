@@ -13,8 +13,7 @@ function mainlab_stock_listing ($organism, $page) {
   "SELECT 
     stock_id,
     uniquename, 
-    (SELECT name FROM {cvterm} WHERE cvterm_id = type_id) AS type,
-    (SELECT nid FROM chado_stock WHERE stock_id = stock.stock_id) AS nid
+    (SELECT name FROM {cvterm} WHERE cvterm_id = type_id) AS type
   FROM {stock}
   WHERE organism_id = (SELECT organism_id FROM {organism} WHERE genus = :genus AND species = :species)
   AND 
