@@ -11,6 +11,7 @@ function mainlab_stock_listing ($organism, $page) {
   $species = $fullname [1];
   $sql =
   "SELECT 
+    stock_id,
     uniquename, 
     (SELECT name FROM {cvterm} WHERE cvterm_id = type_id) AS type,
     (SELECT nid FROM chado_stock WHERE stock_id = stock.stock_id) AS nid
@@ -41,9 +42,10 @@ function mainlab_stock_listing ($organism, $page) {
     } else {
       $class = array('tripal-table-odd-row');
     }
-    if ($row->nid) {
-      $rows[] = array('data' => array(l($row->uniquename, "/node/$row->nid"), $row->type)
-          , 'class' =>$class);
+    $link = mainlab_tripal_link_record('stock', $row->stock_id);
+    if ($link) {
+      $rows[] = array('data' => array(l($row->uniquename, $link), $row->type)
+        , 'class' =>$class);
     } else {
       $rows[] = array('data' => array($row->uniquename, $row->type)
           , 'class' =>$class);
