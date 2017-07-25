@@ -44,8 +44,8 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/js/mainlab_t
          }
          $descriptor = $score->descriptor;
          $env = str_replace(array("COTTONDB_", "CDB_NCGC_"), array("", ""), $score->environment);
-         $env_nid = db_table_exists('chado_nd_geolocation') ? chado_get_nid_from_id ('nd_geolocation', $score->nd_geolocation_id) : NULL;
-         $env_display = $env_nid ? "<a href='/node/$env_nid'>" . $env . '</a>' : $env;
+         $link = db_table_exists('chado_nd_geolocation') ? mainlab_tripal_link_record('nd_geolocation', $score->nd_geolocation_id) : NULL;
+         $env_display = $link ? "<a href='$link'>" . $env . '</a>' : $env;
          print "<tr class=\"$class\"><td>". ($counter + 1) . "</td><td>$score->project</td><td>$descriptor</td><td>$score->value</td><td>$env_display</td><td>$score->replications</td></tr>";
          fwrite($handle, '"' . ($counter + 1) . '","'. $score->project . '","' . $descriptor . '","' . $score->value . '","' . $env . '","' . $score->replications . '"' . "\n");
          $counter ++;
