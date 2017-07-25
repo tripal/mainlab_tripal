@@ -28,10 +28,11 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/js/mainlab_t
              } else {
                 $class = "tripal_feature-table-odd-row odd";
              }
-            $diversity_data = "<a href=\"/node/$stock->nid/?block=genotypic_data&\">$stock->uniquename</a>";
+            $link = mainlab_tripal_link_record('stock', $stock->stock_id);
+            $diversity_data = "<a href=\"$link/?block=genotypic_data&\">$stock->uniquename</a>";
              print "<tr class=\"$class\">
                            <td style=\"padding-left:10px;\">$counter</td>
-                           <td style=\"padding-left:10px;\"><a href=\"/node/$stock->nid\">" . $stock->uniquename . "</a></td>
+                           <td style=\"padding-left:10px;\"><a href=\"$link\">" . $stock->uniquename . "</a></td>
                      <td style=\"padding-left:10px;\">$diversity_data</td>
                      <td style=\"padding-left:10px;\">$stock->project</td>
                  </tr>";
