@@ -13,7 +13,6 @@ if (property_exists($organism, 'all_relationships')) {
 if (count($object_rels) > 0 or count($subject_rels) > 0) {
 ?>
   <div id="tripal_organism-relationships-box" class="tripal_organism-info-box tripal-info-box">
-    <div class="tripal_organism-info-box-title tripal-info-box-title">Fertile/Sterile/Incompatible Species</div>
     <div class="tripal_organism-info-box-desc tripal-info-box-desc"></div> <?php
     
       // first add in the subject relationships.  
@@ -38,8 +37,9 @@ if (count($object_rels) > 0 or count($subject_rels) > 0) {
              <tr class="<?php print $class; ?>">
                <td>
                  <?php 
-                  if ($object->nid) {
-                    print "<i><a href=\"" . url("node/" . $object->nid) . "\" target=\"_blank\">" . $object->genus . " " . $object->species . "</i></a>";
+                  $link = mainlab_tripal_link_record('organism', $object->organism_id);
+                  if ($link) {
+                    print "<i><a href=\"" . url($link) . "\" target=\"_blank\">" . $object->genus . " " . $object->species . "</i></a>";
                   }
                   else {
                     print "<i>" . $object->genus . " " . $object->species . "</i>";
