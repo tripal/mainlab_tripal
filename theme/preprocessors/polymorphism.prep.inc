@@ -95,6 +95,7 @@ function mainlab_tripal_preprocess_mainlab_polymorphism(&$variables) {
           $new_p->marker_name = $mname;
           $new_p->marker_nid = $mnid;
           $new_p->marker_oid = $moid;
+          $new_p->feature_id = $feature_id;
           $hashed_poly [$key] = $new_p;
         }
       }

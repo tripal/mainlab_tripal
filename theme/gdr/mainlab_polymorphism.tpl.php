@@ -11,9 +11,10 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/js/mainlab_t
 <?php if ($counter_poly > 0) { 
                $keys = array_keys($polymorphism);
                $first_key = $keys[0];
+  $link = mainlab_tripal_link_record('feature', $polymorphism[$first_key]->feature_id);
   ?>
     <div id="mainlab_polymorphism-box" class="tripal_details_full">
-      <div class="tripal_feature-info-box-desc tripal-info-box-desc">Marker <?php print "<a href=\"/node/" . $polymorphism[$first_key]->marker_nid . "\">";print $polymorphism[$first_key]->marker_name . "</a>"?> includes:</div>
+      <div class="tripal_feature-info-box-desc tripal-info-box-desc">Marker <?php print "<a href=\"$link\">";print $polymorphism[$first_key]->marker_name . "</a>"?> includes:</div>
        <!-- Polymorphism -->
        <?php 
            print "Total $counter_poly polymorphisms. <p><i>Note: </i>click on allele name to see all stocks.</p>";
@@ -33,11 +34,12 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/js/mainlab_t
              // If allele = '+', it needs to be encoded
              $allele = urlencode($name [count($name) - 1]);
              $allelepage = "/allele/$poly->marker_name/$allele/$poly->marker_oid";
+             $slink = mainlab_tripal_link_record('stock', $poly->first_stock_id);
              print "<tr class=\"$class\">
                            <td>$counter</td>
                            <td><a href=\"$allelepage\">" . $poly->uniquename . "</a></td>
                        <td>$poly->description</td>
-                    <td><a href=\"/node/" . $poly->first_stock_nid . "\">" . $poly->first_stock_name . "</a>";                           
+                    <td><a href=\"$slink\">" . $poly->first_stock_name . "</a>";                           
                      if ($poly->num_stocks > 1) {print " <a href=\"$allelepage\">[show all ". $poly->num_stocks . "] </a>";}
              print    "</td>
                      <td>" . $poly->project . "</td>
