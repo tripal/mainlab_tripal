@@ -39,14 +39,16 @@ foreach ($contacts AS $con) {
 $pubs = $eimage->pubs;
 $pub = '';
 foreach ($pubs AS $p) {
-  $pub .= "<a href=\"/node/$p->nid\">" . $p->uniquename . "</a><br>";
+  $link = property_exists($p, 'pub_id') ? mainlab_tripal_link_record('pub', $p->pub_id) : NULL;
+  $pub .= "<a href=\"$link\">" . $p->uniquename . "</a><br>";
 }
 
 // Projects
 $projects = $eimage->project;
 $project = '';
 foreach ($projects AS $p) {
-  $project .= "<a href=\"/node/$p->nid\">" . $p->name . "</a><br>";
+  $link = property_exists($p, 'project_id') ? mainlab_tripal_link_record('project', $p->pub_id) : NULL;
+  $project .= "<a href=\"$link\">" . $p->name . "</a><br>";
 }
 ?>
 <div id="tripal_eimage-base-box" class="tripal_eimage-info-box tripal-info-box">
