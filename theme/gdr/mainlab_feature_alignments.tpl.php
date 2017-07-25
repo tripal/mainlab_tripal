@@ -57,8 +57,8 @@ if(count($alignments) > 0){ ?>
         }?> 
         <tr class="<?php print $class ?>">
           <td><?php 
-            if (isset($alignment->nid)) {
-              $link = $feature_name == $alignment->record->feature_id->name ? mainlab_tripal_link_record('feature', $alignment->record->feature_id->feature_id) : mainlab_tripal_link_record('feature', $alignment->record->srcfeature_id->feature_id);
+              $link = $alignment->name == $alignment->record->feature_id->name ? mainlab_tripal_link_record('feature', $alignment->record->feature_id->feature_id) : mainlab_tripal_link_record('feature', $alignment->record->srcfeature_id->feature_id);
+            if ($link) {
               print "<a href=\"" . url($link) . "\">".$alignment->name."</a>";
             } else {
               print $alignment->name;
