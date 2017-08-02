@@ -123,7 +123,8 @@ $rows = array();
 $rows [] = array(array('data' => 'Name', 'header' => TRUE, 'width' => '20%'), $stock->uniquename);
 $rows [] = array(array('data' => 'Alias', 'header' => TRUE, 'width' => '20%'), $syn);
 $rows [] = array(array('data' => 'Type', 'header' => TRUE, 'width' => '20%'), $stock_type);
-$rows [] = array(array('data' => 'Species', 'header' => TRUE, 'width' => '20%'), property_exists($organism, 'nid') ? "<a href=\"".url("node/". $organism->nid)."\">".$organism->genus ." " . $organism->species . "</a>" : $organism->genus ." " . $organism->species);
+$link = mainlab_tripal_link_record('organism', $organism->organism_id);
+$rows [] = array(array('data' => 'Species', 'header' => TRUE, 'width' => '20%'), $link ? "<a href=\"$link\">".$organism->genus ." " . $organism->species . "</a>" : $organism->genus ." " . $organism->species);
 if (count($stock->in_collection) > 0) {
   $rows [] = array(array('data' => 'In Collection', 'header' => TRUE, 'width' => '20%'), "[<a href=\"?pane=in_collection\">view all</a>]");
 }

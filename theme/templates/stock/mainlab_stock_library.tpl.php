@@ -27,8 +27,8 @@ if (count($library_stocks) > 0) {?>
         } ?>
         <tr class="<?php print $class ?>">
           <td><?php 
-            if(property_exists($library, 'nid')){    
-              $link =  url("node/$library->nid");        
+            $link = mainlab_tripal_link_record('library', $library->library_id);
+            if($link){
               print "<a href=\"$link\">$library->name</a>";
             } 
             else {

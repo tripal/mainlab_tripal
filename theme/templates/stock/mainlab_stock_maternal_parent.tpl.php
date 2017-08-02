@@ -35,7 +35,8 @@ $('#tripal_stock-table-maternal_parent_value-link').click(function() {
          } else {
             $class = "tripal_stock-table-odd-row odd";
          }
-         print "<tr class=\"$class\"><td><a href=\"/node/$parent->nid\">$parent->uniquename</a></td><td>$parent->description</td><td>$parent->type</td></tr>";
+         $link = mainlab_tripal_link_record('stock', $parent->stock_id);
+         print "<tr class=\"$class\"><td><a href=\"$link\">$parent->uniquename</a></td><td>$parent->description</td><td>$parent->type</td></tr>";
          $counter ++;
       }
     ?>
