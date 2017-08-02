@@ -16,8 +16,9 @@ if ($stock) {
     }
   }
   $details .= "</table>";
-  if (property_exists($stock, 'nid')) {
-    $rows [] = array ("<a href=\"/node/$stock->nid\">$stock->uniquename</a>", $stock->type_id->name, $details);
+  $link = mainlab_tripal_link_record('stock', $stock->stock_id);
+  if ($link) {
+    $rows [] = array ("<a href=\"$link\">$stock->uniquename</a>", $stock->type_id->name, $details);
   }
   else {
     $rows [] = array ($stock->uniquename, $stock->type_id->name, $details);

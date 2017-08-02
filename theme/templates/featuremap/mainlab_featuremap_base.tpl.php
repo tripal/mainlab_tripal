@@ -8,11 +8,12 @@ $organisms = $featuremap->featuremap_organism;
 $display_organism = "";
 foreach ( $organisms as $org ) {
   $organism = $org->organism_id;
-  if (property_exists($organism, 'nid')) {
-    $display_organism .= "<a href=\"/node/$organism->nid\" target=\"_blank\">";
+  $link = mainlab_tripal_link_record('organism', $organism->organism_id);
+  if ($link) {
+    $display_organism .= "<a href=\"$link\" target=\"_blank\">";
   }
   $display_organism .= "$organism->genus $organism->species";
-  if (property_exists($organism, 'nid')) {
+  if ($link) {
     $display_organism .= "</a>";
   }
   $display_organism .= "<br>";
@@ -85,8 +86,9 @@ foreach ($featuremapprop AS $prop) {
 $rows [] = array(array('data' => 'Map unit', 'header' => TRUE, 'width' => '20%'), $featuremap->unittype_id->name);
 // Print Maternal parents
 if ($maternal) {
-  if (property_exists($maternal, 'nid')) {
-    $rows [] = array(array('data' => 'Maternal parent', 'header' => TRUE, 'width' => '20%'), "<a href=\"/node/$maternal->nid\">". $maternal->uniquename . "</a>");
+  $mlink = mainlab_tripal_link_record('stock', $maternal->stock_id);
+  if ($mlink) {
+    $rows [] = array(array('data' => 'Maternal parent', 'header' => TRUE, 'width' => '20%'), "<a href=\"$mlink\">". $maternal->uniquename . "</a>");
   }
   else {
     $rows [] = array(array('data' => 'Maternal parent', 'header' => TRUE, 'width' => '20%'), $maternal->uniquename);
@@ -95,8 +97,9 @@ if ($maternal) {
 
 // Print Paternal parents
 if ($paternal){
-  if (property_exists($paternal, 'nid')) {
-    $rows [] = array(array('data' => 'Paternal parent', 'header' => TRUE, 'width' => '20%'), "<a href=\"/node/$paternal->nid\">". $paternal->uniquename . "</a>");
+  $plink = mainlab_tripal_link_record('stock', $paternal->stock_id);
+  if ($plink) {
+    $rows [] = array(array('data' => 'Paternal parent', 'header' => TRUE, 'width' => '20%'), "<a href=\"$plink\">". $paternal->uniquename . "</a>");
   }
   else {
     $rows [] = array(array('data' => 'Paternal parent', 'header' => TRUE, 'width' => '20%'), $paternal->uniquename);

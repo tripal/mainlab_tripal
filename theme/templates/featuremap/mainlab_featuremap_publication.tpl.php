@@ -1,45 +1,45 @@
 <?php
-$feature = $variables['node']->feature;
+$featuremap = $variables['node']->featuremap;
 
-// expand feature to include pubs 
+// expand featuremap to include pubs
 $options = array('return_array' => 1);
-$feature = chado_expand_var($feature, 'table', 'feature_pub', $options);
-$feature_pubs = $feature->feature_pub; 
+$featuremap = chado_expand_var($featuremap, 'table', 'featuremap_pub', $options);
+$featuremap_pubs = $featuremap->featuremap_pub;
 
 
-if (count($feature_pubs) > 0) { ?>
-  <div class="tripal_feature_pub-data-block-desc tripal-data-block-desc"></div> <?php 
+if (count($featuremap_pubs) > 0) { ?>
+  <div class="tripal_featuremap_pub-data-block-desc tripal-data-block-desc"></div> <?php
 
   // the $headers array is an array of fields to use as the colum headers.
   // additional documentation can be found here
   // https://api.drupal.org/api/drupal/includes%21theme.inc/function/theme_table/7
-  $headers = array('Year', 'Publication');
-  
+  $headers = array('Year', 'Publications');
+
   // the $rows array contains an array of rows where each row is an array
   // of values for each column of the table in that row.  Additional documentation
   // can be found here:
   // https://api.drupal.org/api/drupal/includes%21theme.inc/function/theme_table/7
   $rows = array();
-  
-  foreach ($feature_pubs as $feature_pub) {
-    $pub = $feature_pub->pub_id;
+
+  foreach ($featuremap_pubs as $featuremap_pub) {
+    $pub = $featuremap_pub->pub_id;
     $pub = chado_expand_var($pub, 'field', 'pub.title');
     $citation = $pub->title;  // use the title as the default citation
-    
+
     // get the citation for this pub if it exists
     $values = array(
-      'pub_id' => $pub->pub_id, 
+      'pub_id' => $pub->pub_id,
       'type_id' => array(
         'name' => 'Citation',
       ),
     );
     $options = array('return_array' => 1);
-    $citation_prop = chado_generate_var('pubprop', $values, $options); 
+    $citation_prop = chado_generate_var('pubprop', $values, $options);
     if (count($citation_prop) == 1) {
       $citation_prop = chado_expand_var($citation_prop, 'field', 'pubprop.value');
       $citation = $citation_prop[0]->value;
     }
-    
+
     // if the publication is synced then link to it
     $link = mainlab_tripal_link_record('pub', $pub->pub_id);
     if ($link) {
@@ -52,19 +52,15 @@ if (count($feature_pubs) > 0) { ?>
         '/(\+)/', '/(\.)/', '/(\?)/',
       );
       $fixed_title = preg_replace($patterns, "\\\\$1", $pub->title);
-      if (preg_match('/' . $fixed_title . '/', $citation)) {
-        $citation = preg_replace('/' . $fixed_title . '/', $link, $citation);
-      } else {
-        $citation = l($citation, $link ,array('attributes' => array('target' => '_blank')));
-      }
+      $citation = preg_replace('/' . str_replace('/', ' ', $fixed_title) . '/', $link, $citation);
     }
-    
+
     $rows[] = array(
       $pub->pyear,
       $citation,
     );
   }
-  
+
   // the $table array contains the headers and rows array as well as other
   // options for controlling the display of the table.  Additional
   // documentation can be found here:
@@ -73,7 +69,7 @@ if (count($feature_pubs) > 0) { ?>
     'header' => $headers,
     'rows' => $rows,
     'attributes' => array(
-      'id' => 'tripal_feature-table-publications',
+      'id' => 'tripal_featuremap-table-publications',
       'class' => 'tripal-data-table'
     ),
     'sticky' => FALSE,
@@ -81,8 +77,8 @@ if (count($feature_pubs) > 0) { ?>
     'colgroups' => array(),
     'empty' => '',
   );
-  
+
   // once we have our table array structure defined, we call Drupal's theme_table()
   // function to generate the table.
-  print theme_table($table); 
+  print theme_table($table);
 }

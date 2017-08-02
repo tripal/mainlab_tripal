@@ -406,6 +406,7 @@ function mainlab_tripal_node_view_alter(&$build) {
     unset($build['tripal_featuremap_base']);
     unset($build['tripal_featuremap_properties']);
     unset($build['tripal_featuremap_featurepos']);
+    unset($build['tripal_featuremap_publication']);
   }
   
   // Environment
