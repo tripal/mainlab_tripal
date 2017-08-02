@@ -149,7 +149,7 @@ function mainlab_tripal_preprocess_mainlab_stock_base(&$variables) {
   // Get genotypic data
   $results = chado_query(
       "SELECT
-      G.uniquename, G.description, J.name AS project, F.organism_id,
+      G.uniquename, G.description, J.name AS project, F.organism_id, F.feature_id,
             (SELECT nid FROM chado_feature WHERE feature_id = F.feature_id) AS marker_nid,
             (SELECT name FROM {cvterm} WHERE cvterm_id = F.type_id) AS marker_type
       FROM {nd_experiment_genotype} NEG

@@ -71,9 +71,10 @@ $('#tripal_stock-table-genotypic_data_value-link').click(function() {
             }
             $index ++;
          }
-         print "<tr class=\"$class\"><td>". ($counter + 1) . "</td><td>$data->project</td><td><a href=\"/node/$data->marker_nid\">$marker</a></td><td>$data->marker_type</td><td>$descriptor[1]</td><td>$link_alleles</td></tr>";
+         $link = mainlab_tripal_link_record('feature', $data->feature_id);
+         print "<tr class=\"$class\"><td>". ($counter + 1) . "</td><td>$data->project</td><td><a href=\"$link\">$marker</a></td><td>$data->marker_type</td><td>$descriptor[1]</td><td>$link_alleles</td></tr>";
          global $base_url;
-         fwrite($handle, '"' . ($counter + 1) . '","'. $data->project . '","=HYPERLINK(""' . $base_url . '/node/' . $data->marker_nid . '"",""' . $marker . '"")","' . $data->marker_type . '","' . $descriptor[1] . '","'. $alleles_wo_link . '"' . "\n");
+         fwrite($handle, '"' . ($counter + 1) . '","'. $data->project . '","=HYPERLINK(""' . $base_url . $link . '"",""' . $marker . '"")","' . $data->marker_type . '","' . $descriptor[1] . '","'. $alleles_wo_link . '"' . "\n");
          $counter ++;
       }
       fclose($handle);
