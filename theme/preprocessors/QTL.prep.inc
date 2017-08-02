@@ -20,11 +20,14 @@ function mainlab_tripal_preprocess_mainlab_feature_QTL_base(&$variables) {
   $sql =
   "SELECT
           POP.nid AS pop_nid,
+          POP.stock_id,
           POP.uniquename,
           POP.m_nid,
           POP.maternal,
+          POP.mat_stock_id,
           POP.p_nid,
-          POP.paternal
+          POP.paternal,
+          POP.pat_stock_id
        FROM {feature} QTL
        LEFT JOIN
           (SELECT feature_id, FM.name, FM.featuremap_id
@@ -38,14 +41,16 @@ function mainlab_tripal_preprocess_mainlab_feature_QTL_base(&$variables) {
              S.uniquename,
              CS.nid,
              MAT.uniquename as maternal,
+             MAT.stock_id AS mat_stock_id,
              MAT.nid as m_nid,
              PAT.uniquename as paternal,
+             PAT.stock_id AS pat_stock_id,
              PAT.nid as p_nid
            FROM {stock} S
              INNER JOIN {featuremap_stock} FS ON S.stock_id = FS.stock_id
              LEFT JOIN public.chado_stock CS ON CS.stock_id = S.stock_id
              LEFT JOIN (
-               SELECT uniquename, object_id, CS2.nid
+               SELECT uniquename, object_id, CS2.nid, MP.stock_id
                FROM {stock} MP
                  INNER JOIN {stock_relationship} SR ON MP.stock_id = SR.subject_id
                  LEFT JOIN public.chado_stock CS2 ON CS2.stock_id = MP.stock_id
@@ -57,7 +62,7 @@ function mainlab_tripal_preprocess_mainlab_feature_QTL_base(&$variables) {
              )
            ) MAT ON MAT.object_id = S.stock_id
            LEFT JOIN
-             (SELECT uniquename, object_id, CS3.nid
+             (SELECT uniquename, object_id, CS3.nid, PP.stock_id
               FROM {stock} PP
                 INNER JOIN {stock_relationship} SR2 ON PP.stock_id = SR2.subject_id
                 LEFT JOIN public.chado_stock CS3 ON CS3.stock_id = PP.stock_id
@@ -76,6 +81,7 @@ function mainlab_tripal_preprocess_mainlab_feature_QTL_base(&$variables) {
   $sql = "
      SELECT
         CO_LOC_M.nid AS coloc_marker_nid,
+        CO_LOC_M.feature_id,
         CO_LOC_M.uniquename AS colocalizing_marker
      FROM {feature} QTL
      INNER JOIN
@@ -94,6 +100,7 @@ function mainlab_tripal_preprocess_mainlab_feature_QTL_base(&$variables) {
   $sql = "
      SELECT
         CO_LOC_M.nid AS neighboring_marker_nid,
+        CO_LOC_M.feature_id,
         CO_LOC_M.uniquename AS neighboring_marker
      FROM {feature} QTL
      INNER JOIN
@@ -129,6 +136,7 @@ function mainlab_tripal_preprocess_mainlab_feature_QTL_map_positions(&$variables
   $feature = $variables['node']->feature;
   $sql = "
   SELECT
+  FM.featuremap_id,
   CF.nid AS nid,
   FM.name AS name,
   X.accession,

@@ -1,7 +1,4 @@
 <?php
-// The marker link is for GDR only
-$marker_link = "/node/";
-
 $feature  = $variables['node']->feature;
 $feature = chado_expand_var($feature,'table','featureprop', array('return_array' => 1));
 
@@ -32,8 +29,9 @@ if ($mtl_details->synonyms) {
 
 // Population
 $population = "N/A";
-if ($mtl_details->population->pop_nid) {
-  $population = "<a href=\"/node/" . $mtl_details->population->pop_nid . "\">". $mtl_details->population->uniquename . "</a>";
+$slink = mainlab_tripal_link_record('stock', $mtl_details->population->stock_id);
+if ($slink) {
+  $population = "<a href=\"$slink\">". $mtl_details->population->uniquename . "</a>";
 } 
 else if ($mtl_details->population->uniquename) {
   $population = $mtl_details->population->uniquename;
@@ -41,8 +39,9 @@ else if ($mtl_details->population->uniquename) {
 
 // Female Parent
 $fparent = "N/A";
-if ($mtl_details->population->m_nid) {
-  $fparent = "<a href=\"/node/" . $mtl_details->population->m_nid . "\">". $mtl_details->population->maternal . "</a>";
+$matlink = mainlab_tripal_link_record('stock', $mtl_details->population->mat_stock_id);
+if ($matlink) {
+  $fparent = "<a href=\"$matlink\">". $mtl_details->population->maternal . "</a>";
 } 
 else if ($mtl_details->population->maternal) {
   $fparent = $mtl_details->population->maternal;
@@ -50,8 +49,9 @@ else if ($mtl_details->population->maternal) {
 
 // Male Parent
 $mparent = "N/A";
-if ($mtl_details->population->p_nid) {
-  $mparent = "<a href=\"/node/" . $mtl_details->population->p_nid . "\">". $mtl_details->population->paternal . "</a>";
+$patlink = mainlab_tripal_link_record('stock', $mtl_details->population->pat_stock_id);
+if ($patlink) {
+  $mparent = "<a href=\"$patlink\">". $mtl_details->population->paternal . "</a>";
 } 
 else if ($mtl_details->population->paternal) {
   $mparent = $mtl_details->population->paternal;
@@ -63,7 +63,8 @@ if (count($mtl_details->colocalizing_marker) != 0) {
   $colocM = "";
 }
 foreach($mtl_details->colocalizing_marker as $marker) {
-  $colocM .= "<a href=\"$marker_link$marker->coloc_marker_nid\">" . $marker->colocalizing_marker . "</a><br>";
+  $mlink = mainlab_tripal_link_record('feature', $marker->feature_id);
+  $colocM .= "<a href=\"$mlink\">" . $marker->colocalizing_marker . "</a><br>";
 }
 
 // Neighboring Marks
@@ -72,7 +73,8 @@ if (count($mtl_details->neighboring_marker) != 0) {
   $neighborM = "";
 }
 foreach($mtl_details->neighboring_marker as $marker) {
-  $neighborM .= "<a href=\"$marker_link$marker->neighboring_marker_nid\">" . $marker->neighboring_marker . "</a><br>";
+  $nlink = mainlab_tripal_link_record('feature', $marker->feature_id);
+  $neighborM .= "<a href=\"$nlink\">" . $marker->neighboring_marker . "</a><br>";
 }
 
 $headers = array();
