@@ -23,7 +23,7 @@ if (count($haplotypes) > 0) { ?>
               }
               print "<tr class=\"tripal_feature-table-$class-row $class\">";
               $link = mainlab_tripal_link_record('feature', $haplotype->feature_id);
-              print "<td><a href="$link">$haplotype->name</a></td>";
+              print "<td><a href=\"$link\">$haplotype->name</a></td>";
               foreach ($arr AS $k => $v) {
                 print "<td>$v</td>";
               }
