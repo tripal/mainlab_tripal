@@ -104,9 +104,10 @@ if (count($object_rels) > 0) {
                 }
               }
               $loc = $loc ? $loc : "N/A";
+              $link = mainlab_tripal_link_record('feature', $gene->feature_id);
               ?>
                 <tr class="<?php print $class;?>">
-                  <td><a href="/node/<?php print $gene->nid;?>"><?php print $gene->uniquename;?></a></td>
+                  <td><a href="<?php print $link;?>"><?php print $gene->uniquename;?></a></td>
                   <td><?php print $loc;?></td>
                   <td><?php print $accs;?></td>
                 </tr><?php  

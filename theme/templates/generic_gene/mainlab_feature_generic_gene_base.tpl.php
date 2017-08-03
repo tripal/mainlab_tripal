@@ -95,8 +95,10 @@ $dis_evidence = count ($evidence) == 0 ? "NA" : implode ('<br>', $evidence);
       <tr class="tripal_feature-table-even-row odd">
         <th>Organism</th>
         <td>
-          <?php if ($feature->organism_id->nid) { 
-           print "<a href=\"".url("node/".$feature->organism_id->nid)."\">".$feature->organism_id->genus ." " . $feature->organism_id->species . "</a>";
+          <?php
+          $link = mainlab_tripal_link_record('organism', $feature->organism_id->organism_id);
+          if ($link) { 
+           print "<a href=\"$link\">".$feature->organism_id->genus ." " . $feature->organism_id->species . "</a>";
           } else { 
             print $feature->organism_id->genus ." " . $feature->organism_id->species;
           } ?>
