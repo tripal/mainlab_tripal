@@ -9,7 +9,8 @@ $rows = array();
 $rows [] = array(array('data' => 'Name', 'header' => TRUE, 'width' => '20%'), $feature->name);
 $rows [] = array(array('data' => 'Unique Name', 'header' => TRUE, 'width' => '20%'), $feature->uniquename);
 $rows [] = array(array('data' => 'Type', 'header' => TRUE, 'width' => '20%'), 'Sequence');
-$rows [] = array(array('data' => 'Organism', 'header' => TRUE, 'width' => '20%'), property_exists($feature->organism_id, 'nid') ? "<a href=\"".url("node/".$feature->organism_id->nid)."\">".$feature->organism_id->genus ." " . $feature->organism_id->species . "</a>" : $feature->organism_id->genus ." " . $feature->organism_id->species);
+$link = mainlab_tripal_link_record('organism', $feature->organism_id->organism_id);
+$rows [] = array(array('data' => 'Organism', 'header' => TRUE, 'width' => '20%'), $link ? "<a href=\"$link\">".$feature->organism_id->genus ." " . $feature->organism_id->species . "</a>" : $feature->organism_id->genus ." " . $feature->organism_id->species);
 if ($feature->seqlen) {
   $rows [] = array(array('data' => 'Length', 'header' => TRUE, 'width' => '20%'), $feature->seqlen);
 }

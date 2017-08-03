@@ -63,9 +63,9 @@ $fstock = chado_expand_var($feature,'table','feature_stock');
 $display_stock = NULL;
 if (is_object($fstock->feature_stock)) {
   $stock =  $fstock->feature_stock->stock_id->uniquename;
-  $stock_nid = property_exists($fstock->feature_stock->stock_id, 'nid') ? $fstock->feature_stock->stock_id->nid : NULL;
-  if ($stock_nid) {
-    $display_stock = "<a href=\"/node/$stock_nid\">". $stock ."</a>";
+  $link = mainlab_tripal_link_record('stock', $fstock->feature_stock->stock_id->stock_id);
+  if ($link) {
+    $display_stock = "<a href=\"$link\">". $stock ."</a>";
   }
   else {
     $display_stock = $stock;
@@ -73,9 +73,9 @@ if (is_object($fstock->feature_stock)) {
 } else if (is_array($fstock->feature_stock)) {
   foreach ($fstock->feature_stock AS $fs) {
     $s = $fs->stock_id->uniquename;
-    $s_nid = property_exists($fs->stock_id, 'nid') ? $fs->stock_id->nid : NULL;
-    if ($s_nid) {
-      $display_stock .= "<a href=\"/node/$s_nid\">". $s ."</a><br>";
+    $slink = mainlab_tripal_link_record('stock', $fs->stock_id->stock_id);
+    if ($slink) {
+      $display_stock .= "<a href=\"$slink\">". $s ."</a><br>";
     }
     else {
       $display_stock .= $s ."<br>";
@@ -197,14 +197,16 @@ if (count($probes) > 0) {
   //$rows [] = array(array('data' => 'Probe', 'header' => TRUE, 'width' => '20%'), "N/A");
 }
 // Species
-$rows [] = array(array('data' => 'Species', 'header' => TRUE, 'width' => '20%'), $feature->organism_id->nid ? "<a href=\"".url("node/".$feature->organism_id->nid)."\">".$feature->organism_id->genus ." " . $feature->organism_id->species . "</a>" : $feature->organism_id->genus ." " . $feature->organism_id->species);
+$olink = mainlab_tripal_link_record('organism', $feature->organism_id->organism_id);
+$rows [] = array(array('data' => 'Species', 'header' => TRUE, 'width' => '20%'), $olink ? "<a href=\"$olink\">".$feature->organism_id->genus ." " . $feature->organism_id->species . "</a>" : $feature->organism_id->genus ." " . $feature->organism_id->species);
 // Germplasm
 if ($display_stock) {$rows [] = array(array('data' => 'Germplasm', 'header' => TRUE, 'width' => '20%'), $display_stock ? $display_stock : "N/A");}
 // Source Sequence
 $srcseq = "";
 foreach ($seqs AS $seq) {
-  if (property_exists($seq, 'nid')) {
-    $srcseq .= "<a href=\"/node/$seq->nid\">". $seq->name ."</a><br>";
+  $flink = mainlab_tripal_link_record('feature', $seq->feature_id);
+  if ($flink) {
+    $srcseq .= "<a href=\"$flink\">". $seq->name ."</a><br>";
   }
   else {
     $srcseq .= $seq->name . "<br>";
@@ -266,8 +268,9 @@ if (count($assoc_with) == 0) {
 else {
   $no_assoc = 1;
   foreach($assoc_with AS $assoc) {
-    if ($assoc->nid) {
-      $data_assoc_with = l($assoc->name, 'node/' . $assoc->nid);
+    $alink = mainlab_tripal_link_record('feature', $assoc->feature_id);
+    if ($alink) {
+      $data_assoc_with = l($assoc->name, $alink);
     }
     else {
       $data_assoc_with .= $assoc->name . "<br>";
