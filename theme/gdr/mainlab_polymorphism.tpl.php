@@ -9,9 +9,9 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/js/mainlab_t
 ?>
 
 <?php if ($counter_poly > 0) { 
-               $keys = array_keys($polymorphism);
-               $first_key = $keys[0];
-  $link = mainlab_tripal_link_record('feature', $polymorphism[$first_key]->feature_id);
+           $keys = array_keys($polymorphism);
+           $first_key = $keys[0];
+           $link = mainlab_tripal_link_record('feature', $polymorphism[$first_key]->feature_id);
   ?>
     <div id="mainlab_polymorphism-box" class="tripal_details_full">
       <div class="tripal_feature-info-box-desc tripal-info-box-desc">Marker <?php print "<a href=\"$link\">";print $polymorphism[$first_key]->marker_name . "</a>"?> includes:</div>

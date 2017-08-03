@@ -38,6 +38,7 @@ function mainlab_tripal_preprocess_mainlab_feature_genetic_marker_map_positions(
   // get map positions
   $results = chado_query(
       "SELECT
+      FM.featuremap_id,
       CF.nid AS nid,
       FM.name AS name,
        X.accession,

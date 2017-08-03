@@ -14,7 +14,8 @@ $counter_pos = count($map_positions);
   $counter = 1; 
 
   foreach($map_positions AS $pos) {
-    $map = $pos->nid ? "<a href=\"/node/$pos->nid\">$pos->name</a>" : $pos->name;
+    $link = mainlab_tripal_link_record('featuremap', $pos->featuremap_id);
+    $map = $link ? "<a href=\"$link\">$pos->name</a>" : $pos->name;
     $lg = $pos->linkage_group ? $pos->linkage_group : "N/A";
     $bin = $pos->bin ? $pos->bin : "N/A";
     if ($hasChr) {

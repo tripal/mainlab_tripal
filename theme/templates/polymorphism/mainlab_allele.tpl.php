@@ -32,9 +32,10 @@ drupal_add_js(drupal_get_path('module', 'mainlab_tripal') . "/theme/js/mainlab_t
              if (!$dye) {
                $dye = "N/A";
              }
+             $link = mainlab_tripal_link_record('stock', $stock->stock_id);
              print "<tr class=\"$class\">
                            <td style=\"padding-left:10px;\">$counter</td>
-                           <td style=\"padding-left:10px;\"><a href=\"/node/$stock->nid\">" . $stock->uniquename . "</a></td>
+                           <td style=\"padding-left:10px;\"><a href=\"$link\">" . $stock->uniquename . "</a></td>
                      <td style=\"padding-left:10px;\">$dye</td>
                      <td style=\"padding-left:10px;\">$stock->project</td>
                  </tr>";

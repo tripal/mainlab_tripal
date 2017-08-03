@@ -93,9 +93,10 @@ if (count($feature_genotypes) > 0) {
     if(count($stock_genotypes) > 0) { 
       foreach ($stock_genotypes as $stock_genotype){ 
         $stock = $stock_genotype->stock_id; 
-        $stock_name = $stock->name . ' (' . $stock->uniquename . ')'; 
-        if(property_exists($stock, 'nid')) {
-          $stock_name = l($stock_name, 'node/' . $stock->nid, array('attributes' => array('target' => '_blank')));
+        $stock_name = $stock->name . ' (' . $stock->uniquename . ')';
+        $link = mainlab_tripal_link_record('stock', $stock->stock_id);
+        if($link) {
+          $stock_name = l($stock_name, $link, array('attributes' => array('target' => '_blank')));
         }
         $stock_names .= $stock_name . '<br>';
       }
