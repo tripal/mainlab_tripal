@@ -178,6 +178,12 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
           else if ($template_name == 'mainlab_feature_alignments') {
             $toc = 'alignments';
           }
+          else if ($template_name == 'mainlab_feature_libraries') {
+            $toc = 'libraries';
+          }
+          else if ($template_name == 'mainlab_feature_stocks') {
+            $toc = 'stocks';
+          }
           // Use the GenericGene template when applicable
           else if (preg_match('/mainlab_feature_generic_gene_/', $template_name)) {
             $feature = $node->feature;
@@ -316,6 +322,7 @@ function mainlab_tripal_node_view_alter(&$build) {
     unset($build['tripal_feature_contact']);
     unset($build['tripal_feature_alignments']);
     unset($build['tripal_feature_publications']);
+    unset($build['tripal_feature_libraries']);
     switch ($node->feature->type_id->name) {
       // Use mainlab templates if it's enabled
       case 'genetic_marker':
