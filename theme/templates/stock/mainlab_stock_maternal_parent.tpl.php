@@ -19,7 +19,6 @@ $('#tripal_stock-table-maternal_parent_value-link').click(function() {
 </script>
 
   <div id="tripal_stock-maternal_parent-box" class="tripal_stock-info-box tripal-info-box">
-    <div class="tripal_stock-info-box-title tripal-info-box-title">Maternal Parent of</div>
     <table id="tripal_stock-maternal_parent-table" class="tripal_stock-table tripal-table tripal-table-horz">
              <tr>
                <th>Germplasm Name</th>

@@ -1,19 +1,44 @@
 <?php
-
-$organism  = $variables['node']->organism;
+$node = $variables['node'];
+$organism  = $node->organism;
 $organism = chado_expand_var($organism,'field','organism.comment'); ?>
 
 <div class="tripal_organism-data-block-desc tripal-data-block-desc"></div><?php
 
 // generate the image tag
 $image = '';
-$image_url = tripal_get_organism_image_url($organism); 
+$image_url = '';
+
 // If image not found, try to get image from organism_id (Tripal 1.x)
+
+$file =  '/sites/default/files/tripal/tripal_organism/images/';
+if (isset($organism->nid)) {
+  $file .= $organism->nid . '.jpg';
+}
+else {
+  $file .= $organism->genus . '_' . $organism->species . '.jpg';
+}
+if(file_exists(getcwd() . $file)) {
+  global $base_url;
+  $image_url = $base_url . $file; 
+}
+
 if (!$image_url) {
-  $file =  '/sites/default/files/tripal/tripal_organism/images/' . $organism->nid . '.jpg';
-  if(file_exists(getcwd() . $file)) {
-    global $base_url;
-    $image_url = $base_url . $file; 
+  $nid = db_select("chado_$node->bundle", 'b')
+  ->fields('b', array('nid'))
+  ->condition('entity_id', $node->id)
+  ->execute()
+  ->fetchField();
+  if ($nid) {
+    $fid = db_select('file_usage', 'fu')
+    ->fields('fu', array('fid'))
+    ->condition('id', $nid)
+    ->execute()
+    ->fetchField();
+    if ($fid) {
+      $file = file_load($fid);
+      $image_url = file_create_url($file->uri);
+    }
   }
 }
 if ($image_url) {
