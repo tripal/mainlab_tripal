@@ -23,7 +23,7 @@ if(file_exists(getcwd() . $file)) {
   $image_url = $base_url . $file; 
 }
 
-if (!$image_url) {
+if (!$image_url && db_table_exists("chado_$node->bundle")) {
   $nid = db_select("chado_$node->bundle", 'b')
   ->fields('b', array('nid'))
   ->condition('entity_id', $node->id)
@@ -40,6 +40,9 @@ if (!$image_url) {
       $image_url = file_create_url($file->uri);
     }
   }
+}
+if (!$image_url) {
+  $image_url = tripal_get_organism_image_url($organism);
 }
 if ($image_url) {
   $image = "<img class=\"tripal-organism-img\" src=\"$image_url\">";
