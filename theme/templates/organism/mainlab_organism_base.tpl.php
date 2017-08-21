@@ -7,20 +7,19 @@ $organism = chado_expand_var($organism,'field','organism.comment'); ?>
 
 // generate the image tag
 $image = '';
-$image_url = '';
+$image_url = tripal_get_organism_image_url($organism);
 
 // If image not found, try to get image from organism_id (Tripal 1.x)
-
-$file =  '/sites/default/files/tripal/tripal_organism/images/';
-if (isset($organism->nid)) {
-  $file .= $organism->nid . '.jpg';
-}
-else {
-  $file .= $organism->genus . '_' . $organism->species . '.jpg';
-}
-if(file_exists(getcwd() . $file)) {
-  global $base_url;
-  $image_url = $base_url . $file; 
+if (!$image_url) {
+  $path =  '/sites/default/files/tripal/tripal_organism/images/';
+  $file = $path . $organism->genus . '_' . $organism->species . '.jpg';
+  if(!file_exists(getcwd() . $file)) {
+    $file = $path . $organism->nid . "jpg";
+  }
+  if(file_exists(getcwd() . $file)) {
+    global $base_url;
+    $image_url = $base_url . $file; 
+  }
 }
 
 if (!$image_url && db_table_exists("chado_$node->bundle")) {
@@ -41,9 +40,7 @@ if (!$image_url && db_table_exists("chado_$node->bundle")) {
     }
   }
 }
-if (!$image_url) {
-  $image_url = tripal_get_organism_image_url($organism);
-}
+
 if ($image_url) {
   $image = "<img class=\"tripal-organism-img\" src=\"$image_url\">";
 }
