@@ -1,4 +1,4 @@
-<?php
++<?php
 /*
  * Create a page that lists all features filtering by the ogramisn (i.e. $organism in 'genus-species' format), 
  * or the feature type (i.e. $type), or the germplasm name ($stock). All these variables are optional if the passed
@@ -27,7 +27,7 @@ function mainlab_feature_listing ($organism, $type, $stock) {
   }
   if ($stock != '_') {
     $sql .= " INNER JOIN {feature_stock} ON feature.feature_id = feature_stock.feature_id";
-    array_push($conditions, " stock_id = (SELECT stock_id FROM {stock} WHERE uniquename = '$stock' AND name IS NOT NULL)");
+    array_push($conditions, " stock_id IN (SELECT stock_id FROM {stock} WHERE uniquename = '$stock' AND name IS NOT NULL)");
   }
   
   if (count($conditions) > 0) {
@@ -45,7 +45,7 @@ function mainlab_feature_listing ($organism, $type, $stock) {
   $total = chado_query($qcount)->fetchField();
   $num_per_page = 20;
   $output = "<p>Total <strong>" . $total . "</strong> features.</p>";
-  $q = "SELECT feature_id, uniquename, cvterm.name AS type, genus, species 
+  $q = "SELECT feature.feature_id, uniquename, cvterm.name AS type, genus, species 
        FROM {feature} 
        INNER JOIN {cvterm} ON cvterm_id = type_id
        INNER JOIN {organism} O ON feature.organism_id = O.organism_id" . $sql;
