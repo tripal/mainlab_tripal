@@ -8,9 +8,16 @@ $projectprops = $project->projectprop;
 $properties = array();
 foreach ($projectprops as $property) {
   $property = chado_expand_var($property,'field','projectprop.value');
-  $properties[$property->type_id->name] = $property->value;
+  if ($property->value) {
+    if ($property->type_id->name == 'filename') {
+      $properties[$property->type_id->name] = "<a href=\"/bulk_data/www.rosaceae.org/genotype_snp/$property->value\">". $property->value . "</a>";
+    } else if ($property->type_id->name != 'owner' && $property->type_id->name != 'permission') {
+      $properties[$property->type_id->name] = $property->value;
+    }
+  }
 }
 asort($properties);
+
 // expand project to include pubs 
 //$project = chado_expand_var($project, 'table', 'project_pub');
 //$pubs = $project->project_pub;
