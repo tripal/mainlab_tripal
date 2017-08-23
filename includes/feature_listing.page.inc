@@ -1,4 +1,4 @@
-+<?php
+<?php
 /*
  * Create a page that lists all features filtering by the ogramisn (i.e. $organism in 'genus-species' format), 
  * or the feature type (i.e. $type), or the germplasm name ($stock). All these variables are optional if the passed

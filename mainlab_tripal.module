@@ -425,6 +425,7 @@ function mainlab_tripal_node_view_alter(&$build) {
     unset($build['tripal_stock_properties']);
     unset($build['tripal_stock_relationships']);
     unset($build['tripal_stock_references']);
+    unset($build['tripal_stock_publications']);
     unset($build['tripal_stock_synonyms']);
     unset($build['tripal_stock_collections']);
     unset($build['tripal_stock_nd_genotypes']);
@@ -454,6 +455,7 @@ function mainlab_tripal_node_view_alter(&$build) {
     unset($build['tripal_project_base']);
     unset($build['tripal_project_contact']);
     unset($build['tripal_project_properties']);
+    unset($build['tripal_project_publications']);
     unset($build['tripal_project_relationships']);
   }
   // Library
@@ -465,6 +467,16 @@ function mainlab_tripal_node_view_alter(&$build) {
   if (property_exists($node, 'contact') && key_exists('templates--contact', $enabled_themes) && $enabled_themes['templates--contact']) {
     unset($build['tripal_contact_base']);
     unset($build['tripal_contact_properties']);
+  }
+  // Pub
+  if (property_exists($node, 'pub') && key_exists('templates--pub', $enabled_themes) && $enabled_themes['templates--pub']) {
+    unset($build['tripal_pub_authors']);
+    unset($build['tripal_pub_featuremaps']);
+    unset($build['tripal_pub_features']);
+    unset($build['tripal_pub_libraries']);
+    unset($build['tripal_pub_projects']);
+    unset($build['tripal_pub_stocks']);
+    unset($build['tripal_pub_relationships']);
   }
 }
 
