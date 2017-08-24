@@ -18,9 +18,12 @@ if(count($alignments) > 0){ ?>
         }?> 
         <tr class="<?php print $class ?>">
           <td><?php 
-              $link = $alignment->name == $alignment->record->feature_id->name ? 
-                      mainlab_tripal_link_record('feature', $alignment->record->feature_id->feature_id) : 
-                      mainlab_tripal_link_record('feature', $alignment->record->srcfeature_id->feature_id);
+            $link = '';
+            if (isset($alignment->record->feature_id->name) && $alignment->name == $alignment->record->feature_id->name) {
+              $link = mainlab_tripal_link_record('feature', $alignment->record->feature_id->feature_id);
+            } else if (isset($alignment->record->srcfeature_id->feature_id)) {
+              $link = mainlab_tripal_link_record('feature', $alignment->record->srcfeature_id->feature_id);
+            }
             if ($link) {
               print "<a href=\"" . url($link) . "\">".$alignment->name."</a>";
             } else {
@@ -62,7 +65,8 @@ if(count($alignments) > 0){ ?>
               if($analysis == 'Prunus persica Whole Genome v1.0 Assembly & Annotation') {
                 $location = "<a href=\"https://www.rosaceae.org/gb/gbrowse/prunus_persica?name=".$floc."\" target=\"_blank\">$location</a>"; // add hyperlink to the location
                 if ($img_count < 10) {
-                   $gbrowse_imgs['prunus_persica'] .= "<h4>Prunus persica v1.0</h4><img style=\"width:100%\" border=0 src=\"https://www.rosaceae.org/gb/gbrowse_img/prunus_persica?name=" . $floc . "\" width=500px>";
+                   $jb = "<h4>Prunus persica v1.0</h4><img style=\"width:100%\" border=0 src=\"https://www.rosaceae.org/gb/gbrowse_img/prunus_persica?name=" . $floc . "\" width=500px>";
+                   $gbrowse_imgs['prunus_persica'] = isset($gbrowse_imgs['prunus_persica']) ? $gbrowse_imgs['prunus_persica'] . jb : $jb;
                    $img_count ++;
                 } 
                 else {
@@ -72,7 +76,8 @@ if(count($alignments) > 0){ ?>
               else if($analysis == 'Prunus persica Whole Genome Assembly v2.0 & Annotation v2.1 (v2.0.a1)') {
                 $location = "<a href=\"https://www.rosaceae.org/gb/gbrowse/prunus_persica_v2.0.a1/?name=". $floc ."\" target=\"_blank\">$location</a>"; // add hyperlink to the location
                 if ($img_count < 10) {
-                  $gbrowse_imgs['prunus_persica_v2.0.a1'] = "<img style=\"width:100%\" border=0 src=\"https://www.rosaceae.org/gb/gbrowse_img/prunus_persica_v2.0.a1/?name=". $floc ."&type=Gene+Primary_Transcripts+Alternative_Transcripts\" width=500px>";
+                  $jb = "<img style=\"width:100%\" border=0 src=\"https://www.rosaceae.org/gb/gbrowse_img/prunus_persica_v2.0.a1/?name=". $floc ."&type=Gene+Primary_Transcripts+Alternative_Transcripts\" width=500px>";
+                  $gbrowse_imgs['prunus_persica_v2.0.a1']  = isset($gbrowse_imgs['prunus_persica_v2.0.a1']) ? $gbrowse_imgs['prunus_persica_v2.0.a1'] . $jb : $jb;
                   $img_count ++;
                 }
                 else {
@@ -86,7 +91,8 @@ if(count($alignments) > 0){ ?>
               else if($analysis == 'Malus x domestica Whole Genome v1.0p Assembly & Annotation') {
                 $location = "<a href=\"https://www.rosaceae.org/gb/gbrowse/malus_x_domestica?name=". $floc ."\" target=\"_blank\">$location</a>"; // add hyperlink to the location
                 if ($img_count < 10) {
-                   $gbrowse_imgs['malus_x_domestica-combine'] .= "<h4>Malus x domestica v1.0</h4><img style=\"width:100%\" border=0 src=\"https://www.rosaceae.org/gb/gbrowse_img/malus_x_domestica?name=". $floc ."\" width=500px>";
+                   $jb = "<h4>Malus x domestica v1.0</h4><img style=\"width:100%\" border=0 src=\"https://www.rosaceae.org/gb/gbrowse_img/malus_x_domestica?name=". $floc ."\" width=500px>";
+                   $gbrowse_imgs['malus_x_domestica-combine']= isset($gbrowse_imgs['malus_x_domestica-combine']) ? $gbrowse_imgs['malus_x_domestica-combine'] . $jb : $jb;
                    $img_count ++;
                 }
                 else {
@@ -96,7 +102,8 @@ if(count($alignments) > 0){ ?>
               else if($analysis == 'Malus x domestica Whole Genome v1.0 Assembly & Annotation') {
                 $location = "<a href=\"https://www.rosaceae.org/gb/gbrowse/malus_x_domestica_v1.0-primary?name=". $floc ."\" target=\"_blank\">$location</a>"; // add hyperlink to the location
                 if ($img_count < 10) {
-                   $gbrowse_imgs['malus_x_domestica_v1.0-prime'] .= "<h4>Malus x domestica v1.0 pseudo haplotype (primary assembly)</h4><img style=\"width:100%\" border=0 src=\"https://www.rosaceae.org/gb/gbrowse_img/malus_x_domestica_v1.0-primary?name=". $floc ."\" width=500px>";
+                   $jb = "<h4>Malus x domestica v1.0 pseudo haplotype (primary assembly)</h4><img style=\"width:100%\" border=0 src=\"https://www.rosaceae.org/gb/gbrowse_img/malus_x_domestica_v1.0-primary?name=". $floc ."\" width=500px>";
+                   $gbrowse_imgs['malus_x_domestica_v1.0-prime'] = isset($gbrowse_imgs['malus_x_domestica_v1.0-prime']) ? $gbrowse_imgs['malus_x_domestica_v1.0-prime'] . $jb : $jb;
                    $img_count ++;
                 }
                 else {
@@ -110,7 +117,8 @@ if(count($alignments) > 0){ ?>
               else if($analysis == 'Fragaria vesca Whole Genome v1.0 (build 8) Assembly & Annotation') {
                 $location = "<a href=\"https://www.rosaceae.org/gb/gbrowse/fragaria_vesca_v1.1-lg?name=". $floc ."\" target=\"_blank\">$location</a>"; // add hyperlink to the location
                 if ($img_count < 10) {
-                   $gbrowse_imgs['fragaria_vesca_v1.1'] .= "<h4>Fragaria vesca v1.1 Pseudomolecule Assembly</h4><img style=\"width:100%\" border=0 src=\"https://www.rosaceae.org/gb/gbrowse_img/fragaria_vesca_v1.1-lg?name=". $floc ."\" width=500px>";
+                   $jb = "<h4>Fragaria vesca v1.1 Pseudomolecule Assembly</h4><img style=\"width:100%\" border=0 src=\"https://www.rosaceae.org/gb/gbrowse_img/fragaria_vesca_v1.1-lg?name=". $floc ."\" width=500px>";
+                   $gbrowse_imgs['fragaria_vesca_v1.1'] = isset($gbrowse_imgs['fragaria_vesca_v1.1']) ? $gbrowse_imgs['fragaria_vesca_v1.1'] . $jb : $jb;
                    $img_count ++;
                 }
                 else {
@@ -120,7 +128,8 @@ if(count($alignments) > 0){ ?>
               else if($analysis == 'Fragaria vesca Whole Genome v1.1 Assembly & Annotation') {
                 $location = "<a href=\"https://www.rosaceae.org/gb/gbrowse/fragaria_vesca_v1.1-lg?name=". $floc ."\" target=\"_blank\">$location</a>"; // add hyperlink to the location
                 if ($img_count < 10) {
-                  $gbrowse_imgs['fragaria_vesca_v1.1'] = "<img style=\"width:100%\" border=0 src=\"https://www.rosaceae.org/gb/gbrowse_img/fragaria_vesca_v1.1-lg?name=". $floc ."&type=scaffold_alignments+genemark_hybrid+genemark_hybrid_transcripts+RosCos+NCBI_Sequence_Alignments\" width=500px>";
+                  $jb = "<img style=\"width:100%\" border=0 src=\"https://www.rosaceae.org/gb/gbrowse_img/fragaria_vesca_v1.1-lg?name=". $floc ."&type=scaffold_alignments+genemark_hybrid+genemark_hybrid_transcripts+RosCos+NCBI_Sequence_Alignments\" width=500px>";
+                  $gbrowse_imgs['fragaria_vesca_v1.1'] = isset($gbrowse_imgs['fragaria_vesca_v1.1']) ? $gbrowse_imgs['fragaria_vesca_v1.1'] . $jb : $jb;
                   $img_count ++;
                 }
                 else {
@@ -131,7 +140,8 @@ if(count($alignments) > 0){ ?>
               else if($analysis == 'Pyrus communis Genome v1.0 Draft Assembly & Annotation') {
                 $location = "<a href=\"https://www.rosaceae.org/gb/gbrowse/pyrus_communis_v1.0/?name=". $floc ."\" target=\"_blank\">$location</a>"; // add hyperlink to the location
                 if ($img_count < 10) {
-                  $gbrowse_imgs['pyrus_communis_v1.0'] = "<img style=\"width:100%\" border=0 src=\"https://www.rosaceae.org/gb/gbrowse_img/pyrus_communis_v1.0/?name=". $floc ."&type=gene_hybrid+mRNA_hybrid+gene_augustus+mRNA_augustus+NCBI_Sequence_Alignments\" width=500px>";
+                  $jb = "<img style=\"width:100%\" border=0 src=\"https://www.rosaceae.org/gb/gbrowse_img/pyrus_communis_v1.0/?name=". $floc ."&type=gene_hybrid+mRNA_hybrid+gene_augustus+mRNA_augustus+NCBI_Sequence_Alignments\" width=500px>";
+                  $gbrowse_imgs['pyrus_communis_v1.0'] = isset($gbrowse_imgs['pyrus_communis_v1.0']) ? $gbrowse_imgs['pyrus_communis_v1.0'] . $jb : $jb;
                   $img_count ++;
                 }
                 else {
@@ -143,7 +153,8 @@ if(count($alignments) > 0){ ?>
                 $location = "<a href=\"https://www.rosaceae.org/jbrowse/index.html?data=data/rubus/roccidentalis_v1.0.a1&loc=". $floc ."\" target=\"_blank\">$location</a>"; // add hyperlink to the location
                 /* $location = "<a href=\"https://www.rosaceae.org/gb/gbrowse/rubus_occidentalis_v1.0.a1/?name=". $floc ."\" target=\"_blank\">$location</a>"; // add hyperlink to the location
                 if ($img_count < 10) {
-                  $gbrowse_imgs['rubus_occidentalis_v1.0.a1'] = "<img style=\"width:100%\" border=0 src=\"https://www.rosaceae.org/gb/gbrowse_img/rubus_occidentalis_v1.0.a1//?name=". $floc ."&type=Gene+Transcripts\" width=500px>";
+                  $jb = "<img style=\"width:100%\" border=0 src=\"https://www.rosaceae.org/gb/gbrowse_img/rubus_occidentalis_v1.0.a1//?name=". $floc ."&type=Gene+Transcripts\" width=500px>";
+                  $gbrowse_imgs['rubus_occidentalis_v1.0.a1'] = isset($gbrowse_imgs['rubus_occidentalis_v1.0.a1'] ? $gbrowse_imgs['rubus_occidentalis_v1.0.a1'] . $jb : $jb;
                   $img_count ++;
                 }
                 else {

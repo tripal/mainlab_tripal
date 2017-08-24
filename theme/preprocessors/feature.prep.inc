@@ -117,6 +117,7 @@ function mainlab_tripal_feature_get_feature_relationships($feature) {
  * @ingroup mainlab_feature
  */
 function mainlab_tripal_preprocess_mainlab_feature_alignments(&$variables) {
+  $limit = 100;
   // we want to provide a new variable that contains the matched features.
   $feature = $variables['node']->feature;
   $options = array(
@@ -150,7 +151,11 @@ function mainlab_tripal_preprocess_mainlab_feature_alignments(&$variables) {
   // combine all three alignments into a single array for printing together in
   // a single list
   $alignments = array();
+  $counter = 0;
   foreach ($pfeaturelocs as $featureloc) {
+    if ($counter > $limit) {
+      break;
+    }
     // if type is a 'match' then ignore it. We will handle those below
     if (preg_match('/(^match$|^.*?_match|match_part)$/', $featureloc->feature_id->type_id->name)) {
       continue;
@@ -167,8 +172,13 @@ function mainlab_tripal_preprocess_mainlab_feature_alignments(&$variables) {
     if (property_exists($featureloc->feature_id, 'nid')) {
       $alignment->nid = $featureloc->feature_id->nid;
     }
+    $counter ++;
   }
+  $counter = 0;
   foreach ($cfeaturelocs as $featureloc) {
+    if ($counter > $limit) {
+      break;
+    }
     // if type is a 'match' then ignore it. We will handle those below
     if (preg_match('/(^match$|^.*?_match|match_part)$/', $featureloc->feature_id->type_id->name)) {
       continue;
@@ -187,10 +197,15 @@ function mainlab_tripal_preprocess_mainlab_feature_alignments(&$variables) {
     if (property_exists($featureloc->srcfeature_id, 'nid')) {
       $alignment->nid = $featureloc->srcfeature_id->nid;
     }
+    $counter ++;
   }
   // in matching features, the left feature is always the feature
   // provided to this function.
+  $counter = 0;
   foreach ($mfeaturelocs as $featureloc) {
+    if ($counter > $limit) {
+      break;
+    }
     // get more information about the right feature
     $select = array('feature_id' => $featureloc->right_srcfeature_id);
     $rfeature = chado_generate_var('feature', $select);
@@ -216,6 +231,7 @@ function mainlab_tripal_preprocess_mainlab_feature_alignments(&$variables) {
     if (property_exists($rfeature, 'nid')) {
       $alignment->nid = $rfeature->nid;
     }
+    $counter ++;
   }
   $feature->all_featurelocs = $alignments;
 }
