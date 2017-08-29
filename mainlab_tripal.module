@@ -415,6 +415,9 @@ function mainlab_tripal_node_view_alter(&$build) {
         break;
       case 'region':
         unset($build['tripal_feature_base']);
+        unset($build['tripal_feature_properties']);
+        unset($build['mainlab_feature_alignments']);
+        unset($build['mainlab_feature_relationships']);
         break;
     }
   }

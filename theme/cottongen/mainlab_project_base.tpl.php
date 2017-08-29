@@ -38,7 +38,7 @@ $rows[] = array(
     'header' => TRUE,
     'width' => '20%',
   ),
-  $properties->description ? $properties->description : 'n/a',
+  isset($properties->description) ? $properties->description : 'n/a',
 );
 
 if ($project->project_contact) {

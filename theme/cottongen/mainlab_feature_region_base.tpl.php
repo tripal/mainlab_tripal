@@ -19,9 +19,9 @@ $feature = chado_expand_var($feature, 'table', 'feature_stock', $opt);
 //$feature = chado_expand_var($feature, 'table', 'feature_pub', $opt);
 $feature = chado_expand_var($feature, 'table', 'library_feature', $opt);
 
-$feature_stock = $feature->feature_stock;
-$feature_pub = $feature->feature_pub;
-$feature_lib = $feature->library_feature;
+$feature_stock = isset($feature->feature_stock) ? $feature->feature_stock : NULL;
+//$feature_pub = isset($feature->feature_pub) ? $feature->feature_pub : NULL;
+$feature_lib = isset($feature->library_feature) ? $feature->library_feature : NULL;
 
 // the $rows array contains an array of rows where each row is an array
 // of values for each column of the table in that row.  Additional documentation
@@ -44,7 +44,7 @@ $rows[] = array(
     'data' => 'Version',
     'header' => TRUE
   ),
-  $feature->uniquename
+  "<a href=\"https://www.ncbi.nlm.nih.gov/nuccore/$feature->uniquename\" target=\"_blank\">$feature->uniquename</a>"
 );
 // Type row
 $rows[] = array(
@@ -111,6 +111,100 @@ if ($feature_stock) {
   );
 }
 
+$sql = 'SELECT count(*) FROM {feature_pub} FP WHERE feature_id = :feature_id';
+$num_pubs = chado_query($sql, array(':feature_id' => $feature->feature_id))->fetchField();
+
+if ($num_pubs) {
+  $rows[] = array(
+    array(
+      'data' => 'Publication',
+      'header' => TRUE
+    ),
+    "[<a href=\"?pane=publications\">view all</a>]"
+  );
+}
+
+$sql = 
+  "SELECT 
+     F.feature_id,
+     F.name,
+     F.uniquename,
+     (SELECT name FROM {cvterm} WHERE cvterm_id = F.type_id) AS type  
+   FROM {feature_relationship} FR 
+   INNER JOIN {feature} F ON FR.subject_id = F.feature_id
+   WHERE object_id = :feature_id AND FR.type_id = 
+   (SELECT cvterm_id FROM {cvterm} WHERE name = 'linked_to'
+    AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'feature_property'))";
+$feature_rel = chado_query($sql, array(':feature_id' => $feature->feature_id));
+$gene = NULL;
+$mrna = NULL;
+$prot = NULL;
+while ($rel = $feature_rel->fetchObject()) {
+  if ($rel->type == 'gene') {
+    $gene = $rel;
+  }
+  else if ($rel->type == 'mRNA') {
+    $mrna = $rel;
+  }
+  else if ($rel->type == 'polypeptide') {
+    $prot = $rel;
+  }
+}
+if ($gene) {
+  $link = mainlab_tripal_link_record('feature', $gene->feature_id);
+  $rows[] = array(
+    array(
+      'data' => 'Gene',
+      'header' => TRUE
+    ),
+    $link ? "<a href=\"$link\">$gene->name</a>" : $gene->name
+  );
+}
+
+if ($mrna) {
+  $link = mainlab_tripal_link_record('feature', $mrna->feature_id);
+  $rows[] = array(
+    array(
+      'data' => 'mRNA',
+      'header' => TRUE
+    ),
+    $link ? "<a href=\"$link\">$mrna->name</a>" : $mrna->name
+  );
+}
+
+if ($prot) {
+  $sql = 
+    "SELECT 
+       accession,
+       db.urlprefix 
+     FROM {feature_dbxref} FX 
+     INNER JOIN {dbxref} X ON X.dbxref_id = FX.dbxref_id 
+     INNER JOIN {db} ON db.db_id = X.db_id
+     WHERE feature_id = :feature_id
+     AND db.name = 'GI'";
+  $pt = chado_query($sql, array(':feature_id' => $prot->feature_id))->fetchObject();
+  $rows[] = array(
+    array(
+      'data' => 'Protein',
+      'header' => TRUE
+    ),
+    "<a href=\"$pt->urlprefix$pt->accession\" target=\"_blank\">$pt->accession</a>"
+  );
+  $sql = 
+    "SELECT value 
+     FROM {featureprop} 
+     WHERE type_id IN (SELECT cvterm_id FROM {cvterm} WHERE name = 'product') 
+     AND feature_id = :feature_id";
+  $product = chado_query($sql, array(':feature_id' => $prot->feature_id))->fetchField();
+  $rows[] = array(
+    array(
+      'data' => 'Protein product',
+      'header' => TRUE
+    ),
+    $product
+  );
+}
+
 // allow site admins to see the feature ID
 if (user_access('view ids')) { 
   // Feature ID
@@ -123,15 +217,6 @@ if (user_access('view ids')) {
     array(
       'data' => $feature->feature_id,
       'class' => 'tripal-site-admin-only-table-row',
-    ),
-  );
-}
-// Is Obsolete Row
-if($feature->is_obsolete == TRUE){
-  $rows[] = array(
-    array(
-      'data' => '<div class="tripal_feature-obsolete">This feature is obsolete</div>',
-      'colspan' => 2
     ),
   );
 }

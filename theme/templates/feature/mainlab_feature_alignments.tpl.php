@@ -73,9 +73,11 @@ if(count($alignments) > 0){ ?>
   
   foreach ($alignments as $alignment){
     $feature_name = $alignment->name;
-    $link = $feature_name == $alignment->record->feature_id->name ? mainlab_tripal_link_record('feature', $alignment->record->feature_id->feature_id) : mainlab_tripal_link_record('feature', $alignment->record->srcfeature_id->feature_id);
-    if ($link) {
-      $feature_name = l($feature_name, $link);
+    if (isset($alignment->record->feature_id)) {
+      $link = $feature_name == $alignment->record->feature_id->name ? mainlab_tripal_link_record('feature', $alignment->record->feature_id->feature_id) : mainlab_tripal_link_record('feature', $alignment->record->srcfeature_id->feature_id);
+      if ($link) {
+        $feature_name = l($feature_name, $link);
+      }
     }
     $feature_loc = '';
     $strand = '.';
