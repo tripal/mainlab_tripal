@@ -58,11 +58,11 @@ $rows[] = array(
 $organism = $feature->organism_id->genus ." " . $feature->organism_id->species ." (" . $feature->organism_id->common_name .")";
 $link = mainlab_tripal_link_record('organism', $feature->organism_id->organism_id);
 if ($link) {
-  $organism = l("<i>" . $feature->organism_id->genus . " " . $feature->organism_id->species . "</i> (" . $feature->organism_id->common_name .")", $link, array('html' => TRUE));
+  $organism = l("<i>" . $feature->organism_id->genus . " " . $feature->organism_id->species . "</i>", $link, array('html' => TRUE));
 } 
 $rows[] = array(
   array(
-    'data' => 'Organism',
+    'data' => 'Species',
     'header' => TRUE,
   ),
   $organism

@@ -182,7 +182,7 @@ function mainlab_tripal_node_view($node, $view_mode, $langcode) {
             $toc = 'libraries';
           }
           else if ($template_name == 'mainlab_feature_stocks') {
-            $toc = 'stocks';
+            $toc = 'germplasm';
           }
           else if ($template_name == 'mainlab_feature_relationships') {
             $toc = 'relationships';
