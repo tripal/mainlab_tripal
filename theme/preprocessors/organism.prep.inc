@@ -7,6 +7,9 @@ function mainlab_tripal_preprocess_mainlab_organism_base(&$variables) {
   // we want to provide a new variable that contains the matched organisms.
   $organism = $node->organism;
   
+  $sid = db_field_exists('chado.organism_relationship', 'subject_organism_id') ? 'subject_organism_id' : 'subject_id';
+  $oid = db_field_exists('chado.organism_relationship', 'object_organism_id') ? 'object_organism_id' : 'object_id';
+
   // normally we would use chado_expand_vars to expand our
   // organism object and add in the relationships, however whan a large
   // number of relationships are present this significantly slows the
@@ -14,19 +17,19 @@ function mainlab_tripal_preprocess_mainlab_organism_base(&$variables) {
   $sql = "
     SELECT O.genus, O.species, O.organism_id, CO.nid, CVT.name as rel_type
     FROM {organism_relationship} ORel
-      INNER JOIN {organism} O on ORel.object_organism_id = O.organism_id
+      INNER JOIN {organism} O on ORel.$oid = O.organism_id
       INNER JOIN {cvterm} CVT on ORel.type_id = CVT.cvterm_id
       LEFT JOIN chado_organism CO on O.organism_id = CO.organism_id
-    WHERE ORel.subject_organism_id = :organism_id
+    WHERE ORel.$sid = :organism_id
   ";
   $as_subject = chado_query($sql,array(':organism_id' => $organism->organism_id));
   $sql = "
     SELECT O.genus, O.species, O.organism_id, CO.nid, CVT.name as rel_type
     FROM {organism_relationship} ORel
-      INNER JOIN {organism} O on ORel.subject_organism_id = O.organism_id
+      INNER JOIN {organism} O on ORel.$sid = O.organism_id
       INNER JOIN {cvterm} CVT on ORel.type_id = CVT.cvterm_id
       LEFT JOIN chado_organism CO on O.organism_id = CO.organism_id
-    WHERE ORel.object_organism_id = :organism_id
+    WHERE ORel.$oid = :organism_id
   ";
   $as_object = chado_query($sql,array(':organism_id' => $organism->organism_id));
   
