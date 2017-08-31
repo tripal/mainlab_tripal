@@ -13,7 +13,7 @@ $image_url = tripal_get_organism_image_url($organism);
 if (!$image_url) {
   $path =  '/sites/default/files/tripal/tripal_organism/images/';
   $file = $path . $organism->genus . '_' . $organism->species . '.jpg';
-  if(!file_exists(getcwd() . $file)) {
+  if(!file_exists(getcwd() . $file) && isset($organism->nid)) {
     $file = $path . $organism->nid . "jpg";
   }
   if(file_exists(getcwd() . $file)) {
