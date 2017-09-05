@@ -93,7 +93,7 @@ if ($feature_stock) {
   $display_stock = '';
   foreach ($feature_stock AS $fs) {
     $stock = chado_generate_var('stock', array('stock_id' => $fs->stock_id));
-    $sname = $stock->name ? $stock->name : $stock->uniquename;
+    $sname = $stock->uniquename ? $stock->uniquename : $stock->name;
     $link = mainlab_tripal_link_record('stock', $fs->stock_id);
     if ($link) {
       $display_stock .= "<a href=\"$link\">" . $sname . '</a><br>';
