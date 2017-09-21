@@ -647,3 +647,41 @@ function mainlab_tripal_link_record ($base_table, $record_id) {
   }
   return $link;
 }
+
+function mainlab_tripal_sync_environment () {
+  $sql = "
+    SELECT * FROM {nd_geolocation} 
+    WHERE nd_geolocation_id NOT IN (SELECT nd_geolocation_id FROM chado_nd_geolocation)
+    ORDER BY nd_geolocation_id";
+  $results =chado_query($sql);
+  $counter_synced = 0;
+  foreach ($results as $record) {
+      // Create generic new node.
+      $new_node = new stdClass();
+      $new_node->type = 'chado_nd_geolocation';
+      $new_node->uid = 0;
+      $new_node->title = $record->description;
+      $new_node->nd_geolocation_id = $record->nd_geolocation_id;
+      $new_node->nd_geolocation = $record;
+      $new_node->language = LANGUAGE_NONE;
+      
+      // Validate and Save New Node
+      $form = array();
+      $form_state = array();
+      node_validate($new_node, $form, $form_state);
+      
+      if (!form_get_errors()) {
+        $node = node_submit($new_node);
+        node_save($node);
+        if ($node->nid && $node->vid) {
+          $sql = "INSERT INTO chado_nd_geolocation (nid, vid, nd_geolocation_id) VALUES (:nid, :vid, :nd_geolocation_id)";
+          db_query($sql, array(':nid' => $node->nid, ':vid' => $node->vid, ':nd_geolocation_id' => $record->nd_geolocation_id));
+          $counter_synced ++;
+        }
+      }
+      else {
+        throw new Exception(t("Failed to insert $base_table: %title", array('%title' => $new_node->title)));
+      }
+  }
+  print "Synced $counter_synced records.\n";
+}
