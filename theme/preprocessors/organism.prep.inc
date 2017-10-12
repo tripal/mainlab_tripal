@@ -92,11 +92,11 @@ function mainlab_tripal_preprocess_mainlab_organism_unigenes(&$variables) {
       $unigene->nid = $c_node->nid;
     }
     // add in the properties
-    $unigene_name = tripal_analysis_get_property($analysis_id, 'analysis_unigene_name');
-    $num_contigs  = tripal_analysis_get_property($analysis_id, 'analysis_unigene_num_contigs');
-    $num_reads    = tripal_analysis_get_property($analysis_id, 'analysis_unigene_num_reads');
-    $num_clusters = tripal_analysis_get_property($analysis_id, 'analysis_unigene_num_clusters');
-    $num_singlets = tripal_analysis_get_property($analysis_id, 'analysis_unigene_num_singlets');
+    $unigene_name = chado_get_property(array('table' => 'analysis', 'id' => $analysis_id), array('type_name' => 'analysis_unigene_name', 'cv_name' => 'tripal'));
+    $num_contigs  = chado_get_property(array('table' => 'analysis', 'id' => $analysis_id), array('type_name' => 'analysis_unigene_num_contigs', 'cv_name' => 'tripal'));
+    $num_reads    = chado_get_property(array('table' => 'analysis', 'id' => $analysis_id), array('type_name' => 'analysis_unigene_num_reads', 'cv_name' => 'tripal'));
+    $num_clusters = chado_get_property(array('table' => 'analysis', 'id' => $analysis_id), array('type_name' => 'analysis_unigene_num_clusters', 'cv_name' => 'tripal'));
+    $num_singlets = chado_get_property(array('table' => 'analysis', 'id' => $analysis_id), array('type_name' => 'analysis_unigene_num_singlets', 'cv_name' => 'tripal'));
     
     $unigene->unigene_name = is_object($unigene_name) ? $unigene_name->value : '';
     $unigene->num_reads = is_object($num_reads) ? $num_reads->value : '';
