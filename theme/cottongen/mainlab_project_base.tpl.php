@@ -83,11 +83,37 @@ if (isset($project->project_relationship->subject_project_id)) {
   }
   $rows[] = array(
     array(
-      'data' => 'Super Dataset',
+      'data' => 'Super Project',
       'header' => TRUE,
       'width' => '20%',
     ),
     $display_superdata,
+  );
+}
+
+if (isset($project->project_relationship->object_project_id)) {
+  $subdata = $project->project_relationship->object_project_id;
+  $display_subdata = '';
+  foreach ($subdata AS $sub) {
+    if ($sub->type_id->name == 'is_a_subproject_of') {
+      $subid = $sub->subject_project_id->project_id;
+      $subname = $sub->subject_project_id->name;
+      $link = mainlab_tripal_link_record('project', $subid);
+      if ($link) {
+        $display_subdata .= "<a href=\"$link\">" . $subname . "</a><br>";
+      }
+      else {
+        $display_subdata .= $subname . "<br>";
+      }
+    }
+  }
+  $rows[] = array(
+    array(
+      'data' => 'Sub Project',
+      'header' => TRUE,
+      'width' => '20%',
+    ),
+    $display_subdata,
   );
 }
 

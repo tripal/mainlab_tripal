@@ -83,6 +83,15 @@ if (isset($properties->keywords)) {
     $properties->keywords,
   );
 }
+if (isset($properties->last_update)) {
+  $rows[] = array(
+    array(
+      'data' => 'Last Update',
+      'header' => TRUE
+    ),
+    $properties->last_update,
+  );
+}
 if ($project_contact) {
   $pdisplay = '';
   foreach ($project_contact AS $pc) {

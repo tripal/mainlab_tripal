@@ -117,7 +117,7 @@ function mainlab_tripal_preprocess_mainlab_stock_base(&$variables) {
   // Get phenotypic data
   $results = chado_query(
       "SELECT
-      P.uniquename, P.value, J.name AS project, GEO.nd_geolocation_id, GEO.environment, SP.value AS replications, V.name AS descriptor
+      P.uniquename, P.value, J.project_id, J.name AS project, GEO.nd_geolocation_id, GEO.description AS environment, SP.value AS replications, V.name AS descriptor
       FROM {nd_experiment_phenotype} NEP
       INNER JOIN {phenotype} P ON NEP.phenotype_id = P.phenotype_id
       INNER JOIN {cvterm} V ON V.cvterm_id = P.attr_id
@@ -128,10 +128,8 @@ function mainlab_tripal_preprocess_mainlab_stock_base(&$variables) {
       LEFT JOIN
       (SELECT
          NG.nd_geolocation_id,
-             NGP.value AS environment
+         NG.description
        FROM {nd_geolocation} NG
-       INNER JOIN {nd_geolocationprop} NGP ON NG.nd_geolocation_id = NGP.nd_geolocation_id
-       AND NGP.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'site_code' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
       ) GEO ON GEO.nd_geolocation_id = NE.nd_geolocation_id
           LEFT JOIN {stockprop} SP ON NES.stock_id = SP.stock_id AND SP.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'rep' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
       WHERE NES.stock_id = :stock_id OR NES.stock_id IN (SELECT subject_id FROM {stock_relationship} WHERE object_id = :object_id
