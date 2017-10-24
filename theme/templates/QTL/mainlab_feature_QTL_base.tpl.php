@@ -96,6 +96,18 @@ if ($qtl_details->neighboring_marker) {
   }
 }
 
+// Environments
+$env = "N/A";
+if (count($qtl_details->environment) != 0) {
+  $env = "";
+}
+if ($qtl_details->environment) {
+  foreach($qtl_details->environment as $environment) {
+    $elink = mainlab_tripal_link_record('nd_geolocation', $environment->nd_geolocation_id);
+    $env .= "<a href=\"$elink\">" . $environment->description . "</a><br>";
+  }
+}
+
 $headers = array();
 $rows = array();
 $rows [] = array(array('data' => 'QTL Label', 'header' => TRUE, 'width' => '20%'), $feature->uniquename);
@@ -108,6 +120,7 @@ $rows [] = array(array('data' => 'Female Parent', 'header' => TRUE, 'width' => '
 $rows [] = array(array('data' => 'Male Parent', 'header' => TRUE, 'width' => '20%'), $mparent);
 $rows [] = array(array('data' => 'Colocalizing Marker', 'header' => TRUE, 'width' => '20%'), $colocM);
 $rows [] = array(array('data' => 'Neighboring Marker', 'header' => TRUE, 'width' => '20%'), $neighborM);
+$rows [] = array(array('data' => 'Environment', 'header' => TRUE, 'width' => '20%'), $env);
 $rows [] = array(array('data' => 'LOD', 'header' => TRUE, 'width' => '20%'), $LOD);
 $rows [] = array(array('data' => 'Additivity Dominance Ratio', 'header' => TRUE, 'width' => '20%'), $ADr);
 $rows [] = array(array('data' => 'R2', 'header' => TRUE, 'width' => '20%'), $R2);
@@ -120,7 +133,7 @@ $table = array(
   'header' => $headers,
   'rows' => $rows,
   'attributes' => array(
-    'id' => 'tripal_analysis_unigene-table-base',
+    'id' => 'tripal_feature_QTL-table-base',
   ),
   'sticky' => FALSE,
   'caption' => '',

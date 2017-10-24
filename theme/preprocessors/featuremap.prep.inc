@@ -13,6 +13,14 @@ function mainlab_tripal_preprocess_mainlab_featuremap_base(&$variables) {
                                             FROM {cvterm}
                                             WHERE name = 'marker_locus' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'sequence'))
         AND featuremap_id = :featuremap_id", array(':featuremap_id' => $featuremap->featuremap_id))->fetchField();
+  $num_qtl = chado_query(
+      "SELECT count (F.uniquename)
+        FROM {featurepos} FP
+        INNER JOIN {feature} F ON F.feature_id = FP.feature_id
+        WHERE F.type_id = (SELECT cvterm_id
+                                            FROM {cvterm}
+                                            WHERE name = 'QTL' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'sequence'))
+        AND featuremap_id = :featuremap_id", array(':featuremap_id' => $featuremap->featuremap_id))->fetchField();
   $num_lg = chado_query(
       "SELECT count (distinct F.uniquename)
         FROM {featurepos} FP
@@ -32,6 +40,7 @@ function mainlab_tripal_preprocess_mainlab_featuremap_base(&$variables) {
   $cmap_url = is_object($cmap) ? $cmap->urlprefix . $cmap->accession : NULL;
 
   $featuremap->num_loci = $num_loci;
+  $featuremap->num_qtl = $num_qtl;
   $featuremap->num_lg = $num_lg;
   $featuremap->cmap_url = $cmap_url;
 }
@@ -51,7 +60,37 @@ function mainlab_tripal_preprocess_mainlab_featuremap_map_loci(&$variables) {
       INNER JOIN {feature} F ON F.feature_id = FP.map_feature_id
       INNER JOIN {feature} F2 ON F2.feature_id = FP.feature_id
       INNER JOIN {featureposprop} FPP ON FP.featurepos_id = FPP.featurepos_id AND FPP.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'start' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
-      WHERE FM.featuremap_id = :featuremap_id";
+      WHERE FM.featuremap_id = :featuremap_id
+      AND (SELECT name FROM {cvterm} WHERE cvterm_id = F2.type_id) IN ('marker_locus', 'heritable_phenotypic_marker')";
+  $results = chado_query ($sql, array(':featuremap_id' => $featuremap->featuremap_id));
+  $positions = array();
+  while ($pos = $results->fetchObject()) {
+    $positions [] = $pos;
+  }
+  $featuremap->positions = $positions;
+}
+
+function mainlab_tripal_preprocess_mainlab_featuremap_map_QTL(&$variables) {
+  $featuremap = $variables['node']->featuremap;
+  $sql = "
+      SELECT
+        F.uniquename AS LG,
+        (SELECT first (object_id) FROM {feature_relationship} WHERE subject_id = F2.feature_id AND type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'instance_of' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'relationship'))) AS feature_id,
+        F2.uniquename AS marker,
+        F2.feature_id AS marker_feature_id,
+        (SELECT name FROM {cvterm} WHERE cvterm_id = F2.type_id) AS type,
+        FPP.value AS position,
+        FPP2.value AS stop,
+        FPP3.value AS peak
+      FROM {featurepos} FP
+      INNER JOIN {featuremap} FM ON FM.featuremap_id = FP.featuremap_id
+      INNER JOIN {feature} F ON F.feature_id = FP.map_feature_id
+      INNER JOIN {feature} F2 ON F2.feature_id = FP.feature_id
+      INNER JOIN {featureposprop} FPP ON FP.featurepos_id = FPP.featurepos_id AND FPP.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'start' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
+      LEFT JOIN {featureposprop} FPP2 ON FP.featurepos_id = FPP.featurepos_id AND FPP.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'stop' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
+      LEFT JOIN {featureposprop} FPP3 ON FP.featurepos_id = FPP.featurepos_id AND FPP.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'peak' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
+      WHERE FM.featuremap_id = :featuremap_id
+      AND (SELECT name FROM {cvterm} WHERE cvterm_id = F2.type_id) = 'QTL'";
   $results = chado_query ($sql, array(':featuremap_id' => $featuremap->featuremap_id));
   $positions = array();
   while ($pos = $results->fetchObject()) {

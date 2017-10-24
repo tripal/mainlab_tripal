@@ -54,113 +54,46 @@ $display_proj .= "</a>";
 if (count($projects) == 0) {
   $display_proj = "N/A";
 }
-?>
-<div id="tripal_nd_geolocation-base-box" class="tripal_nd_geolocation-info-box tripal-info-box">
 
-  <table id="tripal_nd_geolocation-table-base" class="tripal_nd_geolocation-table tripal-table tripal-contents-table">
-    <tr class="tripal_nd_geolocation-table-even-row even">
-      <th width=40%>Environment Code</th>
-      <td><?php print $properties['site_code']; ?></td>
-    </tr>
-    <tr class="tripal_nd_geolocation-table-odd-row odd">
-      <th>Environment Name</th>
-      <td><?php print $name ?></td>
-    </tr>
-    <tr class="tripal_nd_geolocation-table-even-row even">
-      <th>Associated Dataset</th>
-      <td><?php print $display_proj?></td>
-    </tr>
-        <tr class="tripal_nd_geolocation-table-odd-row odd">
-      <th>Latitude</th>
-      <td><?php print $latitude?></td>
-    </tr>
-        <tr class="tripal_nd_geolocation-table-even-row even">
-      <th>Longitude</th>
-      <td><?php print $longitude ?></td>
-    </tr>
- <tr class="tripal_nd_geolocation-table-odd-row odd">
-      <th>Altitude (m)</th>
-      <td><?php print $altitude ?></td>
-    </tr>
-    <tr class="tripal_nd_geolocation-table-even-row even">
-      <th>Country</th>
-      <td><?php print $properties['country']?></td>
-    </tr>
-        <tr class="tripal_nd_geolocation-table-odd-row odd">
-      <th>State</th>
-      <td><?php print $properties['state']?></td>
-    </tr>
-        <tr class="tripal_nd_geolocation-table-even-row even">
-      <th>Region</th>
-      <td><?php print $properties['region']?></td>
-    </tr>
- <tr class="tripal_nd_geolocation-table-odd-row odd">
-      <th>Address</th>
-      <td><?php print $properties['address'] ?></td>
-    </tr>
-    <tr class="tripal_nd_geolocation-table-even-row even">
-      <th>Type</th>
-      <td><?php print $properties['type']?></td>
-    </tr>
-        <tr class="tripal_nd_geolocation-table-odd-row odd">
-      <th>Data Year</th>
-      <td><?php print $properties['data_year']?></td>
-    </tr>
-        <tr class="tripal_nd_geolocation-table-even-row even">
-      <th>Experimental Design</th>
-      <td><?php print $properties['experimental_design']?></td>
-    </tr>
- <tr class="tripal_nd_geolocation-table-odd-row odd">
-      <th>Replications</th>
-      <td><?php print $properties['replications'] ?></td>
-    </tr>
-    <tr class="tripal_nd_geolocation-table-even-row even">
-      <th>Plants per Replication</th>
-      <td><?php print $properties['plants_per_replication']?></td>
-    </tr>
-        <tr class="tripal_nd_geolocation-table-odd-row odd">
-      <th>Plant Date</th>
-      <td><?php print $properties['plant_date']?></td>
-    </tr>
-        <tr class="tripal_nd_geolocation-table-even-row even">
-      <th>Plot Distance</th>
-      <td><?php print $properties['plot_distance']?></td>
-    </tr>
- <tr class="tripal_nd_geolocation-table-odd-row odd">
-      <th>Row Distance</th>
-      <td><?php print $properties['row_distance'] ?></td>
-    </tr>
-    <tr class="tripal_nd_geolocation-table-even-row even">
-      <th>Plant Distance</th>
-      <td><?php print $properties['plant_distance']?></td>
-    </tr>
-        <tr class="tripal_nd_geolocation-table-odd-row odd">
-      <th>Irrigation</th>
-      <td><?php print $properties['irrigation']?></td>
-    </tr>
-        <tr class="tripal_nd_geolocation-table-even-row even">
-      <th>Soil Type</th>
-      <td><?php print $properties['soil_type']?></td>
-    </tr>
- <tr class="tripal_nd_geolocation-table-odd-row odd">
-      <th>Pest Control</th>
-      <td><?php print $properties['pest_control'] ?></td>
-    </tr>
-    <tr class="tripal_nd_geolocation-table-even-row even">
-      <th>Agronomic Control</th>
-      <td><?php print $properties['agronomic_control']?></td>
-    </tr>
-     <tr class="tripal_nd_geolocation-table-odd-row odd">
-      <th>Pick Date</th>
-      <td><?php print $properties['pick_date'] ?></td>
-    </tr>
-    <tr class="tripal_nd_geolocation-table-even-row even">
-      <th>Evaluation Date</th>
-      <td><?php print $properties['evaluation_date']?></td>
-    </tr>
-         <tr class="tripal_nd_geolocation-table-odd-row odd">
-      <th>Comments</th>
-      <td><?php print $properties['comments'] ?></td>
-    </tr>
-  </table> 
-</div>
+$headers = array();
+$rows = array();
+if ($properties['site_code'] != 'N/A') {$rows [] = array(array('data' => 'Environment Code', 'header' => TRUE, 'width' => '25%'), $properties['site_code']);}
+if ($name != 'N/A') {$rows [] = array(array('data' => 'Environment Name', 'header' => TRUE, 'width' => '25%'), $name);}
+if ($display_proj != 'N/A') {$rows [] = array(array('data' => 'Associated Dataset', 'header' => TRUE, 'width' => '25%'), $display_proj);}
+if ($latitude != 'N/A') {$rows [] = array(array('data' => 'Latitude', 'header' => TRUE, 'width' => '25%'), $latitude);}
+if ($longitude != 'N/A') {$rows [] = array(array('data' => 'Longitude', 'header' => TRUE, 'width' => '25%'), $longitude);}
+if ($altitude != 'N/A') {$rows [] = array(array('data' => 'Altitude (m)', 'header' => TRUE, 'width' => '25%'), $altitude);}
+if ($properties['country'] != 'N/A') {$rows [] = array(array('data' => 'Country', 'header' => TRUE, 'width' => '25%'), $properties['country']);}
+if ($properties['state'] != 'N/A') {$rows [] = array(array('data' => 'State', 'header' => TRUE, 'width' => '25%'), $properties['state']);}
+if ($properties['region'] != 'N/A') {$rows [] = array(array('data' => 'Region', 'header' => TRUE, 'width' => '25%'), $properties['region']);}
+if ($properties['address'] != 'N/A') {$rows [] = array(array('data' => 'Address', 'header' => TRUE, 'width' => '25%'), $properties['address']);}
+if ($properties['type'] != 'N/A') {$rows [] = array(array('data' => 'Type', 'header' => TRUE, 'width' => '25%'), $properties['type']);}
+if ($properties['data_year'] != 'N/A') {$rows [] = array(array('data' => 'Data Year', 'header' => TRUE, 'width' => '25%'), $properties['data_year']);}
+if ($properties['experimental_design'] != 'N/A') {$rows [] = array(array('data' => 'Experimental Design', 'header' => TRUE, 'width' => '25%'), $properties['experimental_design']);}
+if ($properties['replications'] != 'N/A') {$rows [] = array(array('data' => 'Replications', 'header' => TRUE, 'width' => '25%'), $properties['replications']);}
+if ($properties['plants_per_replication'] != 'N/A') {$rows [] = array(array('data' => 'Plants per Replication', 'header' => TRUE, 'width' => '25%'), $properties['plants_per_replication']);}
+if ($properties['plant_date'] != 'N/A') {$rows [] = array(array('data' => 'Plant Date', 'header' => TRUE, 'width' => '25%'), $properties['plant_date']);}
+if ($properties['plot_distance'] != 'N/A') {$rows [] = array(array('data' => 'Plot Distance', 'header' => TRUE, 'width' => '25%'), $properties['plot_distance']);}
+if ($properties['row_distance'] != 'N/A') {$rows [] = array(array('data' => 'Row Distance', 'header' => TRUE, 'width' => '25%'), $properties['row_distance']);}
+if ($properties['plant_distance'] != 'N/A') {$rows [] = array(array('data' => 'Plant Distance', 'header' => TRUE, 'width' => '25%'), $properties['plant_distance']);}
+if ($properties['irrigation'] != 'N/A') {$rows [] = array(array('data' => 'Irrigation', 'header' => TRUE, 'width' => '25%'), $properties['irrigation']);}
+if ($properties['soil_type'] != 'N/A') {$rows [] = array(array('data' => 'Soil Type', 'header' => TRUE, 'width' => '25%'), $properties['soil_type']);}
+if ($properties['pest_control'] != 'N/A') {$rows [] = array(array('data' => 'Pest Control', 'header' => TRUE, 'width' => '25%'), $properties['pest_control']);}
+if ($properties['agronomic_control'] != 'N/A') {$rows [] = array(array('data' => 'Agronomic Control', 'header' => TRUE, 'width' => '25%'), $properties['agronomic_control']);}
+if ($properties['pick_date'] != 'N/A') {$rows [] = array(array('data' => 'Pick Date', 'header' => TRUE, 'width' => '25%'), $properties['pick_date']);}
+if ($properties['evaluation_date'] != 'N/A') {$rows [] = array(array('data' => 'Evaluation Date', 'header' => TRUE, 'width' => '25%'), $properties['evaluation_date']);}
+if ($properties['comments'] != 'N/A') {$rows [] = array(array('data' => 'Comments', 'header' => TRUE, 'width' => '25%'), $properties['comments']);}
+
+$table = array(
+  'header' => $headers,
+  'rows' => $rows,
+  'attributes' => array(
+    'id' => 'tripal_nd_geolocation-table-base',
+  ),
+  'sticky' => FALSE,
+  'caption' => '',
+  'colgroups' => array(),
+  'empty' => '',
+);
+print theme_table($table);
+?>

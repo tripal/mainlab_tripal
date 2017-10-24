@@ -115,6 +115,18 @@ function mainlab_tripal_preprocess_mainlab_feature_QTL_base(&$variables) {
    ";
   $qtl->neighboring_marker = mainlab_tripal_dbresult_to_array(chado_query($sql, array(':feature_id' => $feature_id)));
    
+  // Get environments
+  $sql = "
+    SELECT 
+      ENV.nd_geolocation_id, 
+      description
+    FROM {feature} QTL
+    INNER JOIN {feature_nd_geolocation} FENV ON FENV.feature_id = QTL.feature_id
+    INNER JOIN {nd_geolocation} ENV ON ENV.nd_geolocation_id = FENV.nd_geolocation_id
+    WHERE QTL.feature_id = :feature_id
+  ";
+  $qtl->environment = mainlab_tripal_dbresult_to_array(chado_query($sql, array(':feature_id' => $feature_id)));
+  
   // Get aliases
   $sql = "
     SELECT name

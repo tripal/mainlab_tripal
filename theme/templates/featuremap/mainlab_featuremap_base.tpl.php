@@ -117,6 +117,12 @@ if ($num_loci){
   $rows [] = array(array('data' => 'Number of loci', 'header' => TRUE, 'width' => '20%'), $num_loci);
 }
 
+// Print # of QTL
+$num_qtl = $featuremap->num_qtl;
+if ($num_qtl){
+  $rows [] = array(array('data' => 'Number of QTL', 'header' => TRUE, 'width' => '20%'), $num_qtl);
+}
+
 // Print # of Linkage group
 $num_lg = $featuremap->num_lg;
 if ($num_lg){
