@@ -88,7 +88,7 @@ function mainlab_tripal_preprocess_mainlab_featuremap_map_QTL(&$variables) {
       INNER JOIN {feature} F2 ON F2.feature_id = FP.feature_id
       LEFT JOIN {featureposprop} FPP ON FP.featurepos_id = FPP.featurepos_id AND FPP.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'start' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
       LEFT JOIN {featureposprop} FPP2 ON FP.featurepos_id = FPP2.featurepos_id AND FPP2.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'stop' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
-      LEFT JOIN {featureposprop} FPP3 ON FP.featurepos_id = FPP3.featurepos_id AND FPP3.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'peak' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
+      LEFT JOIN {featureposprop} FPP3 ON FP.featurepos_id = FPP3.featurepos_id AND FPP3.type_id = (SELECT cvterm_id FROM {cvterm} WHERE name = 'qtl_peak' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
       WHERE FM.featuremap_id = :featuremap_id
       AND (SELECT name FROM {cvterm} WHERE cvterm_id = F2.type_id) = 'QTL'";
   $results = chado_query ($sql, array(':featuremap_id' => $featuremap->featuremap_id));

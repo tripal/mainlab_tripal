@@ -29,7 +29,7 @@ if(count($feature_positions) > 0){ ?>
       $position->lg,
       $link ? "<a href='$link'>" . $position->marker . '</a>': $position->marker,
       $position->type,
-      round($position->position, 1) . ' ' . $featuremap->unittype_id->name,
+      $position->position ? round($position->position, 1) . ' ' . $featuremap->unittype_id->name : '-',
       $position->stop ? round($position->stop, 1) . ' ' . $featuremap->unittype_id->name : '-',
       $position->peak ? round($position->peak, 1) . ' ' . $featuremap->unittype_id->name : '-'
     );
