@@ -13,9 +13,9 @@ if ($counter_pos > 0) {
     $lg = $pos->linkage_group ? $pos->linkage_group : "N/A";
     $bin = $pos->bin ? $pos->bin : "N/A"; 
     $chr = $pos->chr ?$pos->chr : "N/A";
-    $start = number_format($pos->qtl_start, 1) == 0 ? "N/A" : number_format($pos->qtl_start, 1);
-    $stop = number_format($pos->qtl_stop, 1) == 0 ? "N/A" : number_format($pos->qtl_stop, 1);
-    $peak = number_format($pos->qtl_peak, 1) == 0 ? "N/A" : number_format($pos->qtl_peak, 1);
+    $start = $pos->qtl_start || $pos->qtl_start === '0' ? number_format($pos->qtl_start, 1) : '-';
+    $stop = $pos->qtl_stop || $pos->qtl_stop === '0'  ? number_format($pos->qtl_stop, 1) : '-';
+    $peak = $pos->qtl_peak || $pos->qtl_peak ? number_format($pos->qtl_peak, 1) : '-';
     $highlight = $node->feature->uniquename;
     $cmap = (!$pos->urlprefix || !$pos->accession)? "N/A" : "<a href=\"$pos->urlprefix$pos->accession" . "&ref_map_acc=-1&highlight=" . $highlight . "\">View</a>";
     $rows[] = array ($counter, $map, $lg, $bin, $chr, $peak, $start, $stop, $cmap);

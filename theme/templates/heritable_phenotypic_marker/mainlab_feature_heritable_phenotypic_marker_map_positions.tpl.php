@@ -13,7 +13,7 @@ if ($counter_pos > 0) {
     $lg = $pos->linkage_group ? $pos->linkage_group : "N/A";
     $bin = $pos->bin ? $pos->bin : "N/A"; 
     $chr = $pos->chr ?$pos->chr : "N/A";
-    $start = number_format($pos->mtl_start, 1) == 0 ? "N/A" : number_format($pos->mtl_start, 1);
+    $start = $pos->mtl_start || $pos->mtl_start === '0' ? number_format($pos->mtl_start, 1) : '-';
     $highlight = $node->feature->uniquename;
     $cmap = (!$pos->urlprefix || !$pos->accession)? "N/A" : "<a href=\"$pos->urlprefix$pos->accession" . "&ref_map_acc=-1&highlight=" . $highlight . "\">View</a>";
     $rows[] = array ($counter, $map, $lg, $bin, $chr, $start, $cmap);
