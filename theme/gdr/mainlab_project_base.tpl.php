@@ -6,6 +6,7 @@ $project = $variables['node']->project;
 $project = chado_expand_var($project,'table', 'projectprop', array('return_array' => 1));
 $projectprops = $project->projectprop;
 $properties = array();
+
 foreach ($projectprops as $property) {
   $property = chado_expand_var($property,'field','projectprop.value');
   if ($property->value) {
@@ -17,6 +18,14 @@ foreach ($projectprops as $property) {
   }
 }
 asort($properties);
+$ptype = isset($properties['project_type']) ? $properties['project_type'] : NULL;
+$subtype = isset($properties['sub_type']) ? $properties['sub_type'] : NULL;
+$data = NULL;
+if ($ptype == 'genotyping' && $subtype == 'SSR') {
+    $data = " [<a href=\"/search/ssr_genotype/summary?project_name=$project->name\">Browse Data</a>]";
+} else if ($ptype == 'genotyping' && $subtype == 'SNP') {
+    $data = " [<a href=\"/search/snp_genotype/summary?project_name=$project->name\">Browse Data</a>]";
+}
 
 // expand project to include pubs 
 //$project = chado_expand_var($project, 'table', 'project_pub');
@@ -33,7 +42,7 @@ asort($properties);
   <table id="tripal_project-table-base" class="tripal_project-table tripal-table tripal-table-vert">
     <tr class="tripal_project-table-even-row even">
       <th width="20%">Project Name</th>
-      <td><?php print $project->name; ?></td>
+      <td><?php print $project->name; if ($data) {print $data;}?></td>
     </tr><?php
       $counter = 0;
       foreach ($properties AS $p_key => $p_value) {
