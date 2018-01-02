@@ -11,7 +11,7 @@ $properties = $node->organism->organismprop;
 $prop = array();
 $count_cname = 0;
 if ($properties) {
-  foreach ($properties AS $p) {
+  foreach (is_array($properties)?$properties:array($properties) AS $p) {
     $prop[$p->type_id->name] = $p->value;
     if ($p->type_id->name == 'alias_common') {
       $count_cname ++;
