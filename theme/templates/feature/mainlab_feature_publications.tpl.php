@@ -43,20 +43,7 @@ if (count($feature_pubs) > 0) { ?>
     // if the publication is synced then link to it
     $link = mainlab_tripal_link_record('pub', $pub->pub_id);
     if ($link) {
-      // replace the title with a link
-      $link = l($pub->title, $link ,array('attributes' => array('target' => '_blank')));
-      $patterns = array(
-        '/(\()/', '/(\))/',
-        '/(\])/', '/(\[)/',
-        '/(\{)/', '/(\})/',
-        '/(\+)/', '/(\.)/', '/(\?)/',
-      );
-      $fixed_title = preg_replace($patterns, "\\\\$1", $pub->title);
-      if (preg_match('/' . $fixed_title . '/', $citation)) {
-        $citation = preg_replace('/' . $fixed_title . '/', $link, $citation);
-      } else {
-        $citation = l($citation, $link ,array('attributes' => array('target' => '_blank')));
-      }
+      $citation = l($citation, $link ,array('attributes' => array('target' => '_blank')));
     }
     
     $rows[] = array(
