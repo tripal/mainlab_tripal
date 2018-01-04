@@ -132,7 +132,7 @@ if ($num_lg){
 // Print Publications
 $featuremap = chado_expand_var($featuremap,'table','featuremap_pub', array('return_array' => TRUE));
 $pubs = $featuremap->featuremap_pub;
-$rows [] = array(array('data' => 'Publication', 'header' => TRUE, 'width' => '20%'), $pubs ? "[<a href=\"?pane=publications\">view all</a>]" : "N/A");
+$rows [] = array(array('data' => 'Publication', 'header' => TRUE, 'width' => '20%'), $pubs ? "[<a href=\"?pane=publication\">view all</a>]" : "N/A");
 
 // Print Contact
 $data_contact = "";
