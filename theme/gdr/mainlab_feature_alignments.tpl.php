@@ -7,7 +7,7 @@ $gbrowse_imgs = array();
 if(count($alignments) > 0){ ?>
   <div id="tripal_feature-alignments-box" class="tripal_feature-info-box tripal-info-box">
     <table id="tripal_feature-featurelocs_as_child-table" class="tripal_feature-table tripal-table tripal-table-horz">
-      <tr><th>Feature Name</th><th>Type</th><th>Location</th><th>Phase</th></tr><?php
+      <tr><th>Feature Name</th><th>Type</th><th>Location</th><th>Analysis</th></tr><?php
       $i = 1; 
       $img_count = 0;
       $hit_limit = FALSE;
@@ -161,6 +161,9 @@ if(count($alignments) > 0){ ?>
                   $hit_limit = true;
                 } */
               }
+              else if($analysis == 'Rubus occidentalis Whole Genome Assembly v1.1') {
+                  $location = "<a href=\"https://www.rosaceae.org/jbrowse/index.html?data=data/rubus/roccidentalis_v1.1&loc=". $floc ."\" target=\"_blank\">$location</a>"; // add hyperlink to the location
+              }
               print $location;
             }
             /***
@@ -220,10 +223,13 @@ if(count($alignments) > 0){ ?>
                 //$location = "<a href=\"https://www.rosaceae.org/gb/gbrowse/rubus_occidentalis_v1.0.a1/?name=". $floc ."\" target=\"_blank\">$location</a>"; // add hyperlink to the location
                 //$gbrowse_imgs['rubus_occidentalis_v1.0.a1'] = "<img style=\"width:100%\" border=0 src=\"https://www.rosaceae.org/gb/gbrowse_img/rubus_occidentalis_v1.0.a1//?name=". $floc ."&type=Gene+Transcripts\" width=500px>";
               }
+              else if($analysis == 'Rubus occidentalis Whole Genome Assembly v1.1') {
+                  $location = "<a href=\"https://www.rosaceae.org/jbrowse/index.html?data=data/rubus/roccidentalis_v1.1&loc=". $floc ."\" target=\"_blank\">$location</a>"; // add hyperlink to the location
+              }
               print $location;
             }?>
           </td>
-          <td><?php print $alignment->phase ?></td>
+          <td><?php print $analysis ?></td>
         </tr> <?php
         $i++;
       } ?>
