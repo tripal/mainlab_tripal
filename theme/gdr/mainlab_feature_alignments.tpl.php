@@ -136,6 +136,9 @@ if(count($alignments) > 0){ ?>
                   $hit_limit = true;
                 }
               }
+              else if($analysis == 'Fragaria vesca Whole Genome v4.0.a1 Assembly & Annotation') {
+                  $location = "<a href=\"https://www.rosaceae.org/jbrowse/index.html?data=data/fragaria/fvesca_v4.0.a1&loc=". $floc ."\" target=\"_blank\">$location</a>"; // add hyperlink to the location
+              }
               // PYRUS
               else if($analysis == 'Pyrus communis Genome v1.0 Draft Assembly & Annotation') {
                 $location = "<a href=\"https://www.rosaceae.org/gb/gbrowse/pyrus_communis_v1.0/?name=". $floc ."\" target=\"_blank\">$location</a>"; // add hyperlink to the location
@@ -211,6 +214,9 @@ if(count($alignments) > 0){ ?>
               else if($analysis == 'Fragaria vesca Whole Genome v1.1 Assembly & Annotation') {
                 $location = "<a href=\"https://www.rosaceae.org/gb/gbrowse/fragaria_vesca_v1.1-lg?name=". $floc ."\" target=\"_blank\">$location</a>"; // add hyperlink to the location
                 $gbrowse_imgs['fragaria_vesca_v1.1'] = "<img style=\"width:100%\" border=0 src=\"https://www.rosaceae.org/gb/gbrowse_img/fragaria_vesca_v1.1-lg?name=". $floc ."&type=scaffold_alignments+genemark_hybrid+genemark_hybrid_transcripts+RosCos+NCBI_Sequence_Alignments\" width=500px>";
+              }
+              else if($analysis == 'Fragaria vesca Whole Genome v4.0.a1 Assembly & Annotation') {
+                  $location = "<a href=\"https://www.rosaceae.org/jbrowse/index.html?data=data/fragaria/fvesca_v4.0.a1&loc=". $floc ."\" target=\"_blank\">$location</a>"; // add hyperlink to the location
               }
               // PYRUS
               else if($analysis == 'Pyrus communis Genome v1.0 Draft Assembly & Annotation') {
