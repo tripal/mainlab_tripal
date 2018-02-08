@@ -103,6 +103,21 @@ if(count($alignments) > 0){ ?>
       $feature_loc = $alignment->name .":". ($alignment->fmin + 1) . ".." . $alignment->fmax . " " . $strand; 
     }
     
+    $srcfeature_id = $alignment->record->srcfeature_id->feature_id;
+    $sql =
+    "SELECT value
+    FROM {feature} F
+    INNER JOIN {analysisfeature} AF ON F.feature_id = AF.feature_id
+    INNER JOIN {analysis} A ON A.analysis_id = AF.analysis_id
+    INNER JOIN {analysisprop} AP ON AP.analysis_id = A.analysis_id
+    INNER JOIN {cvterm} V ON V.cvterm_id = AP.type_id
+    WHERE
+    V.name = 'JBrowse URL' AND
+    F.feature_id = :srcfeature_id";
+    $jbrowse = $srcfeature_id ? chado_query($sql, array('srcfeature_id' => $srcfeature_id))->fetchField() : NULL;
+    if ($jbrowse) {
+        $feature_loc = '<a href="' . $jbrowse . $alignment->name .":". ($alignment->fmin + 1) . ".." . $alignment->fmax . '">' . $feature_loc . '</a>'; 
+    }
     $rows[] = array(
       $feature_name,
       $alignment->type,
