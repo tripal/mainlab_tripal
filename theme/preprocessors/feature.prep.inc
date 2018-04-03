@@ -6,7 +6,10 @@
 function mainlab_tripal_preprocess_mainlab_feature_relationships(&$variables) {
   // we want to provide a new variable that contains the matched features.
   $feature = $variables['node']->feature;
-  
+  // do not generate relationships for chromosome/scaffolds
+  if ($feature->type_id->name == 'chromosome' || $feature->type_id->name == 'supercontig') {
+    return;
+  }
   if (!property_exists($feature, 'all_relationships')) {
     $feature->all_relationships = mainlab_tripal_feature_get_feature_relationships($feature);
   }
@@ -120,6 +123,10 @@ function mainlab_tripal_preprocess_mainlab_feature_alignments(&$variables) {
   $limit = 100;
   // we want to provide a new variable that contains the matched features.
   $feature = $variables['node']->feature;
+  // do not generate alignments for chromosome/scaffold
+  if ($feature->type_id->name == 'chromosome' || $feature->type_id->name == 'supercontig') {
+    return;
+  }
   $options = array(
     'return_array' => 1,
     'include_fk' => array(
