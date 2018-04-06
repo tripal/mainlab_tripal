@@ -5,6 +5,23 @@ if (!$feature->name) {
   $feature->name = $feature->uniquename; // show uniquname if there is no name
 }
 $feature = chado_expand_var($feature, 'table', 'featureprop', array('return_array' => TRUE));
+$synonyms = mainlab_tripal_feature_get_synonyms($feature->feature_id);
+$alias = '';
+$array_id = '';
+foreach ($synonyms AS $synonym) {
+  if ($synonym['type'] == 'alias') {
+    foreach ($synonym['values'] AS $val) {
+      $alias .= $val . '<br>';
+    }
+  }
+  else if ($synonym['type'] == 'SNP_chip') {
+    $array_id = '<table style="border:0px">';
+    foreach ($synonym['values'] AS $val) {
+      $array_id .= '<tr><td style="padding:0px;width:220px" nowrap>' . $val['library'] . ':</td><td style="padding:0px">' . $val['synonym'] .'</td></tr>';
+    }
+    $array_id .= '</table>';
+  }
+}
 
 // get marker properties
 $properties = $feature->featureprop;
@@ -160,7 +177,7 @@ $rows = array();
 // Name
 $rows [] = array(array('data' => 'Name', 'header' => TRUE, 'width' => '20%'), $feature->name);
 // Alias
-if (key_exists('alias', $kv_properties)) {$rows [] = array(array('data' => 'Alias', 'header' => TRUE, 'width' => '20%'), key_exists('alias', $kv_properties) ? $kv_properties['alias'] : "N/A");}
+if ($alias) {$rows [] = array(array('data' => 'Alias', 'header' => TRUE, 'width' => '20%'), $alias);}
 //Genbank ID
 if ($marker_type != "SNP") {
   $gbid = "N/A";
@@ -177,6 +194,7 @@ else {
   }
   $rows [] = array(array('data' => 'dbSNP ID', 'header' => TRUE, 'width' => '20%'), $dbsnp_id);
 }
+if ($array_id) {$rows [] = array(array('data' => 'SNP Array ID', 'header' => TRUE, 'width' => '20%'), $array_id);}
 $rows [] = array(array('data' => 'Type', 'header' => TRUE, 'width' => '20%'), key_exists('marker_type', $kv_properties) ? $kv_properties['marker_type'] : "N/A");
 if ($marker_type == "SNP") {
   $rows [] = array(array('data' => 'SNP Alleles', 'header' => TRUE, 'width' => '20%'), $snp ? $snp : "N/A");  

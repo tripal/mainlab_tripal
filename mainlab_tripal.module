@@ -354,6 +354,7 @@ function mainlab_tripal_node_view_alter(&$build) {
           unset($build['tripal_feature_nd_genotypes']);
           unset($build['tripal_feature_nd_phenotypes']);
           unset($build['tripal_feature_seqence']);
+          unset($build['tripal_feature_synonyms']);
         }
         break;
         case 'sequence_feature':
@@ -687,4 +688,37 @@ function mainlab_tripal_sync_environment () {
       }
   }
   print "Synced $counter_synced records.\n";
+}
+
+function mainlab_tripal_feature_get_synonyms ($feature_id) {
+  $sql = 
+    "SELECT 
+       S.synonym_id, 
+       S.name, 
+       S.type_id,
+       (SELECT name FROM {cvterm} WHERE cvterm_id = S.type_id) AS type,
+       L.library_id,
+       L.name AS library
+     FROM {feature} F
+     INNER JOIN {feature_synonym} FS ON F.feature_id = FS.feature_id
+     INNER JOIN {synonym} S ON S.synonym_id = FS.synonym_id
+     INNER JOIN {library_synonym} LS ON LS.synonym_id = S.synonym_id
+     INNER JOIN {library} L ON L.library_id = LS.library_id
+     WHERE F.feature_id = :feature_id";
+  $results = chado_query($sql, array(':feature_id' => $feature_id));
+  $synonyms = array();
+  while ($s = $results->fetchObject()) {
+    $values = array(
+      $s->library_id => array(
+        'library' => $s->library,
+        'synonym' => $s->name
+      )
+    );
+    if (isset($synonyms[$s->type_id]['values'])) {
+      $values += $synonyms[$s->type_id]['values'];
+    }
+    $synonyms[$s->type_id]['type'] = $s->type;
+    $synonyms[$s->type_id]['values'] = $values;
+  }
+  return $synonyms;
 }
