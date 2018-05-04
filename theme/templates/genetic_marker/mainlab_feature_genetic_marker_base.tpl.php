@@ -214,6 +214,12 @@ if (count($probes) > 0) {
 } else {
   //$rows [] = array(array('data' => 'Probe', 'header' => TRUE, 'width' => '20%'), "N/A");
 }
+
+// Flanking sequences
+if (key_exists('five_prime_flanking_region', $kv_properties)) {$rows [] = array(array('data' => '5\' Flanking Sequence', 'header' => TRUE, 'width' => '20%'), key_exists('five_prime_flanking_region', $kv_properties) ? $kv_properties['five_prime_flanking_region'] : "N/A");}
+if (key_exists('three_prime_flanking_region', $kv_properties)) {$rows [] = array(array('data' => '3\' Flanking Sequence', 'header' => TRUE, 'width' => '20%'), key_exists('three_prime_flanking_region', $kv_properties) ? $kv_properties['three_prime_flanking_region'] : "N/A");}
+
+
 // Species
 $olink = mainlab_tripal_link_record('organism', $feature->organism_id->organism_id);
 $rows [] = array(array('data' => 'Species', 'header' => TRUE, 'width' => '20%'), $olink ? "<a href=\"$olink\">".$feature->organism_id->genus ." " . $feature->organism_id->species . "</a>" : $feature->organism_id->genus ." " . $feature->organism_id->species);
