@@ -216,8 +216,8 @@ if (count($probes) > 0) {
 }
 
 // Flanking sequences
-if (key_exists('five_prime_flanking_region', $kv_properties)) {$rows [] = array(array('data' => '5\' Flanking Sequence', 'header' => TRUE, 'width' => '20%'), key_exists('five_prime_flanking_region', $kv_properties) ? $kv_properties['five_prime_flanking_region'] : "N/A");}
-if (key_exists('three_prime_flanking_region', $kv_properties)) {$rows [] = array(array('data' => '3\' Flanking Sequence', 'header' => TRUE, 'width' => '20%'), key_exists('three_prime_flanking_region', $kv_properties) ? $kv_properties['three_prime_flanking_region'] : "N/A");}
+if (key_exists('five_prime_flanking_region', $kv_properties)) {$rows [] = array(array('data' => '5\' Flanking Sequence', 'header' => TRUE, 'width' => '20%'), key_exists('five_prime_flanking_region', $kv_properties) ? wordwrap($kv_properties['five_prime_flanking_region'], 60, "\n", TRUE) : "N/A");}
+if (key_exists('three_prime_flanking_region', $kv_properties)) {$rows [] = array(array('data' => '3\' Flanking Sequence', 'header' => TRUE, 'width' => '20%'), key_exists('three_prime_flanking_region', $kv_properties) ? wordwrap($kv_properties['three_prime_flanking_region'], 60, "\n", TRUE)  : "N/A");}
 
 
 // Species
