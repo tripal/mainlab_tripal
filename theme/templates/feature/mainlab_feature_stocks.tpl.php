@@ -15,7 +15,7 @@ if (count($fstocks) > 0) {
     $stk = chado_generate_var('stock', array('stock_id' => $stock->stock_id->stock_id));
     
     $link = mainlab_tripal_link_record('stock', $stk->stock_id);
-    $name = $stk->name ? $stk->name : $stk->uniquename;
+    $name = $stk->uniquename ? $stk->uniquename : $stk->name;
 
     $rows[] = array(
       $link ? "<a href='$link'>" . $name . '</a>': $name,
