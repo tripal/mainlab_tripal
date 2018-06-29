@@ -302,6 +302,12 @@ function mainlab_tripal_node_view_alter(&$build) {
   // Hide default templates in this function
   
   $node = $build['#node'];
+  
+  // Make sure Title doesn't start with a comma for Tripal 3
+  if ($build['#entity_type'] == 'TripalEntity') {
+      $node->title = trim($node->title, ', ');
+  }
+  
   $enabled_themes = variable_get('mainlab_tripal_enabled_themes', array());
   
   // Organism
