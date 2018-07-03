@@ -2,7 +2,7 @@
 $feature = $variables['node']->feature;
 $feature = chado_expand_var($feature, 'table', 'analysisfeature', array('return_array' => 1));
 $alignments = $feature->all_featurelocs;
-$gbrowse_imgs = array();
+//$gbrowse_imgs = array();
 
 if(count($alignments) > 0){ ?>
   <div id="tripal_feature-alignments-box" class="tripal_feature-info-box tripal-info-box">
@@ -51,8 +51,8 @@ if(count($alignments) > 0){ ?>
               elseif ($alignment->right_strand == 1) {
                    $rstrand = '+';
               }
-              print $feature->name .":". ($alignment->fmin + 1) . ".." . $alignment->fmax . " " . $strand; 
-              $location = "<br>" . $alignment->name .":". ($alignment->right_fmin + 1) . ".." . $alignment->right_fmax . $rstrand;
+              //print $feature->name .":". ($alignment->fmin + 1) . ".." . $alignment->fmax . " " . $strand; 
+              $location = $alignment->name .":". ($alignment->right_fmin + 1) . ".." . $alignment->right_fmax . $rstrand;
               $floc = $alignment->name .":". ($alignment->right_fmin + 1) . ".." . $alignment->right_fmax;
               
               $landmark = $alignment->right_feature;
@@ -74,8 +74,9 @@ if(count($alignments) > 0){ ?>
                 F.feature_id = :srcfeature_id";
               $jbrowse = $srcfeature_id ? chado_query($sql, array('srcfeature_id' => $srcfeature_id))->fetchField() : NULL;
               if ($jbrowse) {
-                $location = '<a href="' . $jbrowse . $alignment->name .":". ($alignment->fmin + 1) . ".." . $alignment->fmax . '">' . $location . '</a>';
+                  $location = '<a href="' . $jbrowse . $alignment->name .":". ($alignment->right_fmin + 1) . ".." . $alignment->right_fmax . '">' . $location . '</a>';
               }
+              /*
               // PRUNUS
               if($analysis == 'Prunus persica Whole Genome v1.0 Assembly & Annotation') {
                 if ($img_count < 10) {
@@ -150,6 +151,7 @@ if(count($alignments) > 0){ ?>
                   $hit_limit = true;
                 }
               }
+              */
               print $location;
             }
             /***
@@ -182,6 +184,7 @@ if(count($alignments) > 0){ ?>
               $location = $floc . $strand; 
               }
               // PRUNUS
+              /*
               if($analysis == 'Prunus persica Whole Genome v1.0 Assembly & Annotation') {
                 $gbrowse_imgs['prunus_persica_v1.0'] = "<img style=\"width:100%\" border=0 src=\"https://www.rosaceae.org/gb/gbrowse_img/prunus_persica?name=". $floc ."&type=Transcripts+Alternative_Transcripts+genes-v1.0-r1+NCBI_Sequence_Alignments+Repeat_Consensus+Markers+RosCOS+snp_Koepke_2012+IRSC_9K_peach_SNP_array+IRSC_6K_cherry_SNP_array+Davis_6K_peach_SNPs+All_Candidate_SNPs\" width=500px>";
               }
@@ -206,6 +209,7 @@ if(count($alignments) > 0){ ?>
               else if($analysis == 'Pyrus communis Genome v1.0 Draft Assembly & Annotation') {
                 $gbrowse_imgs['pyrus_communis_v1.0'] = "<img style=\"width:100%\" border=0 src=\"https://www.rosaceae.org/gb/gbrowse_img/pyrus_communis_v1.0/?name=". $floc ."&type=gene_hybrid+mRNA_hybrid+gene_augustus+mRNA_augustus+NCBI_Sequence_Alignments\" width=500px>";
               }
+              */
               print $location;
             }?>
           </td>
@@ -214,12 +218,14 @@ if(count($alignments) > 0){ ?>
         $i++;
       } ?>
     </table><?php
+    /*
     foreach ($gbrowse_imgs as $map => $img){ ?>
       <div id="tripal_feature-gbrowse-images" style="padding-top:20px; width=100%"><?php print $img ?></div> <?php  
     }
     if ($hit_limit) {
        print "<p><b>(Limited to 10 GBrowse images)</b></p>";
     }
+    */
   ?>
   </div><?php
 }
