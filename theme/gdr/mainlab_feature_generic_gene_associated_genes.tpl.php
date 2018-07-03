@@ -75,16 +75,16 @@ if (count($object_rels) > 0) {
                   $sf = $srcfeature->type_id->name == 'contig' ? $srcfeature->name : $srcfeature->name . ":" . $floc->fmin . ".." . $floc->fmax;
                   // Add hyperlinks to the location
                   if ($analysis->name == 'Prunus persica Whole Genome v1.0 Assembly & Annotation') {
-                    $loc .= "<a href=\"http://www.rosaceae.org/gb/gbrowse/prunus_persica?name=".$sf."\" target=\"_blank\">" . $sf . "</a><br>";
+                    $loc .= "<a href=\"https://www.rosaceae.org/jbrowse/index.html?data=data%2Fprunus%2Fppersica_v1.0&loc=".$sf."\" target=\"_blank\">" . $sf . "</a><br>";
                   }
                   else if ($analysis->name == 'Malus x domestica Whole Genome v1.0 Assembly & Annotation') {
-                    $loc .= "<a href=\"http://www.rosaceae.org/gb/gbrowse/malus_x_domestica?name=".$sf."\" target=\"_blank\">" . $sf . "</a><br>";
+                    $loc .= "<a href=\"https://www.rosaceae.org/jbrowse/index.html?data=data/malus/mdomestica_v1.0&loc=".$sf."\" target=\"_blank\">" . $sf . "</a><br>";
                   }
                   else if ($analysis->name == 'Malus x domestica Whole Genome v1.0p Assembly & Annotation') {
-                    $loc .= "<a href=\"http://www.rosaceae.org/gb/gbrowse/malus_x_domestica_v1.0-primary?name=".$sf."\" target=\"_blank\">" . $sf . "</a><br>";
+                    $loc .= "<a href=\"https://www.rosaceae.org/jbrowse/index.html?data=data/malus/mdomestica_v1.0_primary&loc=".$sf."\" target=\"_blank\">" . $sf . "</a><br>";
                   }
                   else if ($analysis->name == 'Fragaria vesca Whole Genome v1.0 (build 8) Assembly & Annotation') {
-                    $loc .= "<a href=\"http://www.rosaceae.org/gb/gbrowse/fragaria_vesca_v1.1-lg?name=".$sf."\" target=\"_blank\">" . $sf . "</a><br>";
+                    $loc .= "<a href=\"https://www.rosaceae.org/jbrowse/index.html?data=data%2Ffragaria%2Ffvesca_v1.0_chr&loc=".$sf."\" target=\"_blank\">" . $sf . "</a><br>";
                   }
                   else {
                     $loc .= $sf . "<br>";
@@ -119,16 +119,16 @@ if (count($object_rels) > 0) {
                       $sf = $mid_type == 'contig' ? $mid_srcfeature->name : $mid_srcfeature->name . ":" . $mid_loc->fmin . ".." . $mid_loc->fmax;
                       // Add hyperlinks to the location
                       if ($mid_analysis->name == 'Prunus persica Whole Genome v1.0 Assembly & Annotation') {
-                        $loc .= "<a href=\"http://www.rosaceae.org/gb/gbrowse/prunus_persica?name=".$sf."\" target=\"_blank\">" . $sf . "</a><br>";
+                        $loc .= "<a href=\"https://www.rosaceae.org/jbrowse/index.html?data=data%2Fprunus%2Fppersica_v1.0&loc=".$sf."\" target=\"_blank\">" . $sf . "</a><br>";
                       }
                       else if ($mid_analysis->name == 'Malus x domestica Whole Genome v1.0 Assembly & Annotation') {
-                        $loc .= "<a href=\"http://www.rosaceae.org/gb/gbrowse/malus_x_domestica?name=".$sf."\" target=\"_blank\">" . $sf . "</a><br>";
+                        $loc .= "<a href=\"https://www.rosaceae.org/jbrowse/index.html?data=data/malus/mdomestica_v1.0&loc=".$sf."\" target=\"_blank\">" . $sf . "</a><br>";
                       }
                       else if ($mid_analysis->name == 'Malus x domestica Whole Genome v1.0p Assembly & Annotation') {
-                        $loc .= "<a href=\"http://www.rosaceae.org/gb/gbrowse/malus_x_domestica_v1.0-primary?name=".$sf."\" target=\"_blank\">" . $sf . "</a><br>";
+                        $loc .= "<a href=\"https://www.rosaceae.org/jbrowse/index.html?data=data/malus/mdomestica_v1.0_primary&loc=".$sf."\" target=\"_blank\">" . $sf . "</a><br>";
                       }
                       else if ($mid_analysis->name == 'Fragaria vesca Whole Genome v1.0 (build 8) Assembly & Annotation') {
-                        $loc .= "<a href=\"http://www.rosaceae.org/gb/gbrowse/fragaria_vesca_v1.1-lg?name=".$sf."\" target=\"_blank\">" . $sf . "</a><br>";
+                        $loc .= "<a href=\"https://www.rosaceae.org/jbrowse/index.html?data=data%2Ffragaria%2Ffvesca_v1.0_chr&loc=".$sf."\" target=\"_blank\">" . $sf . "</a><br>";
                       }
                       else {
                         $loc .= $sf . "<br>";
