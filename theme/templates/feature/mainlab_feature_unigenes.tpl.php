@@ -13,11 +13,13 @@ if($unigenes){ ?>
   foreach ($unigenes AS $unigene) {
     $unigene_name = '';
     $link = mainlab_tripal_link_record('analysis', $unigene->analysis_id);
-    if($link){
-      $unigene_name .= "<a href=\"" . $link . "\">$unigene->unigene_name</a>";
-    } 
-    else {
-      $unigene_name .= $unigene->unigene_name;
+    if (isset($unigene->unigene_name)) {
+      if($link){
+        $unigene_name .= "<a href=\"" . $link . "\">$unigene->unigene_name</a>";
+      } 
+      else {
+        $unigene_name .= $unigene->unigene_name;
+      }
     }
     $analysis = '';
     if($link){
