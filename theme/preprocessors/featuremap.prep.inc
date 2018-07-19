@@ -11,7 +11,7 @@ function mainlab_tripal_preprocess_mainlab_featuremap_base(&$variables) {
         INNER JOIN {feature} F ON F.feature_id = FP.feature_id
         WHERE F.type_id = (SELECT cvterm_id
                                             FROM {cvterm}
-                                            WHERE name = 'marker_locus' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'sequence'))
+                                            WHERE name = 'marker_locus' AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN'))
         AND featuremap_id = :featuremap_id", array(':featuremap_id' => $featuremap->featuremap_id))->fetchField();
   $num_qtl = chado_query(
       "SELECT count (F.uniquename)

@@ -82,7 +82,7 @@ function mainlab_tripal_preprocess_mainlab_feature_genetic_marker_map_positions(
      (SELECT cvterm_id
       FROM {cvterm}
       WHERE name = 'marker_locus'
-     AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'sequence')
+     AND cv_id = (SELECT cv_id FROM {cv} WHERE name = 'MAIN')
      )
     AND FPP.type_id =
      (SELECT cvterm_id
