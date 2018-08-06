@@ -8,6 +8,19 @@ $organism = chado_expand_var($organism,'field','organism.comment'); ?>
 // generate the image tag
 $image = '';
 $image_url = tripal_get_organism_image_url($organism);
+if(!$image_url && isset($node->id)) {
+    $fid =   db_select('file_usage', 'fu')
+    ->fields('fu', array('fid'))
+    ->condition('module', 'file')
+    ->condition('type', 'TripalEntity')
+    ->condition('id', $node->id)
+    ->execute()
+    ->fetchField();
+    if ($fid) {
+      $file = file_load($fid);
+      $image_url = file_create_url($file->uri);
+    }
+}
 
 // If image not found, try to get image from organism_id (Tripal 1.x)
 if (!$image_url) {
@@ -19,25 +32,6 @@ if (!$image_url) {
   if(file_exists(getcwd() . $file)) {
     global $base_url;
     $image_url = $base_url . $file; 
-  }
-}
-
-if (!$image_url && db_table_exists("chado_$node->bundle")) {
-  $nid = db_select("chado_$node->bundle", 'b')
-  ->fields('b', array('nid'))
-  ->condition('entity_id', $node->id)
-  ->execute()
-  ->fetchField();
-  if ($nid) {
-    $fid = db_select('file_usage', 'fu')
-    ->fields('fu', array('fid'))
-    ->condition('id', $nid)
-    ->execute()
-    ->fetchField();
-    if ($fid) {
-      $file = file_load($fid);
-      $image_url = file_create_url($file->uri);
-    }
   }
 }
 
