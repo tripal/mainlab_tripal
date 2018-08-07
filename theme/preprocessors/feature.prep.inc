@@ -248,6 +248,9 @@ function mainlab_tripal_preprocess_mainlab_feature_alignments(&$variables) {
  * Implements preprocess hook for the tripal_feature_unigenes template.
  */
 function mainlab_tripal_preprocess_mainlab_feature_unigenes(&$variables) {
+  if (!chado_table_exists('organism_unigene_mview')) {
+      return;
+  }
   $node = $variables['node'];
   $feature = $node->feature;
   

@@ -69,6 +69,9 @@ function mainlab_tripal_preprocess_mainlab_organism_base(&$variables) {
  * Implements preprocess hook for the tripal_organism_unigenes template.
  */
 function mainlab_tripal_preprocess_mainlab_organism_unigenes(&$variables) {
+  if (!chado_table_exists('organism_unigene_mview')) {
+      return;
+  }
   $node = $variables['node'];
   $organism = $node->organism;
   
