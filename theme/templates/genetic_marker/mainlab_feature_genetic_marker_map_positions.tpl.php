@@ -10,7 +10,7 @@ $counter_pos = count($map_positions);
      }
    }
   $header = $hasChr ? array ('#', 'Map Name', 'Linkage Group', 'Bin', 'Chromosome', 'Position', 'Locus') : array ('#', 'Map Name', 'Linkage Group', 'Bin', 'Position', 'Locus');
-  $cmap_enabled = variable_get('mainlab_tripal_cmap_links', 0);
+  $cmap_enabled = variable_get('mainlab_tripal_cmap_links', 1);
   if ($cmap_enabled) {
       $header[] = 'CMap';
   }

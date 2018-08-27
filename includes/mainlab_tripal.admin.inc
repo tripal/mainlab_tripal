@@ -61,7 +61,7 @@ function mainlab_tripal_admin_form() {
       '#title' => 'Advanced Settings',
       '#description' => 'More settings for the page display.'
   );  
-  $cmap = variable_get('mainlab_tripal_cmap_links', 0);
+  $cmap = variable_get('mainlab_tripal_cmap_links', 1);
   $form['advanced']['cmap_links'] = array (
       '#type' => 'checkbox',
       '#title' => 'Show CMap links on Featuremap and Genetic Marker pages',
