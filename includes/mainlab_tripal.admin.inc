@@ -64,7 +64,7 @@ function mainlab_tripal_admin_form() {
   $cmap = variable_get('mainlab_tripal_cmap_links', 1);
   $form['advanced']['cmap_links'] = array (
       '#type' => 'checkbox',
-      '#title' => 'Show CMap links on Featuremap and Genetic Marker pages',
+      '#title' => 'Show CMap links on Featuremap, Genetic Marker, QTL, and MTL (heritable_phenotypic_marker) pages',
       '#default_value' => $cmap
   );
   return system_settings_form($form);
