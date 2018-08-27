@@ -77,7 +77,8 @@ $contacts = $featuremap->featuremap_contact;
 
 $headers = array();
 $rows = array();
-$display_name = $featuremap->cmap_url ? $featuremap->name . " [<a href=\"" . $featuremap->cmap_url . "&ref_map_accs=-1\" target=\"_blank\">View in CMap</a>]" : $featuremap->name;
+$cmap_enabled = variable_get('mainlab_tripal_cmap_links', 0);
+$display_name = $cmap_enabled && $featuremap->cmap_url ? $featuremap->name . " [<a href=\"" . $featuremap->cmap_url . "&ref_map_accs=-1\" target=\"_blank\">View in CMap</a>]" : $featuremap->name;
 $rows [] = array(array('data' => 'Name', 'header' => TRUE, 'width' => '20%'), $display_name);
 $rows [] = array(array('data' => 'Species', 'header' => TRUE, 'width' => '20%'), $display_organism);
 foreach ($featuremapprop AS $prop) {

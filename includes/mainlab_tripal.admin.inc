@@ -47,12 +47,25 @@ function mainlab_tripal_admin_form() {
                                     selected. If you add a new template, save the settings again so theme 
                                     cache will be cleared and Drupal can pick up the change.'
   );
-
   $override = variable_get('mainlab_tripal_override_folder', 'templates');
   $form['override']['override_folder'] = array (
     '#type' => 'select',
     '#options' => $override_folders,
     '#default_value' => $override
+  );
+  
+  // Advanced settings
+  $form ['advanced'] = array (
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#title' => 'Advanced Settings',
+      '#description' => 'More settings for the page display.'
+  );  
+  $cmap = variable_get('mainlab_tripal_cmap_links', 0);
+  $form['advanced']['cmap_links'] = array (
+      '#type' => 'checkbox',
+      '#title' => 'Show CMap links on Featuremap and Genetic Marker pages',
+      '#default_value' => $cmap
   );
   return system_settings_form($form);
 }
@@ -63,7 +76,10 @@ function mainlab_tripal_admin_form() {
  */
 function mainlab_tripal_admin_form_validate($form, &$form_state) {
   $values = $form_state['values'];
+  // override template folder
   variable_set('mainlab_tripal_override_folder', $values['override_folder']);
+  // display of cmap links
+  variable_set('mainlab_tripal_cmap_links', $values['cmap_links']);
   
   $enabled_themes = array();
   foreach ($values AS $key => $val) {
