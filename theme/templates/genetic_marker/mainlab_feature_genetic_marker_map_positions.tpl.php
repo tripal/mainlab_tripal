@@ -26,7 +26,7 @@ $counter_pos = count($map_positions);
     if ($hasChr) {
       $chr = $pos->chr ?$pos->chr : "N/A";
     }
-    $position = number_format($pos->locus_start, 2);
+    $position = round($pos->locus_start, 2);
     $locus = $pos->locus_name;
     $highlight = $node->feature->uniquename;
     if ($cmap_enabled) {

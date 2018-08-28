@@ -17,9 +17,9 @@ if ($counter_pos > 0) {
     $lg = $pos->linkage_group ? $pos->linkage_group : "N/A";
     $bin = $pos->bin ? $pos->bin : "N/A"; 
     $chr = $pos->chr ?$pos->chr : "N/A";
-    $start = $pos->qtl_start || $pos->qtl_start === '0' ? number_format($pos->qtl_start, 1) : '-';
-    $stop = $pos->qtl_stop || $pos->qtl_stop === '0'  ? number_format($pos->qtl_stop, 1) : '-';
-    $peak = $pos->qtl_peak || $pos->qtl_peak ? number_format($pos->qtl_peak, 1) : '-';
+    $start = $pos->qtl_start || $pos->qtl_start === '0' ? round($pos->qtl_start, 2) : '-';
+    $stop = $pos->qtl_stop || $pos->qtl_stop === '0'  ? round($pos->qtl_stop, 2) : '-';
+    $peak = $pos->qtl_peak || $pos->qtl_peak ? round($pos->qtl_peak, 2) : '-';
     $highlight = $node->feature->uniquename;
     if ($cmap_enabled) {
       $cmap = (!$pos->urlprefix || !$pos->accession)? "N/A" : "<a href=\"$pos->urlprefix$pos->accession" . "&ref_map_acc=-1&highlight=" . $highlight . "\">View</a>";

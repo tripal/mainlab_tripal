@@ -29,7 +29,7 @@ if(count($feature_positions) > 0){ ?>
       $position->lg,
       $link ? "<a href='$link'>" . $position->marker . '</a>': $position->marker,
       $position->type,
-      $position->position || $position->position === '0' ? round($position->position, 1) . ' ' . $featuremap->unittype_id->name : '-'
+      $position->position || $position->position === '0' ? round($position->position, 2) . ' ' . $featuremap->unittype_id->name : '-'
     );
   } 
   // the $table array contains the headers and rows array as well as other

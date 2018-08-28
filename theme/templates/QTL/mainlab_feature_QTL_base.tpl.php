@@ -16,13 +16,13 @@ if ($properties) {
       $symbol = $prop->value;
     } 
     else if ($prop->type_id->name == 'LOD') {
-      $LOD = is_numeric($prop->value) ? number_format($prop->value, 2) : $prop->value;
+      $LOD = is_numeric($prop->value) ? round($prop->value, 2) : $prop->value;
     } 
     else if ($prop->type_id->name == 'R2') {
-      $R2 = is_numeric($prop->value) ? number_format($prop->value, 2) : $prop->value;
+      $R2 = is_numeric($prop->value) ? round($prop->value, 2) : $prop->value;
     } 
     else if ($prop->type_id->name == 'additivity_dominance_ratio') {
-      $ADr = is_numeric($prop->value) ? number_format($prop->value, 2) : $prop->value;
+      $ADr = is_numeric($prop->value) ? round($prop->value, 2) : $prop->value;
     } 
     else if ($prop->type_id->cv_id->name == 'MAIN' && $prop->type_id->name == 'comments') {
       $comments = $prop->value;
