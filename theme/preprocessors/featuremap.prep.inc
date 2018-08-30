@@ -51,7 +51,7 @@ function mainlab_tripal_preprocess_mainlab_featuremap_map_loci(&$variables) {
       SELECT 
         F.uniquename AS LG, 
         (SELECT first (object_id) FROM {feature_relationship} WHERE subject_id = F2.feature_id AND type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'instance_of' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'relationship'))) AS feature_id, 
-        F2.uniquename AS marker, 
+        F2.name AS marker, 
         F2.feature_id AS marker_feature_id,
         (SELECT name FROM {cvterm} WHERE cvterm_id = F2.type_id) AS type,
         FPP.value AS position 
@@ -65,6 +65,9 @@ function mainlab_tripal_preprocess_mainlab_featuremap_map_loci(&$variables) {
   $results = chado_query ($sql, array(':featuremap_id' => $featuremap->featuremap_id));
   $positions = array();
   while ($pos = $results->fetchObject()) {
+    $sql_gm = "SELECT name FROM {feature} WHERE feature_id = :feature_id";
+    $genetic_marker = chado_query($sql_gm, array(':feature_id' => $pos->feature_id))->fetchField();
+    $pos->genetic_marker = $genetic_marker;
     $positions [] = $pos;
   }
   $featuremap->positions = $positions;

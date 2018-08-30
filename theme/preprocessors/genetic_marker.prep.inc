@@ -47,7 +47,7 @@ function mainlab_tripal_preprocess_mainlab_feature_genetic_marker_map_positions(
       BIN.name AS bin,
       LGP.value AS chr,
       FPP.value AS locus_start,
-      LOCUS.uniquename AS locus_name
+      LOCUS.name AS locus_name
     FROM {feature} LOCUS
     INNER JOIN {feature_relationship} FR ON FR.subject_id = LOCUS.feature_id
     INNER JOIN {featurepos} FP ON LOCUS.feature_id = FP.feature_id
