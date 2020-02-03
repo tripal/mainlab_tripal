@@ -1,9 +1,0 @@
-name = MainLab Tripal Data Display
-description = Extended Tripal themes and templates created by the Main Bioinformatics Lab
-core = 7.x
-#project = mainlab_tripal
-package = Mainlab
-version = 7.x-1.0
-dependencies[] = tripal_core
-dependencies[] = tripal_feature
-dependencies[] = tripal_analysis
